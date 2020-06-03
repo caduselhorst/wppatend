@@ -16,7 +16,7 @@ public class HookController {
 	
 	@RequestMapping(value = "/hook", method = RequestMethod.POST)
 	public void hook (@RequestBody WppObjectRequest msg) {
-		logger.info(String.format("Mensagem de: %1$s (%2$s) fromMe: %3$s", msg.getMessages().get(0).getChatName(), msg.getMessages().get(0).getAuthor()));
+		logger.info(String.format("Mensagem de: %1$s (%2$s) fromMe: %3$s", msg.getMessages().get(0).getChatName(), msg.getMessages().get(0).getAuthor(), msg.getMessages().get(0).getFromMe()));
 	}
 
 }
