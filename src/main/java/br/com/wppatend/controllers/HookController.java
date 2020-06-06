@@ -34,7 +34,7 @@ public class HookController {
 				msg.getMessages().get(0).getChatId(),
 				msg.getMessages().get(0).getId()));
 		
-		if((msg.getMessages().get(0).getAuthor().contains("559699720884") || msg.getMessages().get(0).getAuthor().contains("559699720884")) && !msg.getMessages().get(0).getFromMe()) {
+		if((msg.getMessages().get(0).getAuthor().contains("559699720884") || msg.getMessages().get(0).getAuthor().contains("559681433060")) && !msg.getMessages().get(0).getFromMe()) {
 			
 			logger.info(String.format("\nMsg de Alana ou Helio.\nId: %1$s\nBody:%2$s\nTipo: %3$s\nName: %4$s", 
 					msg.getMessages().get(0).getId(), 
