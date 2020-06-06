@@ -28,15 +28,19 @@ public class HookController {
 	@RequestMapping(value = "/hook", method = RequestMethod.POST)
 	public void hook (@RequestBody WppObjectRequest msg) {
 		logger.info(String.format("Mensagem de: %1$s (%2$s) fromMe: %3$s chatId: %4$s Id: %5$s", 
-				msg.getMessages().get(0).getChatName(), 
+				msg.getMessages().get(0).getSenderName(), 
 				msg.getMessages().get(0).getAuthor(), 
-				msg.getMessages().get(0).getFromMe()),
+				msg.getMessages().get(0).getFromMe(),
 				msg.getMessages().get(0).getChatId(),
-				msg.getMessages().get(0).getId());
+				msg.getMessages().get(0).getId()));
 		
-		if(msg.getMessages().get(0).getAuthor().contains("559699720884")) {
+		if((msg.getMessages().get(0).getAuthor().contains("559699720884") || msg.getMessages().get(0).getAuthor().contains("559699720884")) && !msg.getMessages().get(0).getFromMe()) {
 			
-			logger.info(String.format("Alana me mandando msg. Id: %1$s", msg.getMessages().get(0).getId()));
+			logger.info(String.format("\nMsg de Alana ou Helio.\nId: %1$s\nBody:%2$s\nTipo: %3$s\nName: %4$s", 
+					msg.getMessages().get(0).getId(), 
+					msg.getMessages().get(0).getBody(),
+					msg.getMessages().get(0).getType(),
+					msg.getMessages().get(0).getSenderName()));
 			
 			/*
 			logger.info("Instanciando client rest." + (urlPessoaFisicaApi == null ? "" : " URL api pessoa fisica -> " + urlPessoaFisicaApi));
