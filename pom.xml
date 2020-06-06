@@ -13,6 +13,13 @@
 	<version>1.0</version>
 	<name>wppatend</name>
 	<description>Demo project for Spring Boot</description>
+	
+	<repositories>
+		<repository>
+			<id>myMavenRepo.read</id>
+			<url>https://mymavenrepo.com/repo/84kvGJ27J3oqma6ejMQg/</url>
+		</repository>
+	</repositories>
 
 	<properties>
 		<java.version>1.8</java.version>
