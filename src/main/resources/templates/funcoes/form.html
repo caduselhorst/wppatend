@@ -1,0 +1,51 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+<head>
+    <title>Cadastro de funções</title>
+    <script type="text/javascript" src="../../dist/js/address.js"></script>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>Cadastro de funções</h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="active">Cadastro de funções</li>
+    </ol>
+</section>
+
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Dados</h3>
+            <div class="box-tools pull-right">
+                <a href="/fornecedores" type="button" class="btn btn-box-tool"><i class="fa fa-list-ul"></i></a>
+            </div>
+        </div>
+        <form data-toggle="validator" role="form" th:object="${role}" th:action="@{/funcoes/save}" method="post">
+            <div class="box-body">
+                <input type="hidden" th:field="*{id}"/>
+                <div class="form-group">
+                    <label for="name">Função</label>
+                    <input type="text" required="true" class="form-control" th:field="*{nome}" id="name" />
+                </div>
+            </div>
+            <div class="form-group">
+                    <label form="permissions">Permissões</label>
+                    <select class="form-control" 
+                    	th:field="*{permissions}"
+						id="permissions"
+						multiple="multiple"
+						required="true">
+						<option th:each="perm : ${permissions}"th:value="${perm.id}"th:text="${perm.name}" th:selected="${role.permissions.contains(perm)}"/>
+					</select>	
+                </div>
+            <div class="box-footer">
+                <button class="btn btn-primary" type="submit">Gravar</button>
+                <a class="btn btn-danger" href="../1">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

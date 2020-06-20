@@ -1,35 +1,31 @@
 package br.com.wppatend.clients;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.caelum.stella.validation.CPFValidator;
+import br.com.wppatend.services.ConfigurationService;
 import br.com.wppatend.wpprequest.model.PessoaFisica;
 
+@Service
 public class PessoaFisicaRestClient {
 	
-	private static final String HARD_API = "http://localhost:8082/pessoafisica";
 	
-	private String urlApi = null;
-	private RestTemplate template;
+	@Autowired
+	private ConfigurationService configurationService;
 	
-	public PessoaFisicaRestClient() {
-		template = new RestTemplate();
-	}
-	
-	public PessoaFisicaRestClient(String urlApi) {
-		this.urlApi = urlApi;
-		template = new RestTemplate();
-	}
-	
-	
-	public PessoaFisica getPessoaFisicaByTelefoneWA(String fone) {
-		if(urlApi == null) {
-			return template.getForObject(HARD_API + "/" + fone, PessoaFisica.class);
-		} else {
-			return template.getForObject(urlApi + "/" + fone, PessoaFisica.class);
-		}
+	private RestTemplate template = new RestTemplate();
 		
+	
+	public PessoaFisica getPessoaFisicaByTelefoneWA(String fone) {		
+		return template.getForObject(configurationService.getApiUrlPessoaFisica() + "/" + fone, PessoaFisica.class);
+	}
+	
+	public PessoaFisica getPessoaFisicaById(Long id) {		
+		return template.getForObject(configurationService.getApiUrlPessoaFisica() + "/id/" + id, PessoaFisica.class);
 	}
 	
 	public PessoaFisica savePessoaFisica(PessoaFisica pessoaFisica) {
@@ -39,12 +35,14 @@ public class PessoaFisicaRestClient {
 		
 		HttpEntity<PessoaFisica> entity = new HttpEntity<PessoaFisica>(pessoaFisica, headers);
 		
-		if(urlApi == null) {
-			return template.postForObject(HARD_API + "/save", entity, PessoaFisica.class);
-		} else {
-			return template.postForObject(urlApi + "/save" , entity, PessoaFisica.class);
-		}
+		return template.postForObject(configurationService.getApiUrlPessoaFisica() + "/save" , entity, PessoaFisica.class);
 		
 	}
+	
+	public boolean isCpfValido(String cpf) {
+		CPFValidator validator = new CPFValidator();
+		return validator.invalidMessagesFor(cpf).isEmpty();
+	}
+	
 
 }

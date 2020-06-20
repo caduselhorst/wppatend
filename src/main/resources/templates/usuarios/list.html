@@ -1,0 +1,60 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <title>Usuários</title>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>Usuários</h1>
+<ol class="breadcrumb">
+    <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">Usuários</li>
+</ol>
+</section>
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Lista</h3>
+            <div class="box-tools pull-right">
+                <a href="/usuarios/add/usuario" type="button" class="btn btn-box-tool"><i class="fa fa-plus"></i></a>
+                <br clear="all" />
+            </div>
+        </div>
+        <div class="box-body no-padding">
+            <table class="table table-striped">
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Login</th>
+                    <th>Ações</th>
+                </tr>
+                <tr th:each="row : ${list}">
+                    <td th:text="${row.id}"></td>
+                    <td th:text="${row.name}"></td>
+                    <td th:text="${row.username}"></td>
+                    <td>
+                        <a th:href="${'/usuarios/edit/' + row.id}">Alterar</a> |
+                        <a th:href="${'/usuarios/delete/' + row.id}">Excluir</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="box-footer clearfix">
+            <ul class="pagination pagination-sm no-margin pull-right">
+                <li><a href="/usuarios/1">Inicio</a></li>
+                <li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''">
+                    <a th:href="${'/usuarios/' + p}" th:text="${p}"></a>
+                </li>
+                <li><a th:href="${'/usuarios/' + endIndex}">Fim</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+	    <div class="col-xs-1">	       
+	        <a href="add/usuario" class="btn btn-primary">Novo</a>
+	    </div>
+	</div>
+</div>
+</body>
+</html>

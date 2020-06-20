@@ -9,6 +9,14 @@ public class EmpresaAtv {
 	private String cnae;
 	private String descricao;
 	private Boolean principal;
+	
+	public EmpresaAtv() {}
+	
+	public EmpresaAtv(String cnae, String descricao) {
+		this.descricao = descricao;
+		this.cnae = cnae;
+	}
+	
 	public Long getIdempresa_atv() {
 		return idempresaatv;
 	}

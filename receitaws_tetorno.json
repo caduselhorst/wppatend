@@ -1,0 +1,74 @@
+{
+    "atividade_principal": [
+        {
+            "text": "Comércio atacadista de produtos alimentícios em geral",
+            "code": "46.39-7-01"
+        }
+    ],
+    "data_situacao": "31/03/2008",
+    "nome": "LIDER COMERCIO LTDA",
+    "uf": "AP",
+    "telefone": "(96) 3244-1500",
+    "atividades_secundarias": [
+        {
+            "text": "Comércio varejista de mercadorias em geral, com predominância de produtos alimentícios - minimercados, mercearias e armazéns",
+            "code": "47.12-1-00"
+        },
+        {
+            "text": "Comércio atacadista de outros equipamentos e artigos de uso pessoal e doméstico não especificados anteriormente",
+            "code": "46.49-4-99"
+        },
+        {
+            "text": "Comércio atacadista de chocolates, confeitos, balas, bombons e semelhantes",
+            "code": "46.37-1-07"
+        },
+        {
+            "text": "Comércio varejista de artigos de papelaria",
+            "code": "47.61-0-03"
+        },
+        {
+            "text": "Comércio atacadista de produtos de higiene, limpeza e conservação domiciliar",
+            "code": "46.49-4-08"
+        }
+    ],
+    "qsa": [
+        {
+            "qual": "49-Sócio-Administrador",
+            "nome": "PERPETUA DO SOCORRO ROCHA DAVID"
+        },
+        {
+            "qual": "49-Sócio-Administrador",
+            "nome": "KAROLINNE OLIVEIRA DAVID"
+        },
+        {
+            "qual": "22-Sócio",
+            "nome": "LUCAS ROCHA DAVID"
+        }
+    ],
+    "situacao": "ATIVA",
+    "bairro": "BURITIZAL",
+    "logradouro": "AV 13 DE SETEMBRO",
+    "numero": "2138",
+    "cep": "68.900-115",
+    "municipio": "MACAPA",
+    "porte": "EMPRESA DE PEQUENO PORTE",
+    "abertura": "31/03/2008",
+    "natureza_juridica": "206-2 - Sociedade Empresária Limitada",
+    "fantasia": "LIDER DESCARTAVEIS",
+    "cnpj": "09.452.592/0001-57",
+    "ultima_atualizacao": "2020-03-11T07:58:16.841Z",
+    "status": "OK",
+    "tipo": "MATRIZ",
+    "complemento": "",
+    "email": "",
+    "efr": "",
+    "motivo_situacao": "",
+    "situacao_especial": "",
+    "data_situacao_especial": "",
+    "capital_social": "500000.00",
+    "extra": {},
+    "billing": {
+        "free": true,
+        "database": true
+    }
+}

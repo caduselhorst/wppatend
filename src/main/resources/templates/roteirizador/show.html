@@ -1,0 +1,25 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <title>Roteirizador</title>
+</head>
+<body>
+<section layout:fragment="header">	
+</section>
+<section layout:fragment="content">
+		<div class="box-header" id="chat" style="height: 50%">
+	        <h2>Roteirizador</h2>
+	        
+	    </div>
+	    <div class="box-body" id="chat" style="height: 50%">	        
+	        <h3 th:if="*{status}">Roteirizador ativo</h3>
+	        <h3 th:unless="*{status}">Roteirizador inativo</h3>
+	        <br>
+	      	<a href="iniciar"  class="btn btn-success" th:unless="*{status}">Iniciar</a>
+	        <a href="parar" class="btn btn-danger" th:if="*{status}">Parar</a>
+	    </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+[
+	{
+		"id" : 1, 
+		"descricao" : "Cadastra cliente",
+		"mensagem" : "Olá! Seja bem vindo(a) ao nosso atendimento virtual. Verificamos que seu número não possui cadastro em nossa base de dados. Para iniciar seu atendimento é necessário ter em mãos o número de seu *CPF* e *CEP*. Se deseja continuar, responda com a palavra *CADASTRAR*",
+		"direcionamentos"  : [{"id" : 1, "idProximoEstado" : 2, "idProximoEstadoErro" : null,"resposta" : "CADASTRAR", "confirmacao" : false}]
+	},
+	{
+		"id" : 2, 
+		"descricao" : "Pergunta nome completo",
+		"mensagem" : "Para começar, informe seu nome completo. Não utilize abreviações.",
+		"direcionamentos"  : [{"id" : 2, "idProximoEstado" : 3, "idProximoEstadoErro" : null, "resposta" : null, "confirmacao" : false}
+		]
+	},
+	{
+		"id" : 3, 
+		"descricao" : "Confirma nome completo",
+		"mensagem" : "@nome\nConfirma Sim(s) ou Não(n).",
+		"direcionamentos"  : [{"id" : 3, "idProximoEstado" : 4, "idProximoEstadoErro" : null, "resposta" : "SIM", "confirmacao" : true}, {"id" : 4, "idProximoEstado" : 2, "idProximoEstadoErro" : null, "resposta" : "NÃO", "confirmacao" : false}]
+	},
+	{
+		"id" : 4, 
+		"descricao" : "Pergunta CPF",
+		"mensagem" : "Certo! Agora, informa seu CPF. Não se preocupe com os pontos e traços.",
+		"direcionamentos"  : [{"id" : 5, "idProximoEstado" : 5, "idProximoEstadoErro" : null, "resposta" : null, "confirmacao" : false}]
+	},
+	{
+		"id" : 5, 
+		"descricao" : "Confirma CPF",
+		"mensagem" : "@cpf\nConfirma Sim(s) ou Não(n).",
+		"direcionamentos"  : [{"id" : 6, "idProximoEstado" : 6, "idProximoEstadoErro" : 4, "resposta" : "SIM", "confirmacao" : true}, {"id" : 7, "idProximoEstado" : 4, "idProximoEstadoErro" : null, "resposta" : "NÃO", "confirmacao" : false}]
+	},
+	{
+		"id" : 6, 
+		"descricao" : "Pergunta CEP",
+		"mensagem" : "Obrigado! Agora, informa seu CEP.",
+		"direcionamentos"  : [{"id" : 8, "idProximoEstado" : 7, "idProximoEstadoErro" : null, "resposta" : null, "confirmacao" : false}]
+	},
+	{
+		"id" : 7, 
+		"descricao" : "Confirma endereço",
+		"mensagem" : "Consultamos o CEP nos correios e obtemos o seguinte:\nEstado: @uf\nCidade: @localidade\nBairro: @bairro\nLogradouro: @logradouro\nEssas informações estão corretas?\n Confirma Sim(s) ou Não(n).",
+		"direcionamentos"  : [{"id" : 9, "idProximoEstado" : 8, "idProximoEstadoErro" : null, "resposta" : "SIM", "confirmacao" : true},{"id" : 10, "idProximoEstado" : 6, "idProximoEstadoErro" : null, "resposta" : "NÃO", "confirmacao" : false}]
+	},
+	{
+		"id" : 8, 
+		"descricao" : "Pergunta número",
+		"mensagem" : "Ok! Agora você me informa o número da sua residência?",
+		"direcionamentos"  : [{"id" : 11, "idProximoEstado" : 9, "idProximoEstadoErro" : null, "resposta" : null, "confirmacao" : false}]
+	},
+	{
+		"id" : 9, 
+		"descricao" : "Pergunta complemento",
+		"mensagem" : "Quase terminando. Você pode informar um complemento do endereço? Se não tiver, pode responder NÃO",
+		"direcionamentos"  : [{"id" : 12, "idProximoEstado" : 13, "idProximoEstadoErro" : null, "resposta" : null, "confirmacao" : false}]
+	},
+	{
+		"id" : 10, 
+		"descricao" : "Cadastro finalizado",
+		"mensagem" : "Vou te passar as opções do nosso atendimento.\n\n*1* - *Novo* atendimento\n\n*2* - *Continuar* outro atendimento\n\n*3* - Atualizar cadastro.\n\nSe deseja um atendimento corporativo, digite *Corporativo*",
+		"direcionamentos"  : [{"id" : 13, "idProximoEstado" : 11, "idProximoEstadoErro" : null, "resposta" : "1"},
+		{"id" : 14, "idProximoEstado" : 11, "idProximoEstadoErro" : null, "resposta" : "NOVO", "confirmacao" : false},
+		{"id" : 15, "idProximoEstado" : 12, "idProximoEstadoErro" : null, "resposta" : "2", "confirmacao" : false},
+		{"id" : 16, "idProximoEstado" : 12, "idProximoEstadoErro" : null, "resposta" : "CONTINUAR", "confirmacao" : false},
+		{"id" : 17, "idProximoEstado" : 13, "idProximoEstadoErro" : null, "resposta" : "3", "confirmacao" : false},
+		{"id" : 18, "idProximoEstado" : 13, "idProximoEstadoErro" : null, "resposta" : "ATUALIZAR", "confirmacao" : false},
+		{"id" : 22, "idProximoEstado" : 15, "idProximoEstadoErro" : null, "resposta" : "CORPORATIVO", "confirmacao" : false}]
+	},
+	{
+		"id" : 11, 
+		"descricao" : "Novo atendimento",
+		"mensagem" : "Aguarde. Um atendente logo irá lhe responder",
+		"direcionamentos"  : null
+	},
+	{
+		"id" : 12, 
+		"descricao" : "Continuar atendimento",
+		"mensagem" : "Em implementação",
+		"direcionamentos"  : null
+	},
+	{
+		"id" : 13, 
+		"descricao" : "Pergunta o e-mail",
+		"mensagem" : "Para finalizar, informe seu e-mail.",
+		"direcionamentos"  : [{"id" : 19, "idProximoEstado" : 14, "idProximoEstadoErro" : null, "resposta" : null, "confirmacao" : false}]
+	},
+	{
+		"id" : 14, 
+		"descricao" : "Conforma email",
+		"mensagem" : "@email\nConfirma Sim(s) ou Não(n).",
+		"direcionamentos"  : [{"id" : 20, "idProximoEstado" : 10, "idProximoEstadoErro" : null, "resposta" : "SIM", "confirmacao" : true}, {"id" : 21, "idProximoEstado" : 13, "idProximoEstadoErro" : null, "resposta" : "NÃO", "confirmacao" : false}]
+	},
+	{
+		"id" : 15, 
+		"descricao" : "Solicita CNPJ",
+		"mensagem" : "Por favor, informe o CNPJ da empresa. Digite apenas os números.",
+		"direcionamentos"  : [{"id" : 23, "idProximoEstado" : 16, "idProximoEstadoErro" : null, "resposta" : null, "confirmacao" : false}]
+	},
+	{
+		"id" : 16, 
+		"descricao" : "Confirma CNPJ",
+		"mensagem" : "@cnpj\nConfirma Sim(s) ou Não(n).",
+		"direcionamentos"  : [{"id" : 26, "idProximoEstado" : 17, "idProximoEstadoErro" : 15, "resposta" : "SIM", "confirmacao" : true}, {"id" : 27, "idProximoEstado" : 15, "idProximoEstadoErro" : null, "resposta" : "NÃO", "confirmacao" : false}]
+	},
+	{
+		"id" : 17, 
+		"descricao" : "Confirma Empresa",
+		"mensagem" : "O atendimento será realizado para empresa;\nRazão Social: @razao\nFantasia: @fantasia\nCNPJ: @cnpj\nConfirma Sim(s) ou Não(n).",
+		"direcionamentos"  : [{"id" : 24, "idProximoEstado" : 11, "idProximoEstadoErro" : null, "resposta" : "SIM", "confirmacao" : true}, {"id" : 25, "idProximoEstado" : 15, "idProximoEstadoErro" : null, "resposta" : "NÃO", "confirmacao" : false}]
+	}
+	
+]
