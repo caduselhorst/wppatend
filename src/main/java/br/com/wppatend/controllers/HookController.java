@@ -40,14 +40,7 @@ import br.com.wppatend.wpprequest.model.WppObjectRequest;
 public class HookController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HookController.class);
-	
-	/*
-	@Value("${api.pessoafisica}")
-	private String urlPessoaFisicaApi;
-	@Value("${api.pessoajuridica}")
-	private String urlPessoaJuridicaApi;
-	*/
-	
+		
 	@Autowired
 	private MegaBotRestClient megaBotApi;
 	@Autowired
@@ -102,7 +95,7 @@ public class HookController {
 					p.setProtocolo(new SimpleDateFormat("yyyyMMdd").format(p.getDataInicio()) + p.getId());
 					p = protocoloRepository.save(p);
 					
-					PessoaFisica pf = pessoaFisicaRestClient.getPessoaFisicaByTelefoneWA(fone);
+					PessoaFisica pf = pessoaFisicaRestClient.getPessoaFisicaByTelefoneWA(phoneAuthor);
 					if(pf == null) {
 						
 						EstadoAtendimento ea = estadoAtendimentoRepository.findById(Integer.parseInt("1")).get();
@@ -110,7 +103,9 @@ public class HookController {
 						p = protocoloRepository.save(p);
 						
 						pf = new PessoaFisica();
-						pf.setNumero_wa(fone);
+						pf.setNumerowa(phoneAuthor);
+						pf.setNumerocel(fone);
+						pf.setDataCadastro(new Date());
 						
 						pf = pessoaFisicaRestClient.savePessoaFisica(pf);
 						
@@ -211,12 +206,17 @@ public class HookController {
 											nEa = estadoAtendimentoRepository.findById(ead.getIdProximoEstadoErro()).get();
 											//megaBotApi.sendMessage(phoneAuthor, ea.getMensagem().replace("@cpf", p.getUltMsgDig()));
 										}
+										p.setEstado(nEa);
+										p.setDataAlteracao(new Date());
+										p = protocoloRepository.save(p);
+										megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem());
+									} else {
+										nEa = estadoAtendimentoRepository.findById(ead.getIdProximoEstado()).get();
+										megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem());
+										p.setEstado(nEa);
+										p.setDataAlteracao(new Date());
+										p = protocoloRepository.save(p);
 									}
-									//EstadoAtendimento nEa = estadoAtendimentoRepository.findById(ead.getIdProximoEstado()).get();
-									p.setEstado(nEa);
-									p.setDataAlteracao(new Date());
-									p = protocoloRepository.save(p);
-									megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem());
 									achou = true;
 								}
 							}
@@ -282,17 +282,19 @@ public class HookController {
 							break;
 						}
 						case 8: {
+							
 							p.setUltMsgDig(msg.getMessages().get(0).getBody().toUpperCase());
 							p = protocoloRepository.save(p);
-							PessoaFisica pf = pessoaFisicaRestClient.getPessoaFisicaById(p.getCodPessoa());
-							pf.setNumero(msg.getMessages().get(0).getBody());
-							pf = pessoaFisicaRestClient.savePessoaFisica(pf);
-							
 							EstadoAtendimento nEa = estadoAtendimentoRepository.findById(ea.getDirecionamentos().get(0).getIdProximoEstado()).get();
 							p.setEstado(nEa);
 							
-							protocoloRepository.save(p);
-							megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem());
+							p.setDataAlteracao(new Date());
+							p.setEstado(nEa);
+							
+							p = protocoloRepository.save(p);
+							
+							megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem().replace("@nro", p.getUltMsgDig()));
+							
 							break;
 						}
 						case 9: {
@@ -319,11 +321,13 @@ public class HookController {
 									EstadoAtendimento nEa = estadoAtendimentoRepository.findById(ead.getIdProximoEstado()).get();
 									p.setEstado(nEa);
 									protocoloRepository.save(p);
-									
-									FilaAtentimento fila = new FilaAtentimento();
-									fila.setDataFila(new Date());
-									fila.setProtocolo(p);
-									filaRepository.save(fila);
+									if(ead.getConfirmacao()) {
+										FilaAtentimento fila = new FilaAtentimento();
+										fila.setDataFila(new Date());
+										fila.setProtocolo(p);
+										filaRepository.save(fila);
+									}
+										
 									megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem());
 									achou = true;
 								}
@@ -420,27 +424,132 @@ public class HookController {
 									
 								}
 							}
-							p.setUltMsgDig(msg.getMessages().get(0).getBody().toUpperCase());
+							//p.setUltMsgDig(msg.getMessages().get(0).getBody().toUpperCase());
 							p = protocoloRepository.save(p);
 							break;
 						}
 						case 17: {
-							p.setUltMsgDig(msg.getMessages().get(0).getBody().toUpperCase());
-							p = protocoloRepository.save(p);
+							
+							boolean achou = false;
+							EstadoAtendimento nEa = null;
 							for(EstadoAtendimentoDirecionamento ead : ea.getDirecionamentos()) {
+								/*
 								EstadoAtendimento nEa = estadoAtendimentoRepository.findById(ead.getIdProximoEstado()).get();
 								p.setEstado(nEa);
 								p.setDataAlteracao(new Date());
 								p = protocoloRepository.save(p);
 								megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem());
+								*/
+								if(ead.getResposta().contains(msg.getMessages().get(0).getBody().toUpperCase())) {
+									if(ead.getConfirmacao()) {
+										PessoaJuridica pj = pessoaJuridicaRestClient.getPessoaJuridicaByCNPJ(p.getUltMsgDig());
+										p.setCodPessoaJuridica(pj.getIdpessoaj());
+										p = protocoloRepository.save(p);
+										FilaAtentimento fila = new FilaAtentimento();
+										fila.setDataFila(new Date());
+										fila.setProtocolo(p);
+										filaRepository.save(fila);
+									}
+									
+									nEa = estadoAtendimentoRepository.findById(ead.getIdProximoEstado()).get();
+									p.setEstado(nEa);
+									p.setDataAlteracao(new Date());
+									//p.setCodPessoaJuridica(pj.getIdpessoaj());
+									p = protocoloRepository.save(p);
+									megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem());
+									achou = true;
+								}
+								
 							}
 							
+							if(!achou) {
+								megaBotApi.sendMessage(phoneAuthor, "Ops! Algo deu errado. Vamos tentar novamente?\n" + p.getEstado().getMensagem());
+							}
+							p.setUltMsgDig(msg.getMessages().get(0).getBody().toUpperCase());
+							p = protocoloRepository.save(p);
+							break;
+						}
+						case 18: {
+							
+							boolean achou = false;
+							EstadoAtendimento nEa = null;
+							for(EstadoAtendimentoDirecionamento ead : ea.getDirecionamentos()) {
+								if(ead.getResposta().contains(msg.getMessages().get(0).getBody().toUpperCase())) {
+									if(ead.getConfirmacao()) {
+										String nro = p.getUltMsgDig();
+										PessoaFisica pf = pessoaFisicaRestClient.getPessoaFisicaById(p.getCodPessoa());
+										pf.setNumero(nro);
+										pessoaFisicaRestClient.savePessoaFisica(pf);
+										nEa = estadoAtendimentoRepository.findById(ead.getIdProximoEstado()).get();
+										
+										p.setEstado(nEa);
+										p.setDataAlteracao(new Date());
+										p = protocoloRepository.save(p);
+										megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem());
+									} else {
+										nEa = estadoAtendimentoRepository.findById(ead.getIdProximoEstado()).get();
+										megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem());
+										p.setEstado(nEa);
+										p.setDataAlteracao(new Date());
+										p = protocoloRepository.save(p);
+									}
+									achou = true;
+								}
+							}
+							if(!achou) {
+								megaBotApi.sendMessage(phoneAuthor, "Ops! Algo deu errado. Vamos tentar novamente?\n" + p.getEstado().getMensagem());
+							}
+							p.setUltMsgDig(msg.getMessages().get(0).getBody().toUpperCase());
+							p = protocoloRepository.save(p);
+							break;
+						}
+						case 19: {
+							p.setUltMsgDig(msg.getMessages().get(0).getBody().toUpperCase());
+							/*
+							p = protocoloRepository.save(p);
+							PessoaFisica pf = pessoaFisicaRestClient.getPessoaFisicaById(p.getCodPessoa());
+							if(msg.getMessages().get(0).getBody().toUpperCase().contains("S")) {
+								pf.setDesejaReceberOfertas(true);
+							} else {
+								pf.setDesejaReceberOfertas(false);
+							}
+							pessoaFisicaRestClient.savePessoaFisica(pf);
+							*/
+							boolean achou = false;
+							EstadoAtendimento nEa = null;
+							for(EstadoAtendimentoDirecionamento ead : ea.getDirecionamentos()) {
+								if(ead.getResposta().contains(msg.getMessages().get(0).getBody().toUpperCase())) {
+									PessoaFisica pf = pessoaFisicaRestClient.getPessoaFisicaById(p.getCodPessoa());
+									
+									
+									if(msg.getMessages().get(0).getBody().toUpperCase().contains("S")) {
+										pf.setDesejaReceberOfertas(true);
+									} else {
+										pf.setDesejaReceberOfertas(false);
+									}
+									
+									pessoaFisicaRestClient.savePessoaFisica(pf);
+									nEa = estadoAtendimentoRepository.findById(ead.getIdProximoEstado()).get();
+									
+									p.setEstado(nEa);
+									p.setDataAlteracao(new Date());
+									p = protocoloRepository.save(p);
+									megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem());
+									
+									achou = true;
+								}
+							}
+							if(!achou) {
+								megaBotApi.sendMessage(phoneAuthor, "Ops! Algo deu errado. Vamos tentar novamente?\n" + p.getEstado().getMensagem());
+							}
+							p.setUltMsgDig(msg.getMessages().get(0).getBody().toUpperCase());
+							p = protocoloRepository.save(p);
 							break;
 						}
 					}
 				}
 			} else {
-				//megaBotApi.sendMessage(msg.getMessages().get(0).getAuthor(), configurationService.getMsgDevMode());
+				megaBotApi.sendMessage(msg.getMessages().get(0).getAuthor(), configurationService.getMsgDevMode());
 			}
 			
 		}

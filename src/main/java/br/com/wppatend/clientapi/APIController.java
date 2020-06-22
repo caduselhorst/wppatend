@@ -29,11 +29,14 @@ import br.com.wppatend.clients.PessoaFisicaRestClient;
 import br.com.wppatend.clients.PessoaJuridicaRestClient;
 import br.com.wppatend.constraints.DirecaoMensagem;
 import br.com.wppatend.entities.Chat;
+import br.com.wppatend.entities.Finalizacao;
 import br.com.wppatend.entities.Protocolo;
 import br.com.wppatend.entities.Role;
 import br.com.wppatend.entities.Roteirizador;
 import br.com.wppatend.entities.User;
 import br.com.wppatend.services.ChatService;
+import br.com.wppatend.services.ConfigurationService;
+import br.com.wppatend.services.FinalizacaoService;
 import br.com.wppatend.services.ProtocoloService;
 import br.com.wppatend.services.RoteirizadorService;
 import br.com.wppatend.services.UserService;
@@ -52,6 +55,8 @@ public class APIController {
 	private ProtocoloService protocoloService;
 	@Autowired
 	private ChatService chatService;
+	@Autowired
+	private FinalizacaoService finalizacaoService;
 	
 	@Autowired
 	private PessoaFisicaRestClient pfClient;
@@ -59,6 +64,8 @@ public class APIController {
 	private PessoaJuridicaRestClient pjClient;
 	@Autowired
 	private MegaBotRestClient botClient;
+	@Autowired
+	private ConfigurationService configurationService;
 	
 	
 	@PostMapping(path ="/user/login")
@@ -171,7 +178,10 @@ public class APIController {
 		
 		Protocolo p = protocoloService.findById(info.getIdProtocolo()).get();
 		p.setDataFechamento(new Date());
+		p.setFinalizacao(info.getIdFinalizacao());
 		p = protocoloService.save(p);
+		
+		botClient.sendMessage(p.getFone(), configurationService.getMensagemFinalizacaoAtendimento());
 		
 		ApiReturn ret = new ApiReturn();
 		ret.setError(false);
@@ -192,12 +202,19 @@ public class APIController {
 		
 		chatService.save(chat);
 		
-		//botClient.sendMessage(info.getPhoneNumber(), info.getMessage());
+		botClient.sendMessage(info.getPhoneNumber(), info.getMessage());
 		
 		ApiReturn ret = new ApiReturn();
 		ret.setError(false);
 		
 		return ResponseEntity.ok(ret);
+		
+	}
+	
+	@GetMapping(path ="/finalizacoes")
+	public ResponseEntity<List<Finalizacao>> getFinalizacoes() {
+		
+		return ResponseEntity.ok(finalizacaoService.findAll());
 		
 	}
 	

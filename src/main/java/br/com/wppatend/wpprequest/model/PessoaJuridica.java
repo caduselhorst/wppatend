@@ -2,7 +2,13 @@ package br.com.wppatend.wpprequest.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PessoaJuridica {
@@ -24,29 +30,29 @@ public class PessoaJuridica {
 	private String cidade;
 	private String estado;
 	private String email;
-	private String data_cadastro;
-	private String data_atualizacao;
+	private String dataCadastro;
+	private String dataAtualizacao;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<EmpresaAtv> atividades;
-	
 	public Long getIdpessoaj() {
 		return idpessoaj;
 	}
-	public void setIdpessoa_j(Long idpessoaj) {
+	public void setIdpessoaj(Long idpessoaj) {
 		this.idpessoaj = idpessoaj;
 	}
-	public String getNumero_wa() {
+	public String getNumerowa() {
 		return numerowa;
 	}
 	public void setNumerowa(String numerowa) {
 		this.numerowa = numerowa;
 	}
-	public String getNumero_cel() {
+	public String getNumerocel() {
 		return numerocel;
 	}
-	public void setNumero_cel(String numerocel) {
+	public void setNumerocel(String numerocel) {
 		this.numerocel = numerocel;
 	}
-	public String getNumero_fixo() {
+	public String getNumerofixo() {
 		return numerofixo;
 	}
 	public void setNumerofixo(String numerofixo) {
@@ -130,17 +136,17 @@ public class PessoaJuridica {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getData_cadastro() {
-		return data_cadastro;
+	public String getDataCadastro() {
+		return dataCadastro;
 	}
-	public void setData_cadastro(String data_cadastro) {
-		this.data_cadastro = data_cadastro;
+	public void setDataCadastro(String dataCadastro) {
+		this.dataCadastro = dataCadastro;
 	}
-	public String getData_atualizacao() {
-		return data_atualizacao;
+	public String getDataAtualizacao() {
+		return dataAtualizacao;
 	}
-	public void setData_atualizacao(String data_atualizacao) {
-		this.data_atualizacao = data_atualizacao;
+	public void setDataAtualizacao(String dataAtualizacao) {
+		this.dataAtualizacao = dataAtualizacao;
 	}
 	public List<EmpresaAtv> getAtividades() {
 		return atividades;

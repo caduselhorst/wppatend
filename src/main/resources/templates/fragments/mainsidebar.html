@@ -19,15 +19,18 @@
             <ul class="treeview-menu">
                 <li><a href="/usuarios"><i class="fa fa-circle-o"></i> Usuários</a></li>
             </ul>
+            <ul class="treeview-menu">
+                <li><a href="/finalizacoes"><i class="fa fa-circle-o"></i> Finalizações</a></li>
+            </ul>
         </li>
         <li class="treeview">
-            <a href="#" sec:authorize="hasAuthority('Operador')">
+            <a href="#" sec:authorize="hasAuthority('Administrador')">
                 <i class="fa fa-folder"></i>
-                <span>Atendimento</span>
+                <span>Processos</span>
                 <i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
-                <li><a href="/atendimentos"><i class="fa fa-circle-o"></i> Atendimento</a></li>
+                <li><a href="/roteirizador"><i class="fa fa-circle-o"></i> Roteirizador</a></li>
             </ul>
         </li>
     </ul>

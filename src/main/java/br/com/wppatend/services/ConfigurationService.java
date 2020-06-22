@@ -80,4 +80,8 @@ public class ConfigurationService {
 		return Long.parseLong(properties.getProperty("roteirizacao.tempo.pooling"));
 	}
 	
+	public String getMensagemFinalizacaoAtendimento() {
+		return properties.getProperty("app.msg.fim.atendimento");
+	}
+	
 }

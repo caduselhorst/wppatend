@@ -29,6 +29,7 @@ public class Protocolo {
 	@Column(columnDefinition = "text")
 	private String ultMsgDig;
 	private Long operador;
+	private Long finalizacao;
 	public Long getId() {
 		return id;
 	}
@@ -95,6 +96,11 @@ public class Protocolo {
 	public void setOperador(Long operador) {
 		this.operador = operador;
 	}
-	
+	public Long getFinalizacao() {
+		return finalizacao;
+	}
+	public void setFinalizacao(Long finalizacao) {
+		this.finalizacao = finalizacao;
+	}
 	
 }

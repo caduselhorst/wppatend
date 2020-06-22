@@ -46,7 +46,7 @@
 		"id" : 8, 
 		"descricao" : "Pergunta número",
 		"mensagem" : "Ok! Agora você me informa o número da sua residência?",
-		"direcionamentos"  : [{"id" : 11, "idProximoEstado" : 9, "idProximoEstadoErro" : null, "resposta" : null, "confirmacao" : false}]
+		"direcionamentos"  : [{"id" : 11, "idProximoEstado" : 18, "idProximoEstadoErro" : null, "resposta" : null, "confirmacao" : false}]
 	},
 	{
 		"id" : 9, 
@@ -58,8 +58,8 @@
 		"id" : 10, 
 		"descricao" : "Cadastro finalizado",
 		"mensagem" : "Vou te passar as opções do nosso atendimento.\n\n*1* - *Novo* atendimento\n\n*2* - *Continuar* outro atendimento\n\n*3* - Atualizar cadastro.\n\nSe deseja um atendimento corporativo, digite *Corporativo*",
-		"direcionamentos"  : [{"id" : 13, "idProximoEstado" : 11, "idProximoEstadoErro" : null, "resposta" : "1"},
-		{"id" : 14, "idProximoEstado" : 11, "idProximoEstadoErro" : null, "resposta" : "NOVO", "confirmacao" : false},
+		"direcionamentos"  : [{"id" : 13, "idProximoEstado" : 11, "idProximoEstadoErro" : null, "resposta" : "1", "confirmacao" : true},
+		{"id" : 14, "idProximoEstado" : 11, "idProximoEstadoErro" : null, "resposta" : "NOVO", "confirmacao" : true},
 		{"id" : 15, "idProximoEstado" : 12, "idProximoEstadoErro" : null, "resposta" : "2", "confirmacao" : false},
 		{"id" : 16, "idProximoEstado" : 12, "idProximoEstadoErro" : null, "resposta" : "CONTINUAR", "confirmacao" : false},
 		{"id" : 17, "idProximoEstado" : 13, "idProximoEstadoErro" : null, "resposta" : "3", "confirmacao" : false},
@@ -88,7 +88,7 @@
 		"id" : 14, 
 		"descricao" : "Conforma email",
 		"mensagem" : "@email\nConfirma Sim(s) ou Não(n).",
-		"direcionamentos"  : [{"id" : 20, "idProximoEstado" : 10, "idProximoEstadoErro" : null, "resposta" : "SIM", "confirmacao" : true}, {"id" : 21, "idProximoEstado" : 13, "idProximoEstadoErro" : null, "resposta" : "NÃO", "confirmacao" : false}]
+		"direcionamentos"  : [{"id" : 20, "idProximoEstado" : 19, "idProximoEstadoErro" : null, "resposta" : "SIM", "confirmacao" : true}, {"id" : 21, "idProximoEstado" : 13, "idProximoEstadoErro" : null, "resposta" : "NÃO", "confirmacao" : false}]
 	},
 	{
 		"id" : 15, 
@@ -107,6 +107,17 @@
 		"descricao" : "Confirma Empresa",
 		"mensagem" : "O atendimento será realizado para empresa;\nRazão Social: @razao\nFantasia: @fantasia\nCNPJ: @cnpj\nConfirma Sim(s) ou Não(n).",
 		"direcionamentos"  : [{"id" : 24, "idProximoEstado" : 11, "idProximoEstadoErro" : null, "resposta" : "SIM", "confirmacao" : true}, {"id" : 25, "idProximoEstado" : 15, "idProximoEstadoErro" : null, "resposta" : "NÃO", "confirmacao" : false}]
+	},
+	{
+		"id" : 18, 
+		"descricao" : "Confirmar o número da residência",
+		"mensagem" : "@nro\nConfirma Sim(s) ou Não(n).",
+		"direcionamentos"  : [{"id" : 28, "idProximoEstado" : 9, "idProximoEstadoErro" : null, "resposta" : "SIM", "confirmacao" : true}, {"id" : 29, "idProximoEstado" : 8, "idProximoEstadoErro" : null, "resposta" : "NÃO", "confirmacao" : false}]
+	},
+	{
+		"id" : 19, 
+		"descricao" : "Confirmar receber ofertas",
+		"mensagem" : "Deseja receber ofertas no seu e-email?\nConfirma Sim(s) ou Não(n).",
+		"direcionamentos"  : [{"id" : 30, "idProximoEstado" : 10, "idProximoEstadoErro" : null, "resposta" : "SIM", "confirmacao" : true}, {"id" : 31, "idProximoEstado" : 10, "idProximoEstadoErro" : null, "resposta" : "NÃO", "confirmacao" : true}]
 	}
-	
 ]
