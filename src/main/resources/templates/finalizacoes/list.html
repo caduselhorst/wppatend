@@ -1,0 +1,58 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <title>Finalizações</title>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>Finalizações</h1>
+<ol class="breadcrumb">
+    <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">Finalizações</li>
+</ol>
+</section>
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Lista</h3>
+            <div class="box-tools pull-right">
+                <a href="/funcoes/add/funcao" type="button" class="btn btn-box-tool"><i class="fa fa-plus"></i></a>
+                <br clear="all" />
+            </div>
+        </div>
+        <div class="box-body no-padding">
+            <table class="table table-striped">
+                <tr>
+                    <th>ID</th>
+                    <th>Descrição</th>
+                    <th>Ações</th>
+                </tr>
+                <tr th:each="row : ${list}">
+                    <td th:text="${row.id}"></td>
+                    <td th:text="${row.descricao}"></td>
+                    <td>
+                        <a th:href="${'/finalizacoes/edit/' + row.id}">Alterar</a> |
+                        <a th:href="${'/finalizacoes/delete/' + row.id}">Excluir</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="box-footer clearfix">
+            <ul class="pagination pagination-sm no-margin pull-right">
+                <li><a href="/funcoes/1">Inicio</a></li>
+                <li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''">
+                    <a th:href="${'/finalizacoes/' + p}" th:text="${p}"></a>
+                </li>
+                <li><a th:href="${'/finalizacoes/' + endIndex}">Fim</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+	    <div class="col-xs-1">	       
+	        <a href="add/finalizacao" class="btn btn-primary">Novo</a>
+	    </div>
+	</div>
+</div>
+</body>
+</html>

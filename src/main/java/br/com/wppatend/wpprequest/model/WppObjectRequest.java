@@ -2,6 +2,8 @@ package br.com.wppatend.wpprequest.model;
 
 import java.util.List;
 
+import com.google.gson.Gson;
+
 public class WppObjectRequest {
 	
 	private List<Option> options;
@@ -17,6 +19,12 @@ public class WppObjectRequest {
 	}
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
+	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return new Gson().toJson(this);
 	}
 
 }

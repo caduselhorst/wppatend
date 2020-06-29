@@ -1,10 +1,8 @@
 package br.com.wppatend.controllers;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -23,11 +21,13 @@ import br.com.wppatend.clients.PessoaFisicaRestClient;
 import br.com.wppatend.clients.PessoaJuridicaRestClient;
 import br.com.wppatend.constraints.DirecaoMensagem;
 import br.com.wppatend.entities.Chat;
+import br.com.wppatend.entities.EmpresaContato;
 import br.com.wppatend.entities.EstadoAtendimento;
 import br.com.wppatend.entities.EstadoAtendimentoDirecionamento;
 import br.com.wppatend.entities.FilaAtentimento;
 import br.com.wppatend.entities.Protocolo;
 import br.com.wppatend.repositories.ChatRepository;
+import br.com.wppatend.repositories.EmpresaContatoRepository;
 import br.com.wppatend.repositories.EstadoAtendimentoRespository;
 import br.com.wppatend.repositories.FilaAtendimentoRepository;
 import br.com.wppatend.repositories.ProtocoloRepository;
@@ -57,6 +57,8 @@ public class HookController {
 	private ChatRepository chatRepository;
 	@Autowired
 	private FilaAtendimentoRepository filaRepository;
+	@Autowired
+	private EmpresaContatoRepository empresaContatoRepository;
 
 	@RequestMapping(value = "/web/hook", method = RequestMethod.POST)
 	public ResponseEntity<String> hook (@RequestBody WppObjectRequest msg) {
@@ -328,7 +330,7 @@ public class HookController {
 										filaRepository.save(fila);
 									}
 										
-									megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem());
+									megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem().replace("@protocolo", p.getProtocolo()));
 									achou = true;
 								}
 							}
@@ -339,9 +341,9 @@ public class HookController {
 						}
 						case 11: {
 							Chat chat = new Chat();
-							if(msg.getMessages().get(0).getType().equals("chat")) {
-								chat.setMsg_texto(msg.getMessages().get(0).getBody());
-							}
+							chat.setTipo(msg.getMessages().get(0).getType());
+							chat.setBody(msg.getMessages().get(0).getBody());
+							chat.setLegenda(msg.getMessages().get(0).getCaption());
 							chat.setProtocolo(p.getId());
 							chat.setTx_rx(DirecaoMensagem.RECEBIDA);
 							chat.setData_tx_rx(new Date());
@@ -404,7 +406,7 @@ public class HookController {
 									String message = "";
 									if(ead.getConfirmacao()) {
 										if(pessoaJuridicaRestClient.isCnpjValido(p.getUltMsgDig())) {
-											PessoaJuridica pj = pessoaJuridicaRestClient.getPessoaJuridicaByCNPJ(p.getUltMsgDig());
+											PessoaJuridica pj = pessoaJuridicaRestClient.getPessoaJuridicaByCNPJ(p.getUltMsgDig());	
 											nEa = estadoAtendimentoRepository.findById(ead.getIdProximoEstado()).get();
 											message = nEa.getMensagem().replace("@razao", pj.getRazaosocial()).replace("@fantasia", pj.getFantasia()).replace("@cnpj", pj.getCnpj());
 										} else {
@@ -424,7 +426,6 @@ public class HookController {
 									
 								}
 							}
-							//p.setUltMsgDig(msg.getMessages().get(0).getBody().toUpperCase());
 							p = protocoloRepository.save(p);
 							break;
 						}
@@ -433,18 +434,18 @@ public class HookController {
 							boolean achou = false;
 							EstadoAtendimento nEa = null;
 							for(EstadoAtendimentoDirecionamento ead : ea.getDirecionamentos()) {
-								/*
-								EstadoAtendimento nEa = estadoAtendimentoRepository.findById(ead.getIdProximoEstado()).get();
-								p.setEstado(nEa);
-								p.setDataAlteracao(new Date());
-								p = protocoloRepository.save(p);
-								megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem());
-								*/
 								if(ead.getResposta().contains(msg.getMessages().get(0).getBody().toUpperCase())) {
 									if(ead.getConfirmacao()) {
 										PessoaJuridica pj = pessoaJuridicaRestClient.getPessoaJuridicaByCNPJ(p.getUltMsgDig());
 										p.setCodPessoaJuridica(pj.getIdpessoaj());
 										p = protocoloRepository.save(p);
+										List<EmpresaContato> ecs = empresaContatoRepository.findBypessoaf(p.getCodPessoa());
+										EmpresaContato ec = new EmpresaContato();
+										ec.setPessoaf(p.getCodPessoa());
+										ec.setPessoaj(p.getCodPessoaJuridica());
+										if(!ecs.contains(ec)) {
+											empresaContatoRepository.save(ec);
+										}
 										FilaAtentimento fila = new FilaAtentimento();
 										fila.setDataFila(new Date());
 										fila.setProtocolo(p);
@@ -454,7 +455,6 @@ public class HookController {
 									nEa = estadoAtendimentoRepository.findById(ead.getIdProximoEstado()).get();
 									p.setEstado(nEa);
 									p.setDataAlteracao(new Date());
-									//p.setCodPessoaJuridica(pj.getIdpessoaj());
 									p = protocoloRepository.save(p);
 									megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem());
 									achou = true;
@@ -505,16 +505,6 @@ public class HookController {
 						}
 						case 19: {
 							p.setUltMsgDig(msg.getMessages().get(0).getBody().toUpperCase());
-							/*
-							p = protocoloRepository.save(p);
-							PessoaFisica pf = pessoaFisicaRestClient.getPessoaFisicaById(p.getCodPessoa());
-							if(msg.getMessages().get(0).getBody().toUpperCase().contains("S")) {
-								pf.setDesejaReceberOfertas(true);
-							} else {
-								pf.setDesejaReceberOfertas(false);
-							}
-							pessoaFisicaRestClient.savePessoaFisica(pf);
-							*/
 							boolean achou = false;
 							EstadoAtendimento nEa = null;
 							for(EstadoAtendimentoDirecionamento ead : ea.getDirecionamentos()) {

@@ -28,6 +28,7 @@ public class DataLoader implements ApplicationRunner {
 	private PermissionRepository permissionRepository;
 	private UserRepository userRepository;
 	
+	
 	private static final Logger logger = LoggerFactory.getLogger(DataLoader.class);
 
     @Autowired

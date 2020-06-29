@@ -22,6 +22,7 @@ import br.com.wppatend.api.model.EstadoOperadorInfo;
 import br.com.wppatend.api.model.LoginInfo;
 import br.com.wppatend.api.model.LogoutInfo;
 import br.com.wppatend.api.model.ProtocoloInfo;
+import br.com.wppatend.api.model.SendBase64FileInfo;
 import br.com.wppatend.api.model.SendMessageInfo;
 import br.com.wppatend.api.model.UserResponse;
 import br.com.wppatend.clients.MegaBotRestClient;
@@ -195,7 +196,8 @@ public class APIController {
 		
 		Chat chat = new Chat();
 		chat.setData_tx_rx(new Date());
-		chat.setMsg_texto(info.getMessage());
+		chat.setTipo("chat");
+		chat.setBody(info.getMessage());
 		chat.setProtocolo(info.getProtocolo());
 		chat.setTx_rx(DirecaoMensagem.ENVIADA);
 		
@@ -203,6 +205,25 @@ public class APIController {
 		chatService.save(chat);
 		
 		botClient.sendMessage(info.getPhoneNumber(), info.getMessage());
+		
+		ApiReturn ret = new ApiReturn();
+		ret.setError(false);
+		
+		return ResponseEntity.ok(ret);
+		
+	}
+	
+	@PostMapping(path ="/chat/sendBase64File")
+	private ResponseEntity<ApiReturn> sendBase64File (@RequestBody SendBase64FileInfo info) {
+		
+		Chat chat = new Chat();
+		chat.setData_tx_rx(new Date());
+		chat.setProtocolo(info.getProtocolo());
+		chat.setTx_rx(DirecaoMensagem.ENVIADA);
+		//chat.setMsg_arquivo(info.getMessage());
+		chatService.save(chat);
+		
+		botClient.sendBase64File(info.getPhoneNumber(), info.getMessage(), info.getFilename(), info.getCaption());
 		
 		ApiReturn ret = new ApiReturn();
 		ret.setError(false);

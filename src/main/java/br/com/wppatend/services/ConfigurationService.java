@@ -55,6 +55,10 @@ public class ConfigurationService {
 		return properties.getProperty("bot.api.token");
 	}
 	
+	public boolean isApiSendMsg() {
+		return Boolean.parseBoolean(properties.getProperty("bot.api.send.msg"));
+	}
+	
 	public boolean isModoDesenvolvimento() {
 		return Boolean.parseBoolean(properties.getProperty("app.dev.mode"));
 	}
