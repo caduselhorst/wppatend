@@ -1,12 +1,96 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="layout">
+	layout:decorate="layout">
 <head>
-    <title>Dashboard</title>
+<title>Dashboard</title>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+<script th:inline="javascript">
+	var real_data = [[${finalizacoes}]];
+	console.log("Data: ", real_data);
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+    
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Finalização');
+        data.addColumn('number', 'Total');
+        Object.keys(real_data).forEach(function(key) {
+            data.addRow([ key, real_data[key] ]);
+        });
+        var options = {
+          title: 'Finalizações',
+          is3D: true,
+          height: 200,
+          width: 400
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+    </script>
 </head>
 <body>
-<div layout:fragment="content">
-    My Dashboard
-</div>
+	<div layout:fragment="content">
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Operadores on-line</h3>
+			</div>
+			<div class="box-body no-padding">
+				<table class="table table-striped">
+					<tr>
+						<th>Login</th>
+						<th>Nome</th>
+						<th style="text-align: center;">Disponível</th>
+						<th style="text-align: center;">Em atendimento</th>
+						<th style="text-align: center;">Total de atendimentos</th>
+					</tr>
+					<tr th:each="row : ${usuarios}" style="vertical-align: middle;">
+						<td th:text="${row.user.username}"></td>
+						<td th:text="${row.user.name}"></td>
+						<td style="text-align: center;"><i th:if="${row.disponivel}"
+							class="fa fa-check-square" style="color: green;"></i> <i
+							th:unless="${row.disponivel}" class="fa fa-close"
+							style="color: red;"></i></td>
+						<td style="text-align: center;"><i
+							th:if="${row.emAtendimento}" class="fa fa-check-square"
+							style="color: green;"></i> <i th:unless="${row.emAtendimento}"
+							class="fa fa-close" style="color: red;"></i></td>
+
+						<td th:text="${row.nroAtendimentos}" style="text-align: center;"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Fila de atendimento</h3>
+			</div>
+			<div class="box-body no-padding">
+				<table class="table table-striped">
+					<tr>
+						<th>Data</th>
+						<th>Protocolo</th>
+						<th>Fone</th>
+						<th>Cliente</th>
+					</tr>
+					<tr th:each="row : ${fila}" style="vertical-align: middle;">
+						<td th:text="${row.data}"></td>
+						<td th:text="${row.nroProtocolo}"></td>
+						<td th:text="${row.foneContato}"></td>
+						<td th:text="${row.nomeContato}"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Mais informações</h3>
+			</div>
+			<div class="box-body no-padding">
+				<div id="piechart_3d" style="width: 900px; height: 500px;"></div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

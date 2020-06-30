@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import br.com.wppatend.entities.FilaAtentimento;
+import br.com.wppatend.entities.FilaAtendimento;
 import br.com.wppatend.repositories.FilaAtendimentoRepository;
 import br.com.wppatend.services.FilaAtendimentoService;
 
@@ -17,12 +17,12 @@ public class FilaAtendimentoServiceImpl implements FilaAtendimentoService {
 	private FilaAtendimentoRepository repository;
 	
 	@Override
-	public List<FilaAtentimento> findAll() {
+	public List<FilaAtendimento> findAll() {
 		return repository.findAll(Sort.by(Sort.Direction.ASC, "dataFila"));
 	}
 
 	@Override
-	public void delete(FilaAtentimento fila) {
+	public void delete(FilaAtendimento fila) {
 		repository.delete(fila);
 	}
 

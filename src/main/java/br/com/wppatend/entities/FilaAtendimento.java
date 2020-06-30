@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 @Entity(name = "filatendimento")
-public class FilaAtentimento {
+public class FilaAtendimento {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FilaSeq")

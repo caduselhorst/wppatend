@@ -2,11 +2,11 @@ package br.com.wppatend.services;
 
 import java.util.List;
 
-import br.com.wppatend.entities.FilaAtentimento;
+import br.com.wppatend.entities.FilaAtendimento;
 
 public interface FilaAtendimentoService {
 
-	public List<FilaAtentimento> findAll();
-	public void delete(FilaAtentimento fila);
+	public List<FilaAtendimento> findAll();
+	public void delete(FilaAtendimento fila);
 	
 }

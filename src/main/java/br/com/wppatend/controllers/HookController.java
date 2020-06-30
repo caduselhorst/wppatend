@@ -24,7 +24,7 @@ import br.com.wppatend.entities.Chat;
 import br.com.wppatend.entities.EmpresaContato;
 import br.com.wppatend.entities.EstadoAtendimento;
 import br.com.wppatend.entities.EstadoAtendimentoDirecionamento;
-import br.com.wppatend.entities.FilaAtentimento;
+import br.com.wppatend.entities.FilaAtendimento;
 import br.com.wppatend.entities.Protocolo;
 import br.com.wppatend.repositories.ChatRepository;
 import br.com.wppatend.repositories.EmpresaContatoRepository;
@@ -324,7 +324,7 @@ public class HookController {
 									p.setEstado(nEa);
 									protocoloRepository.save(p);
 									if(ead.getConfirmacao()) {
-										FilaAtentimento fila = new FilaAtentimento();
+										FilaAtendimento fila = new FilaAtendimento();
 										fila.setDataFila(new Date());
 										fila.setProtocolo(p);
 										filaRepository.save(fila);
@@ -446,7 +446,7 @@ public class HookController {
 										if(!ecs.contains(ec)) {
 											empresaContatoRepository.save(ec);
 										}
-										FilaAtentimento fila = new FilaAtentimento();
+										FilaAtendimento fila = new FilaAtendimento();
 										fila.setDataFila(new Date());
 										fila.setProtocolo(p);
 										filaRepository.save(fila);

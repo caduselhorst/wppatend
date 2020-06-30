@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import br.com.wppatend.entities.FilaAtentimento;
+import br.com.wppatend.entities.FilaAtendimento;
 import br.com.wppatend.entities.Protocolo;
 import br.com.wppatend.entities.Roteirizador;
 import br.com.wppatend.services.ConfigurationService;
@@ -51,7 +51,7 @@ public class RoteirizadorThread extends Thread {
 	public void run() {
 		logger.info("Iniciando o roteirizador");
 		while(!parar) {
-			List<FilaAtentimento> fila = filaService.findAll();
+			List<FilaAtendimento> fila = filaService.findAll();
 			if(fila != null) {
 				fila.forEach(f -> {
 					Optional<Roteirizador> r = roteirizadorService.findByDisponivel();

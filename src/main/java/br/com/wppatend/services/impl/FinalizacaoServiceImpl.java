@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import br.com.wppatend.entities.Finalizacao;
 import br.com.wppatend.repositories.FinalizacaoRepository;
 import br.com.wppatend.services.FinalizacaoService;
+import br.com.wppatend.vos.ITotalizadorFinalizacao;
 
 @Service
 public class FinalizacaoServiceImpl implements FinalizacaoService {
@@ -45,6 +46,11 @@ public class FinalizacaoServiceImpl implements FinalizacaoService {
 	@Override
 	public List<Finalizacao> findAll() {
 		return repository.findAll();
+	}
+	
+	@Override
+	public List<ITotalizadorFinalizacao> countFinalizacoes() {
+		return repository.countTotalFinalizacao();
 	}
 
 }

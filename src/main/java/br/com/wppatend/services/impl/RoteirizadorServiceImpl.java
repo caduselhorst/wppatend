@@ -1,5 +1,6 @@
 package br.com.wppatend.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class RoteirizadorServiceImpl implements RoteirizadorService {
 		return repository.findFirst();
 	}
 	
-	
+	@Override
+	public List<Roteirizador> listAll() {
+		return repository.findAll();
+	}
 
 }
