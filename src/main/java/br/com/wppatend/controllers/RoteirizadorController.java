@@ -29,7 +29,7 @@ public class RoteirizadorController {
     public String roteirizador(Model model) {
 		
 		model.addAttribute("roteirizador", roteirizador);
-		model.addAttribute("status", roteirizador.isAlive());
+		model.addAttribute("status", (roteirizador.getThread() == null ? false : roteirizador.getThread().isAlive()));
 		
 		return "roteirizador/show";
 		
@@ -38,12 +38,11 @@ public class RoteirizadorController {
 	@GetMapping("/iniciar")
     public String iniciar(Model model) {
 		
-		if(roteirizador == null) {
-			roteirizador = new RoteirizadorThread();
-		}
-		roteirizador.start();
+		roteirizador.setThread(new Thread(roteirizador));
+		roteirizador.getThread().start();
+		
 		model.addAttribute("roteirizador", roteirizador);
-		model.addAttribute("status", roteirizador.isAlive());
+		model.addAttribute("status", (roteirizador.getThread() == null ? false : roteirizador.getThread().isAlive()));
 		
 		return "redirect:/roteirizador/";
 		
@@ -53,8 +52,15 @@ public class RoteirizadorController {
     public String parar(Model model) {
 		
 		roteirizador.finalizar();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			System.err.println("Interrupção de thread");
+		}
+		
 		model.addAttribute("roteirizador", roteirizador);
-		model.addAttribute("status", roteirizador.isAlive());
+		model.addAttribute("status", (roteirizador.getThread() == null ? false : roteirizador.getThread().isAlive()));
 		
 		return "redirect:/roteirizador/";
 		

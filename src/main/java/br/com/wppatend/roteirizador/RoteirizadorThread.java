@@ -32,6 +32,8 @@ public class RoteirizadorThread extends Thread {
 	private RoteirizadorService roteirizadorService;
 	@Autowired
 	private ProtocoloService protocoloService;
+	
+	private Thread thread;
 
 	
 	private static final Logger logger = LoggerFactory.getLogger(RoteirizadorThread.class);
@@ -49,7 +51,7 @@ public class RoteirizadorThread extends Thread {
 	
 	@Override
 	public void run() {
-		logger.info("Iniciando o roteirizador");
+		logger.info("Roteirizador iniciado");
 		while(!parar) {
 			List<FilaAtendimento> fila = filaService.findAll();
 			if(fila != null) {
@@ -72,7 +74,15 @@ public class RoteirizadorThread extends Thread {
 			}
 		}
 		logger.info("Roteirizador finalizado.");
+		parar = false;
 	}
 	
+	public Thread getThread() {
+		return thread;
+	}
+	
+	public void setThread(Thread t) {
+		thread = t;
+	}
 
 }
