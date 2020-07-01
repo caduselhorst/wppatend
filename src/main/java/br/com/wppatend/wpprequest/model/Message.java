@@ -5,7 +5,7 @@ public class Message {
 	private String id;
 	private String body;
 	private Boolean fromMe;
-	private Integer self;
+	private String self;
 	private Boolean isFoward;
 	private String author;
 	private Long time;
@@ -41,10 +41,10 @@ public class Message {
 	public void setFromMe(Boolean fromMe) {
 		this.fromMe = fromMe;
 	}
-	public Integer getSelf() {
+	public String getSelf() {
 		return self;
 	}
-	public void setSelf(Integer self) {
+	public void setSelf(String self) {
 		this.self = self;
 	}
 	public Boolean getIsFoward() {
