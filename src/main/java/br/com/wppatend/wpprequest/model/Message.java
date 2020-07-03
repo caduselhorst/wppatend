@@ -1,28 +1,31 @@
 package br.com.wppatend.wpprequest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Message {
 	
 	private String id;
 	private String body;
-	private Boolean fromMe;
+	private boolean fromMe;
 	private String self;
-	private Boolean isFoward;
+	private boolean isFoward;
 	private String author;
-	private Long time;
+	private long time;
 	private String chatId;
 	private String type;
 	private String senderName;
 	private String caption;
 	private String quotedMsgBody;
 	private String chatName;
-	private Boolean isBusiness;
-	private Boolean isEnterprise;
-	private Boolean isMyContact;
-	private Boolean isWAContact;
+	private boolean isBusiness;
+	private boolean isEnterprise;
+	private boolean isMyContact;
+	private boolean isWAContact;
 	private ProfilePicThumbObj profilePicThumbObj;
-	private Long lat;
-	private Long lng;
-	private Long loc;
+	private long lat;
+	private long lng;
+	private long loc;
 	public String getId() {
 		return id;
 	}
@@ -35,10 +38,10 @@ public class Message {
 	public void setBody(String body) {
 		this.body = body;
 	}
-	public Boolean getFromMe() {
+	public boolean isFromMe() {
 		return fromMe;
 	}
-	public void setFromMe(Boolean fromMe) {
+	public void setFromMe(boolean fromMe) {
 		this.fromMe = fromMe;
 	}
 	public String getSelf() {
@@ -47,10 +50,10 @@ public class Message {
 	public void setSelf(String self) {
 		this.self = self;
 	}
-	public Boolean getIsFoward() {
+	public boolean isFoward() {
 		return isFoward;
 	}
-	public void setIsFoward(Boolean isFoward) {
+	public void setFoward(boolean isFoward) {
 		this.isFoward = isFoward;
 	}
 	public String getAuthor() {
@@ -59,10 +62,10 @@ public class Message {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	public Long getTime() {
+	public long getTime() {
 		return time;
 	}
-	public void setTime(Long time) {
+	public void setTime(long time) {
 		this.time = time;
 	}
 	public String getChatId() {
@@ -101,28 +104,28 @@ public class Message {
 	public void setChatName(String chatName) {
 		this.chatName = chatName;
 	}
-	public Boolean getIsBusiness() {
+	public boolean isBusiness() {
 		return isBusiness;
 	}
-	public void setIsBusiness(Boolean isBusiness) {
+	public void setBusiness(boolean isBusiness) {
 		this.isBusiness = isBusiness;
 	}
-	public Boolean getIsEnterprise() {
+	public boolean isEnterprise() {
 		return isEnterprise;
 	}
-	public void setIsEnterprise(Boolean isEnterprise) {
+	public void setEnterprise(boolean isEnterprise) {
 		this.isEnterprise = isEnterprise;
 	}
-	public Boolean getIsMyContact() {
+	public boolean isMyContact() {
 		return isMyContact;
 	}
-	public void setIsMyContact(Boolean isMyContact) {
+	public void setMyContact(boolean isMyContact) {
 		this.isMyContact = isMyContact;
 	}
-	public Boolean getIsWAContact() {
+	public boolean isWAContact() {
 		return isWAContact;
 	}
-	public void setIsWAContact(Boolean isWAContact) {
+	public void setWAContact(boolean isWAContact) {
 		this.isWAContact = isWAContact;
 	}
 	public ProfilePicThumbObj getProfilePicThumbObj() {
@@ -131,22 +134,22 @@ public class Message {
 	public void setProfilePicThumbObj(ProfilePicThumbObj profilePicThumbObj) {
 		this.profilePicThumbObj = profilePicThumbObj;
 	}
-	public Long getLat() {
+	public long getLat() {
 		return lat;
 	}
-	public void setLat(Long lat) {
+	public void setLat(long lat) {
 		this.lat = lat;
 	}
-	public Long getLng() {
+	public long getLng() {
 		return lng;
 	}
-	public void setLng(Long lng) {
+	public void setLng(long lng) {
 		this.lng = lng;
 	}
-	public Long getLoc() {
+	public long getLoc() {
 		return loc;
 	}
-	public void setLoc(Long loc) {
+	public void setLoc(long loc) {
 		this.loc = loc;
 	}
 
