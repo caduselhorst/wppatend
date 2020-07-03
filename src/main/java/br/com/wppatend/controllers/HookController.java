@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+
 import br.com.lgss.libs.consultaendereco.BOConsultaEndereco;
 import br.com.lgss.libs.consultaendereco.EnderecoCorreio;
 import br.com.wppatend.clients.MegaBotRestClient;
@@ -62,6 +64,8 @@ public class HookController {
 
 	@RequestMapping(value = "/web/hook", method = RequestMethod.POST)
 	public ResponseEntity<String> hook (@RequestBody WppObjectRequest msg) {
+		
+		logger.info(new Gson().toJson(msg));
 		
 		if(!msg.getMessages().get(0).getFromMe()) {
 			logger.info(String.format("Mensagem de: %1$s (%2$s) fromMe: %3$s chatId: %4$s Id: %5$s Server date: %6$s", 
