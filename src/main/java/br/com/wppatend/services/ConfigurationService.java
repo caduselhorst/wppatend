@@ -88,4 +88,8 @@ public class ConfigurationService {
 		return properties.getProperty("app.msg.fim.atendimento");
 	}
 	
+	public String getMensagemErro() {
+		return properties.getProperty("bot.api.error.msg");
+	}
+	
 }

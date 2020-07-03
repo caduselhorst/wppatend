@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,9 +24,7 @@ public class RoleController {
 	
 	private RoleService service;
 	private PermissionService permissionService;
-	
-	private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
-	
+		
 	public RoleController(RoleService service, PermissionService permissionService) {
 		this.service = service;
 		this.permissionService = permissionService;

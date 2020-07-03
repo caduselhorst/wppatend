@@ -18,13 +18,13 @@
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <img alt="User Image" class="user-image" th:src="@{/dist/img/user2-160x160.jpg}"/>
+                        <img alt="User Image" class="user-image" th:src="@{/dist/img/user.jpeg}"/>
                         <span class="hidden-xs" sec:authentication="name"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img alt="User Image" class="img-circle" th:src="@{/dist/img/user2-160x160.jpg}"/>
+                            <img alt="User Image" class="img-circle" th:src="@{/dist/img/user.jpeg}"/>
 
                             <p  sec:authentication="name">
                                 Uzumaki Naruto - Hokage
@@ -32,11 +32,8 @@
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <div class="pull-left">
-                                <a class="btn btn-default btn-flat" href="#">My Contacts</a>
-                            </div>
-                            <div class="pull-right">
-                                <a class="btn btn-default btn-flat" href="/logout">Logout</a>
+                            <div class="pull-center">
+                                <a class="btn btn-default btn-flat" href="/logout">Sair</a>
                             </div>
                         </li>
                     </ul>
