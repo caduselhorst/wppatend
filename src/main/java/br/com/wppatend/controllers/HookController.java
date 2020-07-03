@@ -67,11 +67,11 @@ public class HookController {
 		
 		logger.info(new Gson().toJson(msg));
 		
-		if(!msg.getMessages().get(0).getFromMe()) {
+		if(!msg.getMessages().get(0).isFromMe()) {
 			logger.info(String.format("Mensagem de: %1$s (%2$s) fromMe: %3$s chatId: %4$s Id: %5$s Server date: %6$s", 
 					msg.getMessages().get(0).getSenderName(), 
 					msg.getMessages().get(0).getAuthor(), 
-					msg.getMessages().get(0).getFromMe(),
+					msg.getMessages().get(0).isFromMe(),
 					msg.getMessages().get(0).getChatId(),
 					msg.getMessages().get(0).getId(),
 					new Date()));
