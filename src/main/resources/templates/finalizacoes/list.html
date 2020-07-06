@@ -26,30 +26,33 @@
                 <tr>
                     <th>ID</th>
                     <th>Descrição</th>
-                    <th>Ações</th>
+                    <th style="text-align: center">Alterar</th>
+                    <th style="text-align: center">Excluir</th>
                 </tr>
                 <tr th:each="row : ${list}">
                     <td th:text="${row.id}"></td>
                     <td th:text="${row.descricao}"></td>
-                    <td>
-                        <a th:href="${'/finalizacoes/edit/' + row.id}">Alterar</a> |
-                        <a th:href="${'/finalizacoes/delete/' + row.id}">Excluir</a>
+                    <td style="text-align: center">
+                        <a th:href="${'/finalizacoes/edit/' + row.id}"><span class="fa fa-pencil"></span></a>
+                    </td>
+                    <td style="text-align: center">
+                        <a th:href="${'/finalizacoes/delete/' + row.id}"><span class="fa fa-trash" style="color: red;"></span></a>
                     </td>
                 </tr>
             </table>
         </div>
         <div class="box-footer clearfix">
-            <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a href="/funcoes/1">Inicio</a></li>
-                <li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''">
-                    <a th:href="${'/finalizacoes/' + p}" th:text="${p}"></a>
+            <ul class="pagination pagination-sm no-margin pull-left">
+                <li class="page-item"><a href="/funcoes/1" class="page-link">Inicio</a></li>
+                <li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''" class="page-item" >
+                    <a th:href="${'/finalizacoes/' + p}" th:text="${p}" class="page-link"></a>
                 </li>
-                <li><a th:href="${'/finalizacoes/' + endIndex}">Fim</a></li>
+                <li class="page-item"><a th:href="${'/finalizacoes/' + endIndex}" class="page-link">Fim</a></li>
             </ul>
         </div>
     </div>
     <div class="row">
-	    <div class="col-xs-1">	       
+	    <div class="col-1">	       
 	        <a href="add/finalizacao" class="btn btn-primary">Novo</a>
 	    </div>
 	</div>

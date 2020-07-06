@@ -10,22 +10,16 @@ import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
 
-import br.com.wppatend.services.ConfigurationService;
+import br.com.wppatend.services.ParametroService;
 import br.com.wppatend.wpprequest.model.ApiBase64Message;
+import br.com.wppatend.wpprequest.model.ApiStatus;
 import br.com.wppatend.wpprequest.model.ApiTextMessage;
 
 @Service
 public class MegaBotRestClient {
-	
-	/*
-	@Value("${bot.api.url}")
-	private String apiUrl;
-	@Value("${bot.api.token}")
-	private String token;
-	*/
-	
+		
 	@Autowired
-	private ConfigurationService configurationService;
+	private ParametroService parametroService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(MegaBotRestClient.class);
 	
@@ -35,7 +29,7 @@ public class MegaBotRestClient {
 		msg.setBody(body);
 		msg.setPhone(phone);
 		String msgBody = new Gson().toJson(msg);
-		String url = configurationService.getUrlApiMegaBot() + "/sendMessage?token="+configurationService.getTokenApiMegaBot();
+		String url = parametroService.getUrlApiMegaBot() + "/sendMessage?token="+parametroService.getTokenApiMegaBot();
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -46,7 +40,7 @@ public class MegaBotRestClient {
 		
 		HttpEntity<String> entity = new HttpEntity<String>(msgBody, headers);
 		
-		if(configurationService.isApiSendMsg()) {
+		if(parametroService.isApiSendMsg()) {
 			String response = rest.postForObject(url, entity, String.class);
 			logger.info("API Service response: " + response);
 		} else {
@@ -62,7 +56,7 @@ public class MegaBotRestClient {
 		msg.setFilename(filename);
 		msg.setPhone(phone);
 		String msgBody = new Gson().toJson(msg);
-		String url = configurationService.getUrlApiMegaBot() + "/sendfilebase64?token="+configurationService.getTokenApiMegaBot();
+		String url = parametroService.getUrlApiMegaBot() + "/sendfilebase64?token="+parametroService.getTokenApiMegaBot();
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -73,13 +67,19 @@ public class MegaBotRestClient {
 		
 		HttpEntity<String> entity = new HttpEntity<String>(msgBody, headers);
 		
-		if(configurationService.isApiSendMsg()) {
+		if(parametroService.isApiSendMsg()) {
 			String response = rest.postForObject(url, entity, String.class);
 			logger.info("API Service response: " + response);
 		} else {
 			logger.info(String.format("ApiURL: %1$s MsgBody: %2$s", url, msgBody));
 		}
 		
+	}
+	
+	public ApiStatus getApiStatus() {
+		String url = parametroService.getUrlApiMegaBot() + "/status?token="+parametroService.getTokenApiMegaBot();
+		RestTemplate rest = new RestTemplate();
+		return rest.getForObject(url, ApiStatus.class);
 	}
 
 }

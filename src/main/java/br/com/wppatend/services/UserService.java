@@ -12,5 +12,6 @@ public interface UserService {
 	public User save(User user);
 	public User findByUserName(String username);
 	public Page<User> getList(Integer pageNumber);
+	public void delete(User user);
 
 }

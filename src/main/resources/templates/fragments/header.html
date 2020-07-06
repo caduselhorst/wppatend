@@ -2,9 +2,9 @@
     <!-- Logo -->
     <a class="logo" href="index2.html">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><b>S</b>AL</span>
+        <span class="logo-mini">WPP</span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>Spring</b>AdminLte</span>
+        <span class="logo-lg">WppAtendimento</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -32,16 +32,20 @@
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <div class="pull-center">
+                            <div class="pull-left">
                                 <a class="btn btn-default btn-flat" href="/logout">Sair</a>
+                            </div>
+                            <div class="pull-right">
+                                <a class="btn btn-default btn-flat" th:href="@{/usuarios/alterasenha(username=${#authentication.name})}" >Alterar minha senha</a>
                             </div>
                         </li>
                     </ul>
                 </li>
-                <!-- Control Sidebar Toggle Button -->
+                <!-- Control Sidebar Toggle Button
                 <li>
                     <a data-toggle="control-sidebar" href="#"><i class="fa fa-gears"></i></a>
                 </li>
+                 -->
             </ul>
         </div>
     </nav>

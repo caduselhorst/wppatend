@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 import br.com.wppatend.entities.FilaAtendimento;
 import br.com.wppatend.entities.Protocolo;
 import br.com.wppatend.entities.Roteirizador;
-import br.com.wppatend.services.ConfigurationService;
 import br.com.wppatend.services.FilaAtendimentoService;
+import br.com.wppatend.services.ParametroService;
 import br.com.wppatend.services.ProtocoloService;
 import br.com.wppatend.services.RoteirizadorService;
 
@@ -25,7 +25,7 @@ public class RoteirizadorThread extends Thread {
 	
 	
 	@Autowired	
-	private ConfigurationService configService;
+	private ParametroService parametroService;
 	@Autowired
 	private FilaAtendimentoService filaService;
 	@Autowired
@@ -68,7 +68,7 @@ public class RoteirizadorThread extends Thread {
 			}
 				
 			try {
-				Thread.sleep(configService.getTempoPoolingRoteirizador());
+				Thread.sleep(parametroService.getTempoPoolingRoteirizador());
 			} catch (InterruptedException e) {
 				logger.warn("Erro de interrução de thread");
 			}

@@ -1,60 +1,121 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="layout">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout">
 <head>
-    <title>Usuários</title>
+<title>Usuários</title>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="../bootstrap/js/bootstrap.bundle.js"></script>
+<script th:inline="javascript">
+	$(document.this).ready(function () {
+		$('#deleteCliente').on("click", function(e){
+		      e.preventDefault();						
+		    
+		      var Id = parseInt($("#modal-deletar-cliente-id").val());
+										
+		      $.ajax({
+		          type:"POST",
+		          url:"/usuarios/delete",
+		          data:{idUsuario:Id},
+	                  success:function (data) {
+		            	   //$("#clientes"+id).closest("td#"+data).parent("tr").remove();
+			          }
+	                  });	
+							        	
+		      });
+		});
+
+	    function modalRemover(id){
+	      console.log("Id: ", id);
+	      console.log("Modal", $("#deleteModal"));
+		  $("#modal-deletar-cliente-id").val(id);
+		  $("#deleteModal").modal('show');	
+	    };
+	</script>
 </head>
 <body>
-<section layout:fragment="header">
-    <h1>Usuários</h1>
-<ol class="breadcrumb">
-    <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-    <li class="active">Usuários</li>
-</ol>
-</section>
-<div layout:fragment="content">
-    <div class="box">
-        <div class="box-header with-border">
-            <h3 class="box-title">Lista</h3>
-            <div class="box-tools pull-right">
-                <a href="/usuarios/add/usuario" type="button" class="btn btn-box-tool"><i class="fa fa-plus"></i></a>
-                <br clear="all" />
-            </div>
-        </div>
-        <div class="box-body no-padding">
-            <table class="table table-striped">
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Login</th>
-                    <th>Ações</th>
-                </tr>
-                <tr th:each="row : ${list}">
-                    <td th:text="${row.id}"></td>
-                    <td th:text="${row.name}"></td>
-                    <td th:text="${row.username}"></td>
-                    <td>
-                        <a th:href="${'/usuarios/edit/' + row.id}">Alterar</a> |
-                        <a th:href="${'/usuarios/delete/' + row.id}">Excluir</a>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="box-footer clearfix">
-            <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a href="/usuarios/1">Inicio</a></li>
-                <li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''">
-                    <a th:href="${'/usuarios/' + p}" th:text="${p}"></a>
-                </li>
-                <li><a th:href="${'/usuarios/' + endIndex}">Fim</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="row">
-	    <div class="col-xs-1">	       
-	        <a href="add/usuario" class="btn btn-primary">Novo</a>
-	    </div>
+	
+	<section layout:fragment="header">
+		<h1>Usuários</h1>
+		<ol class="breadcrumb">
+			<li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+			<li class="active">Usuários</li>
+		</ol>
+	</section>
+	<div layout:fragment="content">
+
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Lista</h3>
+				<div class="box-tools pull-right">
+					<a href="/usuarios/add/usuario" type="button"
+						class="btn btn-box-tool"><i class="fa fa-plus"></i></a> <br
+						clear="all" />
+				</div>
+			</div>
+			<div class="box-body no-padding">
+				<div class="alert alert-primary" role="alert"
+					th:text="${successFlash}" th:if="${successFlash}"></div>
+				<span th:text="${successFlash}"></span>
+				<table class="table table-striped">
+					<tr>
+						<th>ID</th>
+						<th>Nome</th>
+						<th>Login</th>
+						<th style="text-align: center">Alterar</th>
+						<th style="text-align: center">Excluir</th>
+					</tr>
+					<tr th:each="row : ${list}">
+						<td th:text="${row.id}"></td>
+						<td th:text="${row.name}"></td>
+						<td th:text="${row.username}"></td>
+						<td style="text-align: center">
+							<a th:href="${'/usuarios/edit/' + row.id}"><span class="fa fa-pencil"></span></a></td>
+						<td style="text-align: center">
+							<a th:href="${'/usuarios/delete/' + row.id}"><span class="fa fa-trash" style="color: red"></span></a></td>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="box-footer clearfix">
+				<ul class="pagination pagination-sm no-margin pull-left">
+					<li class="page-item"><a href="/usuarios/1" class="page-link">Inicio</a></li>
+					<li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}"
+						th:class="${p == currentIndex} ? 'active' : ''"  class="page-item"><a
+						th:href="${'/usuarios/' + p}" th:text="${p}" class="page-link"></a></li>
+					<li class="page-item"><a th:href="${'/usuarios/' + endIndex}" class="page-link">Fim</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-5">
+				<a href="add/usuario" class="btn btn-primary">Novo</a>
+			</div>
+		</div>
 	</div>
-</div>
+	<div class="modal modal-warning fade in"
+		th:id="modal-warning+${user.id }">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					<h5 class="modal-title">Delete User</h5>
+				</div>
+				<div class="modal-body">
+					<h3>Are you sure want to delete this user?</h3>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline pull-left"
+						data-dismiss="modal">Close</button>
+					<a type="button" class="btn btn-outline"
+						th:href="@{/usuarios/delete/{id}(id=${user.id})}"><i
+						class="fa fa-check"></i>&nbsp;Yes</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

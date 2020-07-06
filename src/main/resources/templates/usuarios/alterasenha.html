@@ -1,0 +1,46 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+<head>
+    <title>Cadastro do usuário</title>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>Alterar senha</h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="active">Alterar senha</li>
+    </ol>
+</section>
+<div layout:fragment="content">
+    <div class="box">
+        <div class="login-box-body">
+
+
+        <div th:if="${erro}">
+            <div class="callout callout-danger">
+                <p th:text="${erro}"></p>
+            </div>
+        </div>
+
+        <form th:action="@{/usuarios/alteraSenha}" method="post" th:object="${vo}">
+        	<input type="hidden" th:field="*{idUsuario}" id="idUsuario"/>
+            <div class="form-group has-feedback">
+                <input type="password" class="form-control" th:field="*{newPassword}" placeholder="nova senha"/>
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" class="form-control" th:field="*{confirmPassword}" placeholder="confirmação"/>
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="row">
+                <div class="col-xs-2">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">Alterar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+</div>
+</body>
+</html>

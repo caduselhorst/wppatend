@@ -34,7 +34,7 @@ import br.com.wppatend.repositories.EmpresaContatoRepository;
 import br.com.wppatend.repositories.EstadoAtendimentoRespository;
 import br.com.wppatend.repositories.FilaAtendimentoRepository;
 import br.com.wppatend.repositories.ProtocoloRepository;
-import br.com.wppatend.services.ConfigurationService;
+import br.com.wppatend.services.ParametroService;
 import br.com.wppatend.wpprequest.model.PessoaFisica;
 import br.com.wppatend.wpprequest.model.PessoaJuridica;
 import br.com.wppatend.wpprequest.model.WppObjectRequest;
@@ -51,7 +51,7 @@ public class HookController {
 	@Autowired
 	private PessoaJuridicaRestClient pessoaJuridicaRestClient;
 	@Autowired
-	private ConfigurationService configurationService;
+	private ParametroService parametroService;
 	@Autowired
 	private ProtocoloRepository protocoloRepository;
 	@Autowired
@@ -78,12 +78,12 @@ public class HookController {
 						msg.getMessages().get(0).getId(),
 						new Date()));
 				
-				boolean devMode = configurationService.isModoDesenvolvimento();
+				boolean devMode = parametroService.isModoDesenvolvimento();
 				if(devMode) {
 					logger.info("Requisição será tratada em developed mode");
 				}
 				
-				List<String> fones = configurationService.getTelefonesDevMode();
+				List<String> fones = parametroService.getTelefonesDevMode();
 				
 				String phoneAuthor = StringUtils.split(msg.getMessages().get(0).getAuthor(), "@")[0];
 				logger.info("Autor da mensagem: " + phoneAuthor);
@@ -98,7 +98,7 @@ public class HookController {
 						p = protocoloRepository.findProtocoloAbertoByFone(phoneAuthor);
 					} catch (Exception e) {
 						logger.error("[" + phoneAuthor + "] Erro ao recuperar o protocolo", e);
-						megaBotApi.sendMessage(phoneAuthor, configurationService.getMensagemErro());
+						megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemErro());
 						return ResponseEntity.ok("Ok");
 					}
 					
@@ -106,7 +106,7 @@ public class HookController {
 						
 						logger.info("[" + phoneAuthor + "] Protocolo não localizado. Iniciando novo protocolo.");
 						
-						megaBotApi.sendMessage(phoneAuthor, configurationService.getMensagemCliente());
+						megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemCliente());
 						
 						Protocolo newProtocolo = new Protocolo();
 						newProtocolo.setDataInicio(new Date());
@@ -124,7 +124,7 @@ public class HookController {
 							pf = pessoaFisicaRestClient.getPessoaFisicaByTelefoneWA(phoneAuthor);
 						} catch (Exception e) {
 							logger.error("[" + phoneAuthor + "] Erro ao recuperar o cliente", e);
-							megaBotApi.sendMessage(phoneAuthor, configurationService.getMensagemErro());
+							megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemErro());
 							return ResponseEntity.ok("Ok");
 						}
 						
@@ -145,7 +145,7 @@ public class HookController {
 								logger.info("[" + phoneAuthor + "] Registro criado. Id[" + pf.getIdpessoaf() + "]");
 							} catch (Exception e) {
 								logger.error("[" + phoneAuthor + "] Erro ao criar o cliente", e);
-								megaBotApi.sendMessage(phoneAuthor, configurationService.getMensagemErro());
+								megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemErro());
 								return ResponseEntity.ok("Ok");
 							}
 							
@@ -261,7 +261,7 @@ public class HookController {
 													logger.info("[" + phoneAuthor + "] Registro atualizado. Recuperando proximo estado");
 												} catch (Exception e) {
 													logger.error("[" + phoneAuthor + "] Ocorreu um erro ao atualizar os dados do cliente.", e);
-													megaBotApi.sendMessage(phoneAuthor, configurationService.getMensagemErro());
+													megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemErro());
 													return ResponseEntity.ok("OK");
 												}
 												
@@ -675,7 +675,7 @@ public class HookController {
 						}
 					}
 				} else {
-					megaBotApi.sendMessage(msg.getMessages().get(0).getAuthor(), configurationService.getMsgDevMode());
+					megaBotApi.sendMessage(msg.getMessages().get(0).getAuthor(), parametroService.getMsgDevMode());
 				}
 			}
 		} catch (NullPointerException e) {

@@ -21,7 +21,7 @@
 	{
 		"id" : 4, 
 		"descricao" : "Pergunta CPF",
-		"mensagem" : "Certo! Agora, informa seu CPF. Não se preocupe com os pontos e traços.",
+		"mensagem" : "Certo! Agora, informe seu CPF. Não se preocupe com os pontos e traços.",
 		"direcionamentos"  : [{"id" : 5, "idProximoEstado" : 5, "idProximoEstadoErro" : null, "resposta" : null, "confirmacao" : false}]
 	},
 	{
@@ -33,7 +33,7 @@
 	{
 		"id" : 6, 
 		"descricao" : "Pergunta CEP",
-		"mensagem" : "Obrigado! Agora, informa seu CEP.",
+		"mensagem" : "Obrigado! Agora, informe seu CEP.",
 		"direcionamentos"  : [{"id" : 8, "idProximoEstado" : 7, "idProximoEstadoErro" : null, "resposta" : null, "confirmacao" : false}]
 	},
 	{
@@ -45,7 +45,7 @@
 	{
 		"id" : 8, 
 		"descricao" : "Pergunta número",
-		"mensagem" : "Ok! Agora você me informa o número da sua residência?",
+		"mensagem" : "Ok! Agora você me informe o número da sua residência?",
 		"direcionamentos"  : [{"id" : 11, "idProximoEstado" : 18, "idProximoEstadoErro" : null, "resposta" : null, "confirmacao" : false}]
 	},
 	{

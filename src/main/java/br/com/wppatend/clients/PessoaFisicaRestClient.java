@@ -7,25 +7,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.caelum.stella.validation.CPFValidator;
-import br.com.wppatend.services.ConfigurationService;
+import br.com.wppatend.services.ParametroService;
 import br.com.wppatend.wpprequest.model.PessoaFisica;
 
 @Service
 public class PessoaFisicaRestClient {
 	
-	
 	@Autowired
-	private ConfigurationService configurationService;
+	private ParametroService parametroService;
 	
 	private RestTemplate template = new RestTemplate();
 		
 	
 	public PessoaFisica getPessoaFisicaByTelefoneWA(String fone) {		
-		return template.getForObject(configurationService.getApiUrlPessoaFisica() + "/" + fone, PessoaFisica.class);
+		return template.getForObject(parametroService.getApiUrlPessoaFisica() + "/" + fone, PessoaFisica.class);
 	}
 	
 	public PessoaFisica getPessoaFisicaById(Long id) {		
-		return template.getForObject(configurationService.getApiUrlPessoaFisica() + "/id/" + id, PessoaFisica.class);
+		return template.getForObject(parametroService.getApiUrlPessoaFisica() + "/id/" + id, PessoaFisica.class);
 	}
 	
 	public PessoaFisica savePessoaFisica(PessoaFisica pessoaFisica) {
@@ -35,7 +34,7 @@ public class PessoaFisicaRestClient {
 		
 		HttpEntity<PessoaFisica> entity = new HttpEntity<PessoaFisica>(pessoaFisica, headers);
 		
-		return template.postForObject(configurationService.getApiUrlPessoaFisica() + "/save" , entity, PessoaFisica.class);
+		return template.postForObject(parametroService.getApiUrlPessoaFisica() + "/save" , entity, PessoaFisica.class);
 		
 	}
 	

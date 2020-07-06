@@ -36,8 +36,8 @@ import br.com.wppatend.entities.Role;
 import br.com.wppatend.entities.Roteirizador;
 import br.com.wppatend.entities.User;
 import br.com.wppatend.services.ChatService;
-import br.com.wppatend.services.ConfigurationService;
 import br.com.wppatend.services.FinalizacaoService;
+import br.com.wppatend.services.ParametroService;
 import br.com.wppatend.services.ProtocoloService;
 import br.com.wppatend.services.RoteirizadorService;
 import br.com.wppatend.services.UserService;
@@ -58,6 +58,8 @@ public class APIController {
 	private ChatService chatService;
 	@Autowired
 	private FinalizacaoService finalizacaoService;
+	@Autowired
+	private ParametroService parametroService;
 	
 	@Autowired
 	private PessoaFisicaRestClient pfClient;
@@ -65,8 +67,6 @@ public class APIController {
 	private PessoaJuridicaRestClient pjClient;
 	@Autowired
 	private MegaBotRestClient botClient;
-	@Autowired
-	private ConfigurationService configurationService;
 	
 	
 	@PostMapping(path ="/user/login")
@@ -182,7 +182,7 @@ public class APIController {
 		p.setFinalizacao(info.getIdFinalizacao());
 		p = protocoloService.save(p);
 		
-		botClient.sendMessage(p.getFone(), configurationService.getMensagemFinalizacaoAtendimento());
+		botClient.sendMessage(p.getFone(), parametroService.getMensagemFinalizacaoAtendimento());
 		
 		ApiReturn ret = new ApiReturn();
 		ret.setError(false);

@@ -1,5 +1,6 @@
 package br.com.wppatend.services.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,9 +49,10 @@ public class FinalizacaoServiceImpl implements FinalizacaoService {
 		return repository.findAll();
 	}
 	
+	
 	@Override
-	public List<ITotalizadorFinalizacao> countFinalizacoes() {
-		return repository.countTotalFinalizacao();
+	public List<ITotalizadorFinalizacao> countFinalizacoes(Date dataInicial, Date dataFinal) {
+		return repository.countTotalFinalizacao(dataInicial, dataFinal);
 	}
 
 }

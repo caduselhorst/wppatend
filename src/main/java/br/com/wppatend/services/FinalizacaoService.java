@@ -1,5 +1,6 @@
 package br.com.wppatend.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +16,6 @@ public interface FinalizacaoService {
 	public Page<Finalizacao> getList(Integer pageNumber);
 	public List<Finalizacao> findAll();
 	public void delete(Finalizacao finalizacao);
-	public List<ITotalizadorFinalizacao> countFinalizacoes();
+	public List<ITotalizadorFinalizacao> countFinalizacoes(Date dataInicial, Date dataFinal);
 
 }

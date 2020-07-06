@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import br.com.wppatend.entities.User;
 import br.com.wppatend.services.RoleService;
 import br.com.wppatend.services.UserService;
+import br.com.wppatend.vos.AlterarSenhaVO;
 
 @Controller
 @RequestMapping("usuarios")
@@ -69,9 +73,21 @@ public class UserController {
         return "usuarios/form";
 
     }
+    
+    @GetMapping("/alterasenha")
+    public String alterarSenha(@Param(value = "user") String username, Model model) {
+    	User u = userService.findByUserName(username);
+    	
+    	AlterarSenhaVO vo = new AlterarSenhaVO();
+    	vo.setIdUsuario(u.getId());
+    	    	
+        model.addAttribute("vo", vo);
+        return "usuarios/alterasenha";
+
+    }
 
     @PostMapping(value = "/save")
-    public String save(User user, final RedirectAttributes ra) {
+    public RedirectView save(User user, RedirectAttributes ra) {
     	String msg = "Usuário salvo com sucesso.";
     	if(user.getId() == null) {
     		user.setPassword(new BCryptPasswordEncoder().encode("1234"));
@@ -80,16 +96,33 @@ public class UserController {
         @SuppressWarnings("unused")
 		User save = userService.save(user);
         ra.addFlashAttribute("successFlash", msg);
-        return "redirect:/usuarios";
+        return new RedirectView("/usuarios");
+
+    }
+    
+    @PostMapping(value = "/alteraSenha")
+    public RedirectView changePassword(@ModelAttribute AlterarSenhaVO model, RedirectAttributes ra) {
+    	//String msg = "Usuário salvo com sucesso.";
+    	Optional<User> oUser = userService.loadById(model.getIdUsuario());
+    	if(model.getNewPassword().equals(model.getConfirmPassword())) {
+    		oUser.get().setPassword(new BCryptPasswordEncoder().encode(model.getNewPassword()));
+    		userService.save(oUser.get());
+    		return new RedirectView("/");
+    	} else {
+    		model.setErro("As senhas não conferem");
+    		return new RedirectView("/usuarios/alterasenha/" + oUser.get().getUsername());
+    	}
+    	        
 
     }
 
-	/*
-	 * @GetMapping("/delete/{id}") public String delete(@PathVariable Long id) {
-	 * 
-	 * customerService.delete(id); return "redirect:/customers";
-	 * 
-	 * }
-	 */
+	
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+    	Optional<User> oUser = userService.loadById(id);
+    	userService.delete(oUser.get());
+    	return "redirect:/usuarios";
+    }
+	
 
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.caelum.stella.validation.CNPJValidator;
-import br.com.wppatend.services.ConfigurationService;
+import br.com.wppatend.services.ParametroService;
 import br.com.wppatend.wpprequest.model.ConsultaCNPJResponseObject;
 import br.com.wppatend.wpprequest.model.EmpresaAtv;
 import br.com.wppatend.wpprequest.model.PessoaJuridica;
@@ -19,12 +19,12 @@ import br.com.wppatend.wpprequest.model.PessoaJuridica;
 public class PessoaJuridicaRestClient {
 	
 	@Autowired
-	private ConfigurationService configurationService;
+	private ParametroService parametroService;
 	
 	private RestTemplate template = new RestTemplate();
 	
 	public PessoaJuridica getPessoaJuridicaByCNPJ(String cnpj) {
-		PessoaJuridica pj =template.getForObject(configurationService.getApiUrlPessoaJuridica() + "/cnpj/" + cnpj, PessoaJuridica.class);
+		PessoaJuridica pj =template.getForObject(parametroService.getApiUrlPessoaJuridica() + "/cnpj/" + cnpj, PessoaJuridica.class);
 		if(pj == null) {
 			pj = getPessoaJuridicaFromApiConsultaCNPJ(cnpj);
 			savePessoaJuridica(pj);
@@ -39,13 +39,13 @@ public class PessoaJuridicaRestClient {
 		
 		HttpEntity<PessoaJuridica> entity = new HttpEntity<PessoaJuridica>(pessoaJuridica, headers);
 		
-		return template.postForObject(configurationService.getApiUrlPessoaJuridica() , entity, PessoaJuridica.class);
+		return template.postForObject(parametroService.getApiUrlPessoaJuridica() , entity, PessoaJuridica.class);
 		
 	}
 	
 	public PessoaJuridica getPessoaJuridicaFromApiConsultaCNPJ(String cnpj) {
 		
-		ConsultaCNPJResponseObject obj = template.getForObject(configurationService.getUrlApiConsultaCNPJ() + "/" + cnpj, ConsultaCNPJResponseObject.class);
+		ConsultaCNPJResponseObject obj = template.getForObject(parametroService.getUrlApiConsultaCNPJ() + "/" + cnpj, ConsultaCNPJResponseObject.class);
 		
 		//String resp = template.getForObject(configurationService.getUrlApiConsultaCNPJ() + "/" + cnpj, String.class);
 		
@@ -77,7 +77,7 @@ public class PessoaJuridicaRestClient {
 	}
 	
 	public PessoaJuridica getPessoaJuridicaById(Long id) {		
-		return template.getForObject(configurationService.getApiUrlPessoaJuridica() + "/id/" + id, PessoaJuridica.class);
+		return template.getForObject(parametroService.getApiUrlPessoaJuridica() + "/id/" + id, PessoaJuridica.class);
 	}
 	
 	public boolean isCnpjValido(String cnpj) {

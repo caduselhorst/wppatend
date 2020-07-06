@@ -1,0 +1,44 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+<head>
+    <title>Parâmetro</title>
+    <script type="text/javascript" src="../../dist/js/address.js"></script>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>Parâmetro</h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="active">Parâmetros</li>
+    </ol>
+</section>
+
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Dados</h3>
+            <div class="box-tools pull-right">
+                <a href="/fornecedores" type="button" class="btn btn-box-tool"><i class="fa fa-list-ul"></i></a>
+            </div>
+        </div>
+        <form data-toggle="validator" role="form" th:object="${parametro}" th:action="@{/parametros/save}" method="post">
+            <div class="box-body">
+                <div class="form-group">
+                    <label for="chave">Chave</label>
+                    <input type="text" class="form-control" th:field="*{chave}" id="chave" readonly="readonly"/>
+                </div>
+                <div class="form-group">
+                    <label for="name">Valor</label>
+                    <input type="text" required="true" class="form-control" th:field="*{valor}" id="name" />
+                </div>
+            </div>
+            <div class="box-footer">
+                <button class="btn btn-primary" type="submit">Gravar</button>
+                <a class="btn btn-danger" href="../1">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

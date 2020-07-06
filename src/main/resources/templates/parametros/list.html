@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout">
 <head>
-    <title>Funções</title>
+    <title>Finalizações</title>
 </head>
 <body>
 <section layout:fragment="header">
-    <h1>Funções</h1>
+    <h1>Finalizações</h1>
 <ol class="breadcrumb">
     <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-    <li class="active">Funções</li>
+    <li class="active">Finalizações</li>
 </ol>
 </section>
 <div layout:fragment="content">
@@ -24,19 +24,15 @@
         <div class="box-body no-padding">
             <table class="table table-striped">
                 <tr>
-                    <th>ID</th>
-                    <th>Função</th>
+                    <th>Chave</th>
+                    <th>Valor</th>
                     <th style="text-align: center">Alterar</th>
-                    <th style="text-align: center">Excluir</th>
                 </tr>
                 <tr th:each="row : ${list}">
-                    <td th:text="${row.id}"></td>
-                    <td th:text="${row.nome}"></td>
+                    <td th:text="${row.chave}"></td>
+                    <td th:text="${row.valor}"></td>
                     <td style="text-align: center">
-                        <a th:href="${'/funcoes/edit/' + row.id}"><span class="fa fa-pencil"></span></a>
-                    </td>
-                    <td style="text-align: center">
-                        <a th:href="${'/funcoes/delete/' + row.id}"><span class="fa fa-trash" style="color: red"></span></a>
+                        <a th:href="${'/parametros/edit/' + row.chave}"><span class="fa fa-pencil"></span></a>
                     </td>
                 </tr>
             </table>
@@ -45,17 +41,12 @@
             <ul class="pagination pagination-sm no-margin pull-left">
                 <li class="page-item"><a class="page-link" href="/funcoes/1">Inicio</a></li>
                 <li class="page-item" th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''">
-                    <a class="page-link" th:href="${'/funcoes/' + p}" th:text="${p}"></a>
+                    <a class="page-link" th:href="${'/parametros/' + p}" th:text="${p}"></a>
                 </li>
-                <li class="page-item"><a class="page-link" th:href="${'/funcoes/' + endIndex}">Fim</a></li>
+                <li class="page-item"><a class="page-link" th:href="${'/parametros/' + endIndex}">Fim</a></li>
             </ul>
         </div>
     </div>
-    <div class="row">
-	    <div class="col-1">	       
-	        <a href="add/funcao" class="btn btn-primary">Novo</a>
-	    </div>
-	</div>
 </div>
 </body>
 </html>
