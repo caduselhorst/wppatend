@@ -1,6 +1,8 @@
 package br.com.wppatend.services.impl;
 
 import java.util.ArrayList;
+
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +19,7 @@ import br.com.wppatend.services.ParametroService;
 
 @Service
 public class ParametroServiceImpl implements ParametroService {
+
 	
 	@Autowired
 	private ParametroRepository repository;
@@ -114,5 +117,165 @@ public class ParametroServiceImpl implements ParametroService {
 		return repository.findById("bot.api.error.msg").get().getValor();
 	}
 	
+	@Override
+	public String getMensagemHorarioAtendimento() {
+		return repository.findById("app.horario.atendimento.msg").get().getValor();
+	}
 
+	@SuppressWarnings("unused")
+	@Override
+	public boolean isHorarioAtendimento() {
+		Calendar calendar = Calendar.getInstance();
+		
+		String[] periodos = getSplitedPeriods(calendar.get(Calendar.DAY_OF_WEEK));
+		if(periodos == null) {
+			return false;
+		} else {
+			for(int i = 0; i < periodos.length; i++) {
+				String[] per = StringUtils.split(periodos[i], "-");
+				Calendar c1 = Calendar.getInstance();
+				c1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(StringUtils.split(per[0], ":")[0]));
+				c1.set(Calendar.MINUTE, Integer.parseInt(StringUtils.split(per[0], ":")[1]));
+				c1.set(Calendar.SECOND, 0);
+				c1.set(Calendar.MILLISECOND, 0);
+				Calendar c2 = Calendar.getInstance();
+				c2.set(Calendar.HOUR_OF_DAY, Integer.parseInt(StringUtils.split(per[1], ":")[0]));
+				c2.set(Calendar.MINUTE, Integer.parseInt(StringUtils.split(per[1], ":")[1]));
+				c2.set(Calendar.SECOND, 0);
+				c2.set(Calendar.MILLISECOND, 0);
+				
+				if(calendar.getTimeInMillis() >= c1.getTimeInMillis() && calendar.getTimeInMillis() <= c2.getTimeInMillis()) {
+					return true;
+				}
+				
+			}
+			return false;
+		}
+		
+		
+	}
+	
+	@Override
+	public boolean isFeriado() {
+		Calendar c = Calendar.getInstance();
+		return isFeriado(c);
+	}
+	
+	@Override
+	public boolean isFeriado(Calendar c) {
+		String[] feriados = StringUtils.split(repository.findById("app.feriados").get().getValor(), ",");
+		for (int i = 0; i < feriados.length; i++) {
+			String[] parsed = StringUtils.split(feriados[i], "/");
+			if(c.get(Calendar.DAY_OF_MONTH) == Integer.parseInt(parsed[0])
+					&& (c.get(Calendar.MONTH) + 1) == Integer.parseInt(parsed[1])) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private String[] getSplitedPeriods(int dayOfWeek) {
+		switch(dayOfWeek) {
+			case Calendar.SUNDAY: {
+				String periodo = "";
+				if(isFeriado()) {
+					periodo = repository.findById("app.horario.atendimento.fer").get().getValor();
+				} else {
+					periodo = repository.findById("app.horario.atendimento.dom").get().getValor();
+				}
+				
+				if(periodo != null && !periodo.isEmpty()) {
+					return StringUtils.split(periodo, ",");
+				} else {
+					return null;
+				}
+				
+			}
+			case Calendar.MONDAY: {
+				String periodo = "";
+				if(isFeriado()) {
+					periodo = repository.findById("app.horario.atendimento.fer").get().getValor();
+				} else {
+					periodo = repository.findById("app.horario.atendimento.seg").get().getValor();
+				}
+				
+				if(periodo != null && !periodo.isEmpty()) {
+					return StringUtils.split(periodo, ",");
+				} else {
+					return null;
+				}
+			}
+			case Calendar.TUESDAY: {
+				String periodo = "";
+				if(isFeriado()) {
+					periodo = repository.findById("app.horario.atendimento.fer").get().getValor();
+				} else {
+					periodo = repository.findById("app.horario.atendimento.ter").get().getValor();
+				}
+				
+				if(periodo != null && !periodo.isEmpty()) {
+					return StringUtils.split(periodo, ",");
+				} else {
+					return null;
+				}
+			}
+			case Calendar.WEDNESDAY: {
+				String periodo = "";
+				if(isFeriado()) {
+					periodo = repository.findById("app.horario.atendimento.fer").get().getValor();
+				} else {
+					periodo = repository.findById("app.horario.atendimento.qua").get().getValor();
+				}
+				
+				if(periodo != null && !periodo.isEmpty()) {
+					return StringUtils.split(periodo, ",");
+				} else {
+					return null;
+				}
+			}
+			case Calendar.THURSDAY: {
+				String periodo = "";
+				if(isFeriado()) {
+					periodo = repository.findById("app.horario.atendimento.fer").get().getValor();
+				} else {
+					periodo = repository.findById("app.horario.atendimento.qui").get().getValor();
+				}
+				
+				if(periodo != null && !periodo.isEmpty()) {
+					return StringUtils.split(periodo, ",");
+				} else {
+					return null;
+				}
+			}
+			case Calendar.FRIDAY: {
+				String periodo = "";
+				if(isFeriado()) {
+					periodo = repository.findById("app.horario.atendimento.fer").get().getValor();
+				} else {
+					periodo = repository.findById("app.horario.atendimento.sex").get().getValor();
+				}
+				
+				if(periodo != null && !periodo.isEmpty()) {
+					return StringUtils.split(periodo, ",");
+				} else {
+					return null;
+				}
+			}
+			default: {
+				String periodo = "";
+				if(isFeriado()) {
+					periodo = repository.findById("app.horario.atendimento.fer").get().getValor();
+				} else {
+					periodo = repository.findById("app.horario.atendimento.sab").get().getValor();
+				}
+				
+				if(periodo != null && !periodo.isEmpty()) {
+					return StringUtils.split(periodo, ",");
+				} else {
+					return null;
+				}
+			}
+		}
+	}
+	
 }

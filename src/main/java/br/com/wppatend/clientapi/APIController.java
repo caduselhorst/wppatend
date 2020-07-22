@@ -220,6 +220,18 @@ public class APIController {
 		chat.setData_tx_rx(new Date());
 		chat.setProtocolo(info.getProtocolo());
 		chat.setTx_rx(DirecaoMensagem.ENVIADA);
+		chat.setBody(info.getMessage());
+		chat.setLegenda(info.getCaption());
+		if(info.getFilename().contains(".jpg") || 
+				info.getFilename().contains(".jpeg") || 
+				info.getFilename().contains(".bmp") ||
+				info.getFilename().contains(".ico") ||
+				info.getFilename().contains(".png")) {
+			chat.setTipo("image");
+		} else {
+			chat.setTipo("document");
+		}
+		
 		//chat.setMsg_arquivo(info.getMessage());
 		chatService.save(chat);
 		

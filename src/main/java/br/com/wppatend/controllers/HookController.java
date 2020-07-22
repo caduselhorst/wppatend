@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
-
 import br.com.lgss.libs.consultaendereco.BOConsultaEndereco;
 import br.com.lgss.libs.consultaendereco.ConsultaEnderecoException;
 import br.com.lgss.libs.consultaendereco.EnderecoCorreio;
@@ -66,17 +64,17 @@ public class HookController {
 	@RequestMapping(value = "/web/hook", method = RequestMethod.POST)
 	public ResponseEntity<String> hook (@RequestBody WppObjectRequest msg) {
 		
-		logger.info("Nova requisição -> " + new Gson().toJson(msg));
+		logger.info("Nova requisição -> " + String.format("Mensagem para tratamento: %1$s (%2$s) fromMe: %3$s chatId: %4$s Id: %5$s Server date: %6$s", 
+				msg.getMessages().get(0).getSenderName(), 
+				msg.getMessages().get(0).getAuthor(), 
+				msg.getMessages().get(0).getFromMe(),
+				msg.getMessages().get(0).getChatId(),
+				msg.getMessages().get(0).getId(),
+				new Date()));
 		
 		try {
 			if(msg.getMessages().get(0).getFromMe() != null && !msg.getMessages().get(0).getFromMe()) {
-				logger.info(String.format("Mensagem para tratamento: %1$s (%2$s) fromMe: %3$s chatId: %4$s Id: %5$s Server date: %6$s", 
-						msg.getMessages().get(0).getSenderName(), 
-						msg.getMessages().get(0).getAuthor(), 
-						msg.getMessages().get(0).getFromMe(),
-						msg.getMessages().get(0).getChatId(),
-						msg.getMessages().get(0).getId(),
-						new Date()));
+				logger.info("Mensagem tratável");
 				
 				boolean devMode = parametroService.isModoDesenvolvimento();
 				if(devMode) {
@@ -104,6 +102,7 @@ public class HookController {
 					
 					if(p == null) {
 						
+						//if(parametroService.isHorarioAtendimento()) {
 						logger.info("[" + phoneAuthor + "] Protocolo não localizado. Iniciando novo protocolo.");
 						
 						megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemCliente());
@@ -167,6 +166,12 @@ public class HookController {
 							megaBotApi.sendMessage(phoneAuthor, ea.getMensagem());
 							logger.info("[" + phoneAuthor + "] Cliente localizado. Id:[" + pf.getIdpessoaf() + "] Mensagem enviada");
 						}
+						//} else {
+						//	logger.info("[" + phoneAuthor + "] Requisição fora do expediente. Enviado mensagem ao cliente");
+						//	megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemHorarioAtendimento());
+						//	logger.info("[" + phoneAuthor + "] Ok");
+						//}
+						
 					} else {
 						
 						EstadoAtendimento ea = p.getEstado();
@@ -413,18 +418,29 @@ public class HookController {
 										logger.info("[" + phoneAuthor + "] Ok.");
 										protocoloRepository.save(p);
 										if(ead.getConfirmacao()) {
-											logger.info("[" + phoneAuthor + "] Direcionando protocolo para fila de atendimento.");
-											FilaAtendimento fila = new FilaAtendimento();
-											fila.setDataFila(new Date());
-											fila.setProtocolo(p);
-											filaRepository.save(fila);
-											logger.info("[" + phoneAuthor + "] Direcionando protocolo para fila de atendimento.");
+											if(parametroService.isHorarioAtendimento()) {
+												logger.info("[" + phoneAuthor + "] Direcionando protocolo para fila de atendimento.");
+												FilaAtendimento fila = new FilaAtendimento();
+												fila.setDataFila(new Date());
+												fila.setProtocolo(p);
+												filaRepository.save(fila);
+												//logger.info("[" + phoneAuthor + "] Direcionando protocolo para fila de atendimento.");
+												//logger.info("[" + phoneAuthor + "] Enviando mensagem ao cliente.");
+												//megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem().replace("@protocolo", p.getProtocolo()));
+												logger.info("[" + phoneAuthor + "] Ok.");
+											} else {
+												logger.info("[" + phoneAuthor + "] Requisição fora do horário de atendimento.");
+												logger.info("[" + phoneAuthor + "] Encerrando protocolo e enviado mensagem ao cliente.");
+												p.setDataFechamento(new Date());
+												p = protocoloRepository.save(p);
+												megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemHorarioAtendimento());
+												logger.info("[" + phoneAuthor + "] Ok.");
+											}
+												
+											achou = true;
 										}
 										
-										logger.info("[" + phoneAuthor + "] Enviando mensagem ao cliente.");
-										megaBotApi.sendMessage(phoneAuthor, nEa.getMensagem().replace("@protocolo", p.getProtocolo()));
-										logger.info("[" + phoneAuthor + "] Ok.");
-										achou = true;
+										
 									}
 								}
 								if(!achou) {
@@ -674,6 +690,8 @@ public class HookController {
 							}
 						}
 					}
+					
+						
 				} else {
 					megaBotApi.sendMessage(msg.getMessages().get(0).getAuthor(), parametroService.getMsgDevMode());
 				}

@@ -71,7 +71,7 @@ public class MegaBotRestClient {
 			String response = rest.postForObject(url, entity, String.class);
 			logger.info("API Service response: " + response);
 		} else {
-			logger.info(String.format("ApiURL: %1$s MsgBody: %2$s", url, msgBody));
+			logger.info(String.format("ApiURL: %1$s MsgBody: %2$s", url, msgBody.substring(0, 60) + "..."));
 		}
 		
 	}

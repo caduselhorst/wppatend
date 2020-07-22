@@ -1,5 +1,6 @@
 package br.com.wppatend.services;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,5 +28,9 @@ public interface ParametroService {
 	public Long getTempoPoolingRoteirizador();
 	public String getMensagemFinalizacaoAtendimento();
 	public String getMensagemErro();
+	public String getMensagemHorarioAtendimento();
+	public boolean isHorarioAtendimento();
+	public boolean isFeriado();
+	public boolean isFeriado(Calendar c);
 	
 }

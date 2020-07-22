@@ -35,6 +35,14 @@ public class UtilsController {
 		return "OK";
 	}
 	
+	@RequestMapping(value="/web/parametros/feriado", method = RequestMethod.GET)
+	public String isFeriado() {
+		return String.valueOf(parametroService.isFeriado());
+	}
 	
+	@RequestMapping(value="/web/parametros/horarioatendimento", method = RequestMethod.GET)
+	public String isHorarioAtendimento() {
+		return String.valueOf(parametroService.isHorarioAtendimento());
+	}
 
 }
