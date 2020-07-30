@@ -1,0 +1,61 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <title>Finalizações</title>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>Finalizações</h1>
+<ol class="breadcrumb">
+    <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">Departamentos</li>
+</ol>
+</section>
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Lista</h3>
+            <div class="box-tools pull-right">
+                <a href="/departamentos/add/departamento" type="button" class="btn btn-box-tool"><i class="fa fa-plus"></i></a>
+                <br clear="all" />
+            </div>
+        </div>
+        <div class="box-body no-padding">
+            <table class="table table-striped">
+                <tr>
+                    <th>ID</th>
+                    <th>Descrição</th>
+                    <th style="text-align: center">Alterar</th>
+                    <th style="text-align: center">Excluir</th>
+                </tr>
+                <tr th:each="row : ${list}">
+                    <td th:text="${row.id}"></td>
+                    <td th:text="${row.descricao}"></td>
+                    <td style="text-align: center">
+                        <a th:href="${'/departamentos/edit/' + row.id}"><span class="fa fa-pencil"></span></a>
+                    </td>
+                    <td style="text-align: center">
+                        <a th:href="${'/departamentos/delete/' + row.id}"><span class="fa fa-trash" style="color: red;"></span></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="box-footer clearfix">
+            <ul class="pagination pagination-sm no-margin pull-left">
+                <li class="page-item"><a href="/funcoes/1" class="page-link">Inicio</a></li>
+                <li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''" class="page-item" >
+                    <a th:href="${'/departamentos/' + p}" th:text="${p}" class="page-link"></a>
+                </li>
+                <li class="page-item"><a th:href="${'/departamentos/' + endIndex}" class="page-link">Fim</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+	    <div class="col-1">	       
+	        <a href="add/departamento" class="btn btn-primary">Novo</a>
+	    </div>
+	</div>
+</div>
+</body>
+</html>
