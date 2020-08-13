@@ -32,5 +32,6 @@ public interface ParametroService {
 	public boolean isHorarioAtendimento();
 	public boolean isFeriado();
 	public boolean isFeriado(Calendar c);
+	public boolean isTrataCliente();
 	
 }
