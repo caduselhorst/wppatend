@@ -19,6 +19,7 @@ public class Departamento {
 	@SequenceGenerator(name = "DepartamentoSeq", sequenceName = "deparamentoseq", allocationSize = 1)
 	private Long id;
 	private String descricao;
+	private boolean deleted;
 
 	public Long getId() {
 		return id;
@@ -31,6 +32,38 @@ public class Departamento {
 	}
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+	public boolean isDeleted() {
+		return deleted;
+	}
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Departamento) {
+			Departamento r = (Departamento) obj;
+			if(id == null && r.getId() != null) {
+				return false;
+			} else {
+				if (id != null && r.getId() == null) {
+					return false;
+				} else {
+					if(id == null && r.getId() == null) {
+						return descricao.equals(r.getDescricao());
+					} else {
+						return id.equals(r.getId());
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 }

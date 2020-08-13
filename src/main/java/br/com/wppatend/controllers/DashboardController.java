@@ -105,6 +105,14 @@ public class DashboardController {
     	dashApiStatus.setWebhook(apiStatus.getWebhook());
     	dashApiStatus.setStatus(Boolean.parseBoolean(apiStatus.getAccountStatus()));
     	
+    	
+    	/*
+    	DashboardApiStatus dashApiStatus = new DashboardApiStatus();
+    	dashApiStatus.setFone(null);
+    	dashApiStatus.setMensagem("Não conectado");
+    	dashApiStatus.setWebhook(null);
+    	dashApiStatus.setStatus(false);
+    	*/
     	DashboardVO vo = new DashboardVO();
     	vo.setFila(lFila);
     	vo.setFinalizacoes(finalizacoes);

@@ -2,15 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
 <head>
-    <title>Cadastro de finalizações</title>
+    <title>Cadastro de Departamentos</title>
     <script type="text/javascript" src="../../dist/js/address.js"></script>
 </head>
 <body>
 <section layout:fragment="header">
-    <h1>Cadastro de finalizações</h1>
+    <h1>Cadastro de Departamentos</h1>
     <ol class="breadcrumb">
         <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Cadastro de finalizações</li>
+        <li class="active">Cadastro de Departamentos</li>
     </ol>
 </section>
 
@@ -22,11 +22,11 @@
                 <a href="/fornecedores" type="button" class="btn btn-box-tool"><i class="fa fa-list-ul"></i></a>
             </div>
         </div>
-        <form data-toggle="validator" role="form" th:object="${finalizacao}" th:action="@{/finalizacoes/save}" method="post">
+        <form data-toggle="validator" role="form" th:object="${departamento}" th:action="@{/departamentos/save}" method="post">
             <div class="box-body">
                 <input type="hidden" th:field="*{id}"/>
                 <div class="form-group">
-                    <label for="name">Finalização</label>
+                    <label for="name">Departamento</label>
                     <input type="text" required="true" class="form-control" th:field="*{descricao}" id="name" />
                 </div>
             </div>

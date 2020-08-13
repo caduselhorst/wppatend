@@ -29,6 +29,8 @@ public class User {
 	private String passwordConfirm;
 	@ManyToMany
 	private List<Role> roles;
+	@ManyToMany
+	private List<Departamento> departamentos;
 	private boolean deleted;
 	
 	public Long getId() {
@@ -72,6 +74,12 @@ public class User {
 	}
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+	public List<Departamento> getDepartamentos() {
+		return departamentos;
+	}
+	public void setDepartamentos(List<Departamento> departamentos) {
+		this.departamentos = departamentos;
 	}
 	
 
