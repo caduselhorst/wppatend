@@ -5,25 +5,22 @@ import org.slf4j.LoggerFactory;
 
 import br.com.wppatend.clients.MegaBotRestClient;
 import br.com.wppatend.flow.entities.FlowInstance;
-import br.com.wppatend.flow.services.FlowService;
 import br.com.wppatend.services.ParametroService;
 
-public abstract class Decision {
-	
-	protected static final Logger logger = LoggerFactory.getLogger(Decision.class);
+public abstract class Collector {
+
+	protected static final Logger logger = LoggerFactory.getLogger(Collector.class);
 	protected FlowInstance flowInstance;
 	protected MegaBotRestClient megaBotRestClient;
 	protected ParametroService parametroService;
-	protected FlowService flowService;
 	
-	protected Decision(FlowInstance flowInstance, MegaBotRestClient megaBotRestClient, 
-			ParametroService parametroService, FlowService flowService) {
+	protected Collector(FlowInstance flowInstance, MegaBotRestClient megaBotRestClient, 
+			ParametroService parametroService) {
 		this.flowInstance = flowInstance;
 		this.megaBotRestClient = megaBotRestClient;
 		this.parametroService = parametroService;
-		this.flowService = flowService;
 	}
-
+	
 	public FlowInstance getFlowInstance() {
 		return flowInstance;
 	}
@@ -39,7 +36,7 @@ public abstract class Decision {
 	protected void setMegaBotRestClient(MegaBotRestClient megaBotRestClient) {
 		this.megaBotRestClient = megaBotRestClient;
 	}
-
+	
 	protected ParametroService getParametroService() {
 		return parametroService;
 	}
@@ -47,16 +44,7 @@ public abstract class Decision {
 	protected void setParametroService(ParametroService parametroService) {
 		this.parametroService = parametroService;
 	}
+
+	public abstract void doCollect(String collectValues);
 	
-	public FlowService getFlowService() {
-		return flowService;
-	}
-
-	public void setFlowService(FlowService flowService) {
-		this.flowService = flowService;
-	}
-
-	public abstract void init();
-	public abstract boolean isConditionSatisfied();
-
 }

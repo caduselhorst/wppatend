@@ -9,9 +9,11 @@ import javax.persistence.PrimaryKeyJoinColumn;
 public class FlowNodeCollect extends FlowNode {
 
 	private String message;
-	private String collectedValue;
+	private String collectorClass;
 	@OneToOne
 	private FlowNode nextNode;
+	@OneToOne
+	private FlowNode onErrorNode;
 	
 	public String getMessage() {
 		return message;
@@ -21,14 +23,14 @@ public class FlowNodeCollect extends FlowNode {
 		this.message = message;
 	}
 	
-	public String getCollectedValue() {
-		return collectedValue;
+	public String getCollectorClass() {
+		return collectorClass;
 	}
-	
-	public void setCollectedValue(String collectedValue) {
-		this.collectedValue = collectedValue;
+
+	public void setCollectorClass(String collectorClass) {
+		this.collectorClass = collectorClass;
 	}
-	
+
 	public FlowNode getNextNode() {
 		return nextNode;
 	}
@@ -36,6 +38,13 @@ public class FlowNodeCollect extends FlowNode {
 	public void setNextNode(FlowNode nextNode) {
 		this.nextNode = nextNode;
 	}
-	
+
+	public FlowNode getOnErrorNode() {
+		return onErrorNode;
+	}
+
+	public void setOnErrorNode(FlowNode onErrorNode) {
+		this.onErrorNode = onErrorNode;
+	}
 	
 }

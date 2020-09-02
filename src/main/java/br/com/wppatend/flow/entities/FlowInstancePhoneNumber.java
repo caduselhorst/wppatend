@@ -1,5 +1,6 @@
 package br.com.wppatend.flow.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -8,6 +9,7 @@ import javax.persistence.OneToOne;
 public class FlowInstancePhoneNumber {
 	
 	@Id
+	@Column(columnDefinition = "varchar(30)")
 	private String phoneNumber;
 	@OneToOne
 	private FlowInstance flowInstance;

@@ -4,8 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import br.com.wppatend.entities.Protocolo;
 import br.com.wppatend.flow.entities.Flow;
 import br.com.wppatend.flow.entities.FlowInstance;
 import br.com.wppatend.flow.entities.FlowInstancePhoneNumber;
@@ -76,6 +80,29 @@ public class FlowServiceImpl implements FlowService {
 	@Override
 	public Optional<FlowInstancePhoneNumber> findFlowInstancePhoneNumberByPhoneNumber(String id) {
 		return flowInstancePhoneNumberRepository.findById(id);
+	}
+	
+	@Override
+	public FlowInstance findFlowInstanceByProtocolo(Protocolo protocolo) {
+		return flowInstanceRepository.findByProtocolo(protocolo).get(0);
+	}
+	
+	@Override
+	public void deleteFlowIntancePhoneNumber(FlowInstancePhoneNumber flowInstancePhoneNumber) {
+		flowInstancePhoneNumberRepository.delete(flowInstancePhoneNumber);
+	}
+	
+	@Override
+	public Page<Flow> getFlowList(Integer pageNumber) {
+		PageRequest pageRequest =
+                PageRequest.of(pageNumber - 1, 15, Sort.Direction.ASC, "id");
+
+        return flowRepository.findAll(pageRequest);
+	}
+	
+	@Override
+	public void deleteFlow(Long id) {
+		flowRepository.delete(flowRepository.findById(id).get());
 	}
 
 }

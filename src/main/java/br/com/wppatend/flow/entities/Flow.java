@@ -24,9 +24,9 @@ public class Flow {
 	@SequenceGenerator(name = "FlowSeq", sequenceName = "flowseq", allocationSize = 1)
 	private Long id;
 	private String name;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
 	private List<FlowNode> nodes;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
 	private List<FlowParameter> parameters;
 	private boolean active;
 	private boolean deleted;

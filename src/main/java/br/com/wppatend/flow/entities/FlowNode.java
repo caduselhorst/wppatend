@@ -71,5 +71,18 @@ public class FlowNode {
 	public void setCopyParamToNextNode(boolean copyParamToNextNode) {
 		this.copyParamToNextNode = copyParamToNextNode;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof FlowNode) {
+			return ((FlowNode) obj).getId().equals(id);
+		}
+		return false;
+	}
 
 }

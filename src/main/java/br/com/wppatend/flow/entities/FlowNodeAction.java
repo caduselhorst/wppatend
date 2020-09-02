@@ -38,5 +38,13 @@ public class FlowNodeAction extends FlowNode {
 		this.onErrorNode = onErrorNode;
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
 }

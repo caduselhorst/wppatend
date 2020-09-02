@@ -1,15 +1,20 @@
 package br.com.wppatend.flow.actions;
 
-import br.com.wppatend.flow.entities.Flow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import br.com.wppatend.flow.entities.FlowInstance;
 
 public abstract class Validator {
 
-	protected Flow flow;
+	protected static final Logger logger = LoggerFactory.getLogger(Action.class);
+	protected FlowInstance flowInstance;
 	
-	protected Validator(Flow flow) {
-		this.flow = flow;
+	protected Validator(FlowInstance flowInstance) {
+		this.flowInstance = flowInstance;
 	}
 	
-	public abstract boolean isValid(String param);
+	public abstract void init();
+	public abstract boolean isValid();
 	
 }

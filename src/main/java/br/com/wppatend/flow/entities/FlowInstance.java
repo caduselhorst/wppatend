@@ -3,10 +3,13 @@ package br.com.wppatend.flow.entities;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
@@ -25,6 +28,7 @@ public class FlowInstance {
 	private Protocolo protocolo;
 	@OneToOne
 	private FlowNode actualNode;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<FlowParameter> parameters;
 	private Date initialDate;
 	private Date updatedDate;

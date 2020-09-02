@@ -3,6 +3,7 @@ package br.com.wppatend.clientapi;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,8 @@ import br.com.wppatend.entities.Protocolo;
 import br.com.wppatend.entities.Role;
 import br.com.wppatend.entities.Roteirizador;
 import br.com.wppatend.entities.User;
+import br.com.wppatend.flow.entities.FlowInstancePhoneNumber;
+import br.com.wppatend.flow.services.FlowService;
 import br.com.wppatend.services.ChatService;
 import br.com.wppatend.services.FinalizacaoService;
 import br.com.wppatend.services.ParametroService;
@@ -67,10 +70,12 @@ public class APIController {
 	private PessoaJuridicaRestClient pjClient;
 	@Autowired
 	private MegaBotRestClient botClient;
+	@Autowired
+	private FlowService flowService;
 	
 	
 	@PostMapping(path ="/user/login")
-	private ResponseEntity<ApiReturn> login (@RequestBody LoginInfo loginInfo) {
+	public ResponseEntity<ApiReturn> login (@RequestBody LoginInfo loginInfo) {
 		
 		User user = userService.findByUserName(loginInfo.getUserName());
 		
@@ -114,7 +119,7 @@ public class APIController {
 	}
 	
 	@PostMapping(path ="/user/logout")
-	private ResponseEntity<ApiReturn> logout (@RequestBody LogoutInfo info) {
+	public ResponseEntity<ApiReturn> logout (@RequestBody LogoutInfo info) {
 				
 		roteirizadorService.delete(roteirizadorService.loadById(info.getIdUser()).get());
 		
@@ -124,7 +129,7 @@ public class APIController {
 	}
 	
 	@PostMapping(path ="/user/estado")
-	private ResponseEntity<ApiReturn> setDisponivel (@RequestBody EstadoOperadorInfo info) {
+	public ResponseEntity<ApiReturn> setDisponivel (@RequestBody EstadoOperadorInfo info) {
 		
 		
 		Roteirizador rot = roteirizadorService.loadById(info.getIdUser()).get();
@@ -143,7 +148,7 @@ public class APIController {
 	}
 	
 	@RequestMapping(value="/protocolo/user/{userid}", method = RequestMethod.GET)
-	private ResponseEntity<ApiProtocolo> getProtocolo (@PathVariable("userid") Long userId) {
+	public ResponseEntity<ApiProtocolo> getProtocolo (@PathVariable("userid") Long userId) {
 		
 		ApiProtocolo apiProtocolo = null;
 		Protocolo p = protocoloService.fingProtocoloAbertoByOperador(userId);
@@ -175,7 +180,7 @@ public class APIController {
 	}
 	
 	@PostMapping(path ="/protocolo")
-	private ResponseEntity<ApiReturn> fechaProtocolo (@RequestBody ProtocoloInfo info) {
+	public ResponseEntity<ApiReturn> fechaProtocolo (@RequestBody ProtocoloInfo info) {
 		
 		Protocolo p = protocoloService.findById(info.getIdProtocolo()).get();
 		p.setDataFechamento(new Date());
@@ -183,6 +188,9 @@ public class APIController {
 		p = protocoloService.save(p);
 		
 		botClient.sendMessage(p.getFone(), parametroService.getMensagemFinalizacaoAtendimento());
+		
+		Optional<FlowInstancePhoneNumber> flowInstancePhoneNumber = flowService.findFlowInstancePhoneNumberByPhoneNumber(p.getFone());
+		flowService.deleteFlowIntancePhoneNumber(flowInstancePhoneNumber.get());
 		
 		ApiReturn ret = new ApiReturn();
 		ret.setError(false);
@@ -192,7 +200,7 @@ public class APIController {
 	}
 	
 	@PostMapping(path ="/chat/send")
-	private ResponseEntity<ApiReturn> sendMessage (@RequestBody SendMessageInfo info) {
+	public ResponseEntity<ApiReturn> sendMessage (@RequestBody SendMessageInfo info) {
 		
 		Chat chat = new Chat();
 		chat.setData_tx_rx(new Date());
@@ -214,7 +222,7 @@ public class APIController {
 	}
 	
 	@PostMapping(path ="/chat/sendBase64File")
-	private ResponseEntity<ApiReturn> sendBase64File (@RequestBody SendBase64FileInfo info) {
+	public ResponseEntity<ApiReturn> sendBase64File (@RequestBody SendBase64FileInfo info) {
 		
 		Chat chat = new Chat();
 		chat.setData_tx_rx(new Date());

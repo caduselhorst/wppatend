@@ -8,5 +8,6 @@ public interface FilaAtendimentoService {
 
 	public List<FilaAtendimento> findAll();
 	public void delete(FilaAtendimento fila);
+	public FilaAtendimento save(FilaAtendimento fila);
 	
 }

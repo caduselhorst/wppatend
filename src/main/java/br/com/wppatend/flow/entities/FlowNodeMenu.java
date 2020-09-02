@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity(name="flownodemenu")
@@ -16,6 +17,8 @@ public class FlowNodeMenu extends FlowNode {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<FlowNodeMenuOption> options;
 	private String messageOnUnrecognizedOption;
+	@OneToOne
+	private FlowNode unrecognizedOptionNode;
 	
 	public String getMessage() {
 		return message;
@@ -39,6 +42,14 @@ public class FlowNodeMenu extends FlowNode {
 	
 	public void setMessageOnUnrecognizedOption(String messageOnUnrecognizedOption) {
 		this.messageOnUnrecognizedOption = messageOnUnrecognizedOption;
+	}
+
+	public FlowNode getUnrecognizedOptionNode() {
+		return unrecognizedOptionNode;
+	}
+
+	public void setUnrecognizedOptionNode(FlowNode unrecognizedOptionNode) {
+		this.unrecognizedOptionNode = unrecognizedOptionNode;
 	}
 
 }
