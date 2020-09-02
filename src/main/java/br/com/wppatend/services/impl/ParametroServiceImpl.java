@@ -42,7 +42,7 @@ public class ParametroServiceImpl implements ParametroService {
 	@Override
 	public Page<Parametro> getList(Integer pageNumber) {
 		PageRequest pageRequest =
-                PageRequest.of(pageNumber - 1, 15, Sort.Direction.ASC, "chave");
+                PageRequest.of(pageNumber - 1, 100, Sort.Direction.ASC, "chave");
 
         return repository.findAll(pageRequest);
 	}
@@ -276,6 +276,16 @@ public class ParametroServiceImpl implements ParametroService {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public boolean isTrataCliente() {
+		if(repository.findById("app.trata.cliente").isPresent()) {
+			return Boolean.parseBoolean(repository.findById("app.trata.cliente").get().getValor());
+		} else {
+			return true;
+		}
+		 
 	}
 	
 }

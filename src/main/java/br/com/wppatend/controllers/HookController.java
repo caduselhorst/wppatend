@@ -123,58 +123,80 @@ public class HookController {
 						logger.info("[" + phoneAuthor + "] Protocolo criado. Recuperando cliente");
 						PessoaFisica pf = null;
 						
-						try {
-							pf = pessoaFisicaRestClient.getPessoaFisicaByTelefoneWA(phoneAuthor);
-						} catch (Exception e) {
-							logger.error("[" + phoneAuthor + "] Erro ao recuperar o cliente", e);
-							megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemErro());
-							return ResponseEntity.ok("Ok");
-						}
-						
-						if(pf == null) {
-							logger.info("[" + phoneAuthor + "] Cliente não localizado. Iniciando processo de cadastro");
-							EstadoAtendimento ea = estadoAtendimentoRepository.findById(Integer.parseInt("1")).get();
-							p.setEstado(ea);
-							p = protocoloRepository.save(p);
-							logger.info("[" + phoneAuthor + "] Estado do atendimento atualizado -> [" + ea.getId() + "]");
-							logger.info("[" + phoneAuthor + "] Criando registro inicial do cliente");
-							pf = new PessoaFisica();
-							pf.setNumerowa(phoneAuthor);
-							pf.setNumerocel(fone);
-							pf.setDataCadastro(new Date());
-							
+						if(parametroService.isTrataCliente()) {
 							try {
-								pf = pessoaFisicaRestClient.savePessoaFisica(pf);
-								logger.info("[" + phoneAuthor + "] Registro criado. Id[" + pf.getIdpessoaf() + "]");
+								pf = pessoaFisicaRestClient.getPessoaFisicaByTelefoneWA(phoneAuthor);
 							} catch (Exception e) {
-								logger.error("[" + phoneAuthor + "] Erro ao criar o cliente", e);
+								logger.error("[" + phoneAuthor + "] Erro ao recuperar o cliente", e);
 								megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemErro());
 								return ResponseEntity.ok("Ok");
 							}
 							
-							p.setCodPessoa(pf.getIdpessoaf());
-							p = protocoloRepository.save(p);
-							logger.info("[" + phoneAuthor + "] Protocolo atualizado. Mandando mensagem ao cliente");
-							megaBotApi.sendMessage(phoneAuthor, ea.getMensagem());
-							logger.info("[" + phoneAuthor + "] Mensagem enviada.");
-							
+							if(pf == null) {
+								logger.info("[" + phoneAuthor + "] Cliente não localizado. Iniciando processo de cadastro");
+								EstadoAtendimento ea = estadoAtendimentoRepository.findById(Integer.parseInt("1")).get();
+								p.setEstado(ea);
+								p = protocoloRepository.save(p);
+								logger.info("[" + phoneAuthor + "] Estado do atendimento atualizado -> [" + ea.getId() + "]");
+								logger.info("[" + phoneAuthor + "] Criando registro inicial do cliente");
+								pf = new PessoaFisica();
+								pf.setNumerowa(phoneAuthor);
+								pf.setNumerocel(fone);
+								pf.setDataCadastro(new Date());
+								
+								try {
+									pf = pessoaFisicaRestClient.savePessoaFisica(pf);
+									logger.info("[" + phoneAuthor + "] Registro criado. Id[" + pf.getIdpessoaf() + "]");
+								} catch (Exception e) {
+									logger.error("[" + phoneAuthor + "] Erro ao criar o cliente", e);
+									megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemErro());
+									return ResponseEntity.ok("Ok");
+								}
+								
+								p.setCodPessoa(pf.getIdpessoaf());
+								p = protocoloRepository.save(p);
+								logger.info("[" + phoneAuthor + "] Protocolo atualizado. Mandando mensagem ao cliente");
+								megaBotApi.sendMessage(phoneAuthor, ea.getMensagem());
+								logger.info("[" + phoneAuthor + "] Mensagem enviada.");
+								
+							} else {
+								logger.info("[" + phoneAuthor + "] Cliente localizado. Id:[" + pf.getIdpessoaf() + "] Enviando mensagem de cumprimento.");
+								megaBotApi.sendMessage(phoneAuthor, "Olá " + pf.getNome());
+								logger.info("[" + phoneAuthor + "] Cliente localizado. Id:[" + pf.getIdpessoaf() + "] Mensagem enviada. Setando estado do atendimento.");
+								EstadoAtendimento ea = estadoAtendimentoRepository.findById(Integer.parseInt("10")).get();
+								p.setEstado(ea);
+								p.setCodPessoa(pf.getIdpessoaf());
+								p = protocoloRepository.save(p);
+								logger.info("[" + phoneAuthor + "] Cliente localizado. Id:[" + pf.getIdpessoaf() + "] Ok! Enviando menu ao cliente");
+								megaBotApi.sendMessage(phoneAuthor, ea.getMensagem());
+								logger.info("[" + phoneAuthor + "] Cliente localizado. Id:[" + pf.getIdpessoaf() + "] Mensagem enviada");
+							}
+							//} else {
+							//	logger.info("[" + phoneAuthor + "] Requisição fora do expediente. Enviado mensagem ao cliente");
+							//	megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemHorarioAtendimento());
+							//	logger.info("[" + phoneAuthor + "] Ok");
+							//}
 						} else {
-							logger.info("[" + phoneAuthor + "] Cliente localizado. Id:[" + pf.getIdpessoaf() + "] Enviando mensagem de cumprimento.");
-							megaBotApi.sendMessage(phoneAuthor, "Olá " + pf.getNome());
-							logger.info("[" + phoneAuthor + "] Cliente localizado. Id:[" + pf.getIdpessoaf() + "] Mensagem enviada. Setando estado do atendimento.");
-							EstadoAtendimento ea = estadoAtendimentoRepository.findById(Integer.parseInt("10")).get();
+							logger.info("Aplicação configurada para não tratar o cliente.");
+							logger.info("Setando estado de chat no protocolo");
+							EstadoAtendimento ea = estadoAtendimentoRepository.findById(11).get();
 							p.setEstado(ea);
-							p.setCodPessoa(pf.getIdpessoaf());
 							p = protocoloRepository.save(p);
-							logger.info("[" + phoneAuthor + "] Cliente localizado. Id:[" + pf.getIdpessoaf() + "] Ok! Enviando menu ao cliente");
-							megaBotApi.sendMessage(phoneAuthor, ea.getMensagem());
-							logger.info("[" + phoneAuthor + "] Cliente localizado. Id:[" + pf.getIdpessoaf() + "] Mensagem enviada");
+							logger.info("Ok. Gravando mensagem do cliente como chat.");
+							Chat chat = new Chat();
+							chat.setBody(msg.getMessages().get(0).getBody());
+							chat.setTipo("chat");
+							chat.setData_tx_rx(new Date());
+							chat.setTx_rx(DirecaoMensagem.RECEBIDA);
+							chat.setProtocolo(p.getId());
+							chatRepository.save(chat);
+							logger.info("Ok. Enfileirando atendimento");
+							FilaAtendimento fila = new FilaAtendimento();
+							fila.setDataFila(new Date());
+							fila.setProtocolo(p);
+							filaRepository.save(fila);
+							logger.info("OK");
 						}
-						//} else {
-						//	logger.info("[" + phoneAuthor + "] Requisição fora do expediente. Enviado mensagem ao cliente");
-						//	megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemHorarioAtendimento());
-						//	logger.info("[" + phoneAuthor + "] Ok");
-						//}
 						
 					} else {
 						
