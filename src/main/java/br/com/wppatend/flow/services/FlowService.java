@@ -9,6 +9,7 @@ import br.com.wppatend.flow.entities.Flow;
 import br.com.wppatend.flow.entities.FlowInstance;
 import br.com.wppatend.flow.entities.FlowInstancePhoneNumber;
 import br.com.wppatend.flow.entities.FlowNode;
+import br.com.wppatend.flow.entities.FlowNodeMenuOption;
 
 public interface FlowService {
 	
@@ -28,5 +29,8 @@ public interface FlowService {
 	
 	public FlowNode saveFlowNode(FlowNode flowNode);
 	public Optional<FlowNode> findFlowNodeById(Long id);
+	
+	public FlowNodeMenuOption saveFlowNodeMenuOption(FlowNodeMenuOption menuOption);
+	public Optional<FlowNodeMenuOption> findFlowNodeMenuOptionById(Long id);
 
 }

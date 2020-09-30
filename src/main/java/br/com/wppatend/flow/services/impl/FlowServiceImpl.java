@@ -14,8 +14,10 @@ import br.com.wppatend.flow.entities.Flow;
 import br.com.wppatend.flow.entities.FlowInstance;
 import br.com.wppatend.flow.entities.FlowInstancePhoneNumber;
 import br.com.wppatend.flow.entities.FlowNode;
+import br.com.wppatend.flow.entities.FlowNodeMenuOption;
 import br.com.wppatend.flow.repositories.FlowInstancePhoneNumberRepository;
 import br.com.wppatend.flow.repositories.FlowInstanceRepository;
+import br.com.wppatend.flow.repositories.FlowNodeMenuOptionRepository;
 import br.com.wppatend.flow.repositories.FlowNodeRepository;
 import br.com.wppatend.flow.repositories.FlowRepository;
 import br.com.wppatend.flow.services.FlowService;
@@ -29,6 +31,8 @@ public class FlowServiceImpl implements FlowService {
 	private FlowRepository flowRepository;
 	@Autowired
 	private FlowNodeRepository flowNodeRepository;
+	@Autowired
+	private FlowNodeMenuOptionRepository flowNodeMenuOptionRepository;
 	@Autowired
 	private FlowInstancePhoneNumberRepository flowInstancePhoneNumberRepository;
 
@@ -104,5 +108,15 @@ public class FlowServiceImpl implements FlowService {
 	public void deleteFlow(Long id) {
 		flowRepository.delete(flowRepository.findById(id).get());
 	}
+	
+	@Override
+	public FlowNodeMenuOption saveFlowNodeMenuOption(FlowNodeMenuOption menuOption) {
+		return flowNodeMenuOptionRepository.save(menuOption);
+	}
+	
+	@Override
+	public Optional<FlowNodeMenuOption> findFlowNodeMenuOptionById(Long id) {
+		return flowNodeMenuOptionRepository.findById(id);
+	};
 
 }

@@ -14,10 +14,10 @@ import javax.persistence.PrimaryKeyJoinColumn;
 public class FlowNodeMenu extends FlowNode {
 	
 	private String message;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
 	private List<FlowNodeMenuOption> options;
 	private String messageOnUnrecognizedOption;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private FlowNode unrecognizedOptionNode;
 	
 	public String getMessage() {

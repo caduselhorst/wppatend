@@ -1,6 +1,8 @@
 package br.com.wppatend.flow.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
@@ -9,9 +11,9 @@ import javax.persistence.PrimaryKeyJoinColumn;
 public class FlowNodeAction extends FlowNode {
 
 	private String actionClass;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private FlowNode onSuccessNode;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private FlowNode onErrorNode;
 	
 	public String getActionClass() {

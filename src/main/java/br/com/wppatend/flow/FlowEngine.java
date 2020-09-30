@@ -123,7 +123,6 @@ public class FlowEngine {
 						
 					fInst.setFlow(f);
 					fInst.setInitialDate(dataInicio);
-					fInst.setParameters(f.getParameters());
 					fInst.setProtocolo(p);
 					fInst.setActualNode(f.getNodes().get(0));
 					
@@ -165,9 +164,9 @@ public class FlowEngine {
 			try {
 				
 				Class<?> classe = Class.forName(nodeAction.getActionClass());
-				Constructor<?> cons = classe.getConstructor(Flow.class, 
+				Constructor<?> cons = classe.getConstructor(FlowInstance.class, 
 						MegaBotRestClient.class, ParametroService.class);
-				Action a = (Action) cons.newInstance(instance.getFlow(), 
+				Action a = (Action) cons.newInstance(instance, 
 						megaBotRestClient, parametroService);
 				a.init();
 				a.doAction();
@@ -198,10 +197,10 @@ public class FlowEngine {
 			try {
 				
 				Class<?> classe = Class.forName(nodeCollect.getCollectorClass());
-				Constructor<?> cons = classe.getConstructor(Flow.class, 
+				Constructor<?> cons = classe.getConstructor(FlowInstance.class, 
 						MegaBotRestClient.class, ParametroService.class);
 				Collector c = (Collector) cons.newInstance(
-						instance.getFlow(), megaBotRestClient, parametroService);
+						instance, megaBotRestClient, parametroService);
 				c.doCollect(body);
 				instance.setActualNode(nodeCollect.getNextNode());
 				
@@ -230,10 +229,10 @@ public class FlowEngine {
 			try {
 				
 				Class<?> classe = Class.forName(nodeDecision.getDecisionClass());
-				Constructor<?> cons = classe.getConstructor(Flow.class, 
+				Constructor<?> cons = classe.getConstructor(FlowInstance.class, 
 						MegaBotRestClient.class, ParametroService.class, FlowService.class);
 				Decision d = (Decision) cons.newInstance(
-						instance.getFlow(), megaBotRestClient, parametroService, flowService);
+						instance, megaBotRestClient, parametroService, flowService);
 				d.init();
 				if(d.isConditionSatisfied()) {
 					instance.setActualNode(nodeDecision.getOnTrueNode());

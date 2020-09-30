@@ -32,12 +32,81 @@
                 <tr>
                     <th>ID</th>
                     <th>Nome</th>
-                    <th>Excluir</th>
+                    <th>Tipo</th>
+                    <th>Próximos</th>
+                    <th style="text-align: center;">Editar</th>
+                    <th style="text-align: center;">Excluir</th>
                 </tr>
                 <tr th:each="row : ${flow.nodes}">
                     <td th:text="${row.id}"></td>
                     <td th:text="${row.name}"></td>
-                    <td><a th:href="${'/fluxos/nodes/delete/' + flow.id + '/' + row.id}"><span class="fa fa-trash" style="color: red;"></span></a></td>
+                    <td>
+                    	<span th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeAction)}" th:text="${'Ação'}"></span>
+                    	<span th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeMenu)}" th:text="${'Menu'}"></span>
+                    	<span th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeCollect)}" th:text="${'Coletor'}"></span>
+                    	<span th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeDecision)}" th:text="${'Decisor'}"></span>
+                    	<span th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeEnqueue)}" th:text="${'Enfileiramento'}"></span>
+                    </td>
+                    <td>
+                    	<!-- Node action -->
+                    	<div th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeAction)}">
+                    		<span class="fa fa-check-square" style="color: green;">Passo sucesso: </span>
+                    		<span th:text="${row.onSuccessNode == null ? 'Não configurado' : row.onSuccessNode.name}"></span>
+                    		<br />
+                    		<span class="fa fa-close" style="color: red;">Passo erro: </span>
+                    		<span th:text="${row.onErrorNode == null ? 'Não configurado' : row.onErrorNode.name}"></span>
+                    	</div>
+                    	<!-- Node menu -->
+                    	<div th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeMenu)}">
+                    		<table class="table table-striped">
+                    			<tr>
+                    				<th>Opção</th>
+                    				<th>Passo</th>
+                    			</tr>
+                    			<tr th:each="menuOption : ${row.options}">
+                    				<td th:text="${menuOption.pattern}"></td>
+                    				<td th:text="${menuOption.nextNode.name}"></td>
+                    			</tr>
+                    		</table>
+                    		<a th:href="${'/fluxos/nodes/nodemenu/options/' + flow.id + '/' + row.id}" class="btn btn-secondary">Gerenciar opções</a>
+                    		<br>
+                    		<span class="fa fa-close" style="color: red;">Passo opção não conhecida: </span>
+                    		<span th:text="${row.unrecognizedOptionNode == null ? 'Não configurado' : row.unrecognizedOptionNode.name}"></span>
+                    	</div>
+                    	<!-- Node collector -->
+                    	<div th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeCollect)}">
+                    		<span class="fa fa-check-square" style="color: green;">Passo sucesso: </span>
+                    		<span th:text="${row.nextNode == null ? 'Não configurado' : row.nextNode.name}"></span>
+                    		<br />
+                    		<span class="fa fa-close" style="color: red;">Passo erro: </span>
+                    		<span th:text="${row.onErrorNode == null ? 'Não configurado' : row.onErrorNode.name}"></span>
+                    	</div>
+                    	<!-- Node decision -->
+                    	<div th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeDecision)}">
+                    		<span class="fa fa-check-square" style="color: green;">Passo condição satisfeita: </span>
+                    		<span th:text="${row.onTrueNode == null ? 'Não configurado' : row.onTrueNode.name}"></span>
+                    		<br />
+                    		<span class="fa fa-check-square" style="color: blue;">Passo condição não satisfeita: </span>
+                    		<span th:text="${row.onFalseNode == null ? 'Não configurado' : row.onFalseNode.name}"></span>
+                    		<br />
+                    		<span class="fa fa-close" style="color: red;">Passo erro: </span>
+                    		<span th:text="${row.onErrorNode == null ? 'Não configurado' : row.onErrorNode.name}"></span>
+                    	</div>
+                    	<!-- Node enqueue -->
+                    	<div th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeEnqueue)}">
+                    		<span class="fa fa-arrow-right" style="color: green;" th:text="${row.departamento == null ? 'Não configurado' : row.departamento.descricao}"></span>
+                    	</div>
+                    </td>
+                    <td style="text-align: center;">
+                    	<a th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeAction)}" th:href="${'/fluxos/nodes/edit/actionNode/' + flow.id + '/' + row.id}"><span class="fa fa-pencil" style="color: blue;"></span></a>
+                    	<a th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeMenu)}" th:href="${'/fluxos/nodes/edit/menuNode/' + flow.id + '/' + row.id}"><span class="fa fa-pencil" style="color: blue;"></span></a>
+                    	<a th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeCollect)}" th:href="${'/fluxos/nodes/edit/collectNode/' + flow.id + '/' + row.id}"><span class="fa fa-pencil" style="color: blue;"></span></a>
+                    	<a th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeDecision)}" th:href="${'/fluxos/nodes/edit/decisionNode/' + flow.id + '/' + row.id}"><span class="fa fa-pencil" style="color: blue;"></span></a>
+                    	<a th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeEnqueue)}" th:href="${'/fluxos/nodes/edit/enqueueNode/' + flow.id + '/' + row.id}"><span class="fa fa-pencil" style="color: blue;"></span></a>
+                    </td>
+                    <td style="text-align: center;">
+                    	<a th:href="${'/fluxos/nodes/delete/' + flow.id + '/' + row.id}"><span class="fa fa-trash" style="color: red;"></span></a>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -45,10 +114,10 @@
     <div class="row">
 	    <div class="col-12">	       
 	        <a th:href="${'/fluxos/nodes/add/actionNode/' + flow.id}" class="btn btn-primary">+Ação</a>
-	        <a href="#" class="btn btn-primary">+Menu</a>
-	        <a href="#" class="btn btn-primary">+Coletor</a>
-	        <a href="#" class="btn btn-primary">+Decisor</a>
-	        <a href="#" class="btn btn-primary">+Enfileiramento</a>
+	        <a th:href="${'/fluxos/nodes/add/menuNode/' + flow.id}" class="btn btn-primary">+Menu</a>
+	        <a th:href="${'/fluxos/nodes/add/collectNode/' + flow.id}" class="btn btn-primary">+Coletor</a>
+	        <a th:href="${'/fluxos/nodes/add/decisionNode/' + flow.id}" class="btn btn-primary">+Decisor</a>
+	        <a th:href="${'/fluxos/nodes/add/enqueueNode/' + flow.id}" class="btn btn-primary">+Enfileiramento</a>
 	    </div>
 	</div>
 </div>

@@ -27,7 +27,7 @@ public class FlowNode {
 	@SequenceGenerator(name = "FlowNodeSeq", sequenceName = "flownodeseq", allocationSize = 1)
 	private Long id;
 	private String name;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<FlowNodeParameter> params;
 	private boolean copyParamToNextNode;
 	private boolean deleted;
