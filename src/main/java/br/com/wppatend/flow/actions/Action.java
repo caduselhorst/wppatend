@@ -4,21 +4,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.com.wppatend.clients.MegaBotRestClient;
+import br.com.wppatend.clients.PessoaFisicaRestClient;
+import br.com.wppatend.clients.PessoaJuridicaRestClient;
 import br.com.wppatend.flow.entities.FlowInstance;
+import br.com.wppatend.flow.exceptions.ActionException;
 import br.com.wppatend.services.ParametroService;
+import br.com.wppatend.services.ProtocoloService;
 
 public abstract class Action {
 	
-	protected static final Logger logger = LoggerFactory.getLogger(Action.class);
+	protected final Logger logger = LoggerFactory.getLogger(Action.class);
 	protected FlowInstance flowInstance;
 	protected MegaBotRestClient megaBotRestClient;
 	protected ParametroService parametroService;
+	protected ProtocoloService protocoloService;
+	protected PessoaFisicaRestClient pessoaFisicaRestClient;
+	protected PessoaJuridicaRestClient pessoaJuridicaRestClient;
 	
-	
-	protected Action(FlowInstance flowInstance, MegaBotRestClient megaBotRestClient, ParametroService parametroService) {
+	protected Action(FlowInstance flowInstance, MegaBotRestClient megaBotRestClient, 
+			ParametroService parametroService, ProtocoloService protocoloService,
+			PessoaFisicaRestClient pessoaFisicaRestClient, PessoaJuridicaRestClient pessoaJuridicaRestClient) {
 		this.flowInstance = flowInstance;
 		this.megaBotRestClient = megaBotRestClient;
 		this.parametroService = parametroService;
+		this.protocoloService = protocoloService;
+		this.pessoaFisicaRestClient = pessoaFisicaRestClient;
+		this.pessoaJuridicaRestClient = pessoaJuridicaRestClient;
 	}
 
 	protected FlowInstance getFlowInstance() {
@@ -44,8 +55,40 @@ public abstract class Action {
 	protected void setParametroService(ParametroService parametroService) {
 		this.parametroService = parametroService;
 	}
+	
+	protected ProtocoloService getProtocoloService() {
+		return protocoloService;
+	}
+
+	protected void setProtocoloService(ProtocoloService protocoloService) {
+		this.protocoloService = protocoloService;
+	}
+	
+	protected PessoaFisicaRestClient getPessoaFisicaRestClient() {
+		return pessoaFisicaRestClient;
+	}
+
+	protected void setPessoaFisicaRestClient(PessoaFisicaRestClient pessoaFisicaRestClient) {
+		this.pessoaFisicaRestClient = pessoaFisicaRestClient;
+	}
+
+	protected PessoaJuridicaRestClient getPessoaJuridicaRestClient() {
+		return pessoaJuridicaRestClient;
+	}
+
+	protected void setPessoaJuridicaRestClient(PessoaJuridicaRestClient pessoaJuridicaRestClient) {
+		this.pessoaJuridicaRestClient = pessoaJuridicaRestClient;
+	}
+	
+	protected void logInfo(String msg) {
+		logger.info(msg);
+	}
+	
+	protected void logError(String msg, Throwable t) {
+		logger.error(msg, t);
+	}
 
 	public abstract void init();
-	public abstract void doAction();
+	public abstract void doAction() throws ActionException;
 
 }

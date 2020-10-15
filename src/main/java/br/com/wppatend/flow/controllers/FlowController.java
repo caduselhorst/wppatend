@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.websocket.server.PathParam;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import br.com.wppatend.flow.entities.FlowNodeDecision;
 import br.com.wppatend.flow.entities.FlowNodeEnqueue;
 import br.com.wppatend.flow.entities.FlowNodeMenu;
 import br.com.wppatend.flow.entities.FlowNodeMenuOption;
+import br.com.wppatend.flow.entities.FlowParameter;
 import br.com.wppatend.flow.services.FlowService;
 import br.com.wppatend.services.DepartamentoService;
 
@@ -426,6 +429,81 @@ public class FlowController {
 	public String delete(@PathVariable Long id) {
 		flowService.deleteFlow(id);
 		return "redirect:/finalizacoes";
+	}
+	
+	
+	/*
+	 * Load flow parameters
+	 */
+	@GetMapping("/parameters/{flowId}")
+	public String loadFlowParameters(@PathVariable Long flowId, Model model) {
+		
+		Optional<Flow> optFlow = flowService.findFlowById(flowId);
+		model.addAttribute("list", optFlow.get().getParameters());
+		model.addAttribute("flow", optFlow.get());
+		return "fluxos/parameterslist";
+		
+	}
+	
+	/*
+	 * Load to add a new parameter into a flow
+	 */
+	@GetMapping("/parameters/{flowId}/add")
+	public String addFlowParameter(@PathVariable Long flowId, Model model) {
+		Optional<Flow> optFlow = flowService.findFlowById(flowId);
+		FlowParameter parameter = new FlowParameter();
+		model.addAttribute("flow", optFlow.get());
+		model.addAttribute("parameter", parameter);
+		
+		return "fluxos/formparameter";
+	}
+	
+	/*
+	 * Load to edit a new parameter into a flow
+	 */
+	@GetMapping("/parameters/{flowId}/edit/{flowParameterId}")
+	public String editFlowParameter(@PathVariable(name = "flowId") Long flowId, 
+			@PathVariable(name="flowParameterId") Long flowParameterId, Model model) {
+		Optional<Flow> optFlow = flowService.findFlowById(flowId);
+		Optional<FlowParameter> parameter = flowService.findFlowParameterById(flowParameterId);
+		model.addAttribute("flow", optFlow.get());
+		model.addAttribute("parameter", parameter.get());
+		
+		return "fluxos/formparameter";
+	}
+	
+	
+	/*
+	 * Save parameter into a flow
+	 */
+	@PostMapping("/parameters/save")
+	public String saveParameter(Long flowId, Model model, FlowParameter parameter) {
+		Flow flow = flowService.findFlowById(flowId).get();
+		
+		if(flow.getParameters() == null) {
+			flow.setParameters(new ArrayList<>());
+		}
+		
+		if(parameter.getId() == null) {
+			flow.getParameters().add(parameter);
+			flowService.saveFlow(flow);
+		} else {
+			flowService.saveFlowParameter(parameter);
+		}
+		
+		return "redirect:/fluxos/parameters/" + flowId;
+	}
+	
+	/*
+	 * Delete a flow parameter
+	 */
+	@GetMapping("/parameters/{flowId}/delete/{parameterId}")
+	public String deleteParameter(@PathVariable(name="flowId") Long flowId, 
+			@PathVariable(name="parameterId") Long parameterId) {
+		Flow flow = flowService.findFlowById(flowId).get();
+		flow.getParameters().remove(flowService.findFlowParameterById(parameterId).get());
+		flowService.saveFlow(flow);
+		return "redirect:/fluxos/parameters/" + flowId;
 	}
 
 }

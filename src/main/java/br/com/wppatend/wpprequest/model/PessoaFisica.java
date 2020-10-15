@@ -1,12 +1,17 @@
 package br.com.wppatend.wpprequest.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PessoaFisica {
+public class PessoaFisica implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2277209160879815128L;
 	private Long idpessoaf;
 	private String numerowa;
 	private String numerocel;

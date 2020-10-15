@@ -15,10 +15,12 @@ import br.com.wppatend.flow.entities.FlowInstance;
 import br.com.wppatend.flow.entities.FlowInstancePhoneNumber;
 import br.com.wppatend.flow.entities.FlowNode;
 import br.com.wppatend.flow.entities.FlowNodeMenuOption;
+import br.com.wppatend.flow.entities.FlowParameter;
 import br.com.wppatend.flow.repositories.FlowInstancePhoneNumberRepository;
 import br.com.wppatend.flow.repositories.FlowInstanceRepository;
 import br.com.wppatend.flow.repositories.FlowNodeMenuOptionRepository;
 import br.com.wppatend.flow.repositories.FlowNodeRepository;
+import br.com.wppatend.flow.repositories.FlowParameterRepository;
 import br.com.wppatend.flow.repositories.FlowRepository;
 import br.com.wppatend.flow.services.FlowService;
 
@@ -35,6 +37,8 @@ public class FlowServiceImpl implements FlowService {
 	private FlowNodeMenuOptionRepository flowNodeMenuOptionRepository;
 	@Autowired
 	private FlowInstancePhoneNumberRepository flowInstancePhoneNumberRepository;
+	@Autowired
+	private FlowParameterRepository flowParameterRepository;
 
 	@Override
 	public Flow saveFlow(Flow flow) {
@@ -118,5 +122,20 @@ public class FlowServiceImpl implements FlowService {
 	public Optional<FlowNodeMenuOption> findFlowNodeMenuOptionById(Long id) {
 		return flowNodeMenuOptionRepository.findById(id);
 	};
+	
+	@Override
+	public Optional<FlowParameter> findFlowParameterById(Long id) {
+		return flowParameterRepository.findById(id);
+	}
+	
+	@Override
+	public FlowParameter saveFlowParameter(FlowParameter flowParameter) {
+		return flowParameterRepository.save(flowParameter);
+	}
+	
+	@Override
+	public void deleteFlowParameter(Long id) {
+		flowParameterRepository.delete(flowParameterRepository.findById(id).get());
+	}
 
 }

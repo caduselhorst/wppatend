@@ -30,6 +30,7 @@
                     <th style="text-align: center">Alterar</th>
                     <th style="text-align: center">Excluir</th>
                     <th style="text-align: center">Passos</th>
+                    <th style="text-align: center">Parâmetros</th>
                 </tr>
                 <tr th:each="row : ${list}">
                     <td th:text="${row.id}"></td>
@@ -46,6 +47,9 @@
                     </td>
                     <td style="text-align: center">
                         <a th:href="${'/fluxos/loadflow/' + row.id}"><span class="fa fa-arrow-circle-o-right" style="color: blue;"></span></a>
+                    </td>
+                    <td style="text-align: center">
+                        <a th:href="${'/fluxos/parameters/' + row.id}"><span class="fa fa-newspaper-o" style="color: purple;"></span></a>
                     </td>
                 </tr>
             </table>

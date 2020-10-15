@@ -33,6 +33,8 @@ import br.com.wppatend.flow.entities.FlowNodeEnqueue;
 import br.com.wppatend.flow.entities.FlowNodeMenu;
 import br.com.wppatend.flow.entities.FlowNodeMenuOption;
 import br.com.wppatend.flow.entities.FlowParameter;
+import br.com.wppatend.flow.exceptions.ActionException;
+import br.com.wppatend.flow.exceptions.DecisionException;
 import br.com.wppatend.flow.services.FlowService;
 import br.com.wppatend.services.ChatService;
 import br.com.wppatend.services.FilaAtendimentoService;
@@ -169,8 +171,13 @@ public class FlowEngine {
 				Action a = (Action) cons.newInstance(instance, 
 						megaBotRestClient, parametroService);
 				a.init();
-				a.doAction();
-				instance.setActualNode(nodeAction.getOnSuccessNode());
+				try {
+					a.doAction();
+					instance.setActualNode(nodeAction.getOnSuccessNode());
+				} catch (ActionException e) {
+					instance.setActualNode(nodeAction.getOnErrorNode());
+				}
+				
 				
 			} catch (ClassNotFoundException e) {
 				logger.error("An error ocurred during the attempted to execution of this action", e);
@@ -234,10 +241,14 @@ public class FlowEngine {
 				Decision d = (Decision) cons.newInstance(
 						instance, megaBotRestClient, parametroService, flowService);
 				d.init();
+				try {
 				if(d.isConditionSatisfied()) {
 					instance.setActualNode(nodeDecision.getOnTrueNode());
 				} else {
 					instance.setActualNode(nodeDecision.getOnFalseNode());
+				}
+				} catch (DecisionException e) {
+					instance.setActualNode(nodeDecision.getOnErrorNode());
 				}
 				
 			} catch (ClassNotFoundException e) {
