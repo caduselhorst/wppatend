@@ -2,7 +2,7 @@
 	{
 		"id" : 1, 
 		"descricao" : "Cadastra cliente",
-		"mensagem" : "Olá! Seja bem vindo(a) ao nosso atendimento virtual. Verificamos que seu número não possui cadastro em nossa base de dados. Para iniciar seu atendimento é necessário ter em mãos o número de seu *CPF* e *CEP*. Se deseja continuar, responda com a palavra *CADASTRAR*",
+		"mensagem" : "Informe o código do produto: ",
 		"direcionamentos"  : [{"id" : 1, "idProximoEstado" : 2, "idProximoEstadoErro" : null,"resposta" : "CADASTRAR", "confirmacao" : false}]
 	},
 	{
