@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.websocket.server.PathParam;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,6 +155,7 @@ public class FlowController {
 			@PathVariable(name = "nodeId") Long nodeId, Model model) {
 		Optional<Flow> f = flowService.findFlowById(flowId);
 		FlowNodeMenu nodeAction = (FlowNodeMenu) flowService.findFlowNodeById(nodeId).get();
+		nodeAction.getOptions();
         model.addAttribute("flow", f.get());
         model.addAttribute("flowNode", nodeAction);
 		return "fluxos/nodemenuform";

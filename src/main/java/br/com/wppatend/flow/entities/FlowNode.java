@@ -31,6 +31,7 @@ public class FlowNode {
 	private List<FlowNodeParameter> params;
 	private boolean copyParamToNextNode;
 	private boolean deleted;
+	private boolean end;
 	
 	public Long getId() {
 		return id;
@@ -72,6 +73,16 @@ public class FlowNode {
 		this.copyParamToNextNode = copyParamToNextNode;
 	}
 	
+	public boolean isEnd() {
+		return end;
+	}
+
+	public void setEnd(boolean end) {
+		this.end = end;
+	}
+	
+	
+
 	@Override
 	public int hashCode() {
 		return super.hashCode();

@@ -161,6 +161,9 @@ public class FlowEngine {
 	
 	private String processFlowInstanceActualNode(FlowInstance instance, String phoneAuthor, String body) {
 		
+		/*
+		 * Action
+		 */
 		if(instance.getActualNode() instanceof FlowNodeAction) {
 			FlowNodeAction nodeAction = (FlowNodeAction) instance.getActualNode();
 			try {
@@ -199,6 +202,9 @@ public class FlowEngine {
 			return processReturnMessage(instance.getActualNode());
 		}
 		
+		/*
+		 * Collect
+		 */
 		if(instance.getActualNode() instanceof FlowNodeCollect) {
 			FlowNodeCollect nodeCollect = (FlowNodeCollect) instance.getActualNode();
 			try {
@@ -231,6 +237,9 @@ public class FlowEngine {
 			return processReturnMessage(instance.getActualNode());
 		}
 		
+		/*
+		 * Decision
+		 */
 		if(instance.getActualNode() instanceof FlowNodeDecision) {
 			FlowNodeDecision nodeDecision = (FlowNodeDecision) instance.getActualNode();
 			try {
@@ -271,6 +280,9 @@ public class FlowEngine {
 			return processReturnMessage(instance.getActualNode());
 		}
 		
+		/*
+		 * Enqueue
+		 */
 		if(instance.getActualNode() instanceof FlowNodeEnqueue) {
 			FilaAtendimento fila = new FilaAtendimento();
 			fila.setDataFila(new Date());
@@ -282,6 +294,9 @@ public class FlowEngine {
 			return "OK";
 		}
 		
+		/*
+		 * Menu
+		 */
 		if(instance.getActualNode() instanceof FlowNodeMenu) {
 			FlowNodeMenu nodeMenu = (FlowNodeMenu) instance.getActualNode();
 			FlowNodeMenuOption findedOption = null;

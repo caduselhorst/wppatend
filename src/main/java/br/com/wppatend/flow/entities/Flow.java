@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.SQLDelete;
@@ -28,6 +29,8 @@ public class Flow {
 	private List<FlowNode> nodes;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
 	private List<FlowParameter> parameters;
+	@OneToOne
+	private FlowNode initialNode;
 	private boolean active;
 	private boolean deleted;
 	public Long getId() {
@@ -66,5 +69,12 @@ public class Flow {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
+	public FlowNode getInitialNode() {
+		return initialNode;
+	}
+	public void setInitialNode(FlowNode initialNode) {
+		this.initialNode = initialNode;
+	}
+	
 
 }
