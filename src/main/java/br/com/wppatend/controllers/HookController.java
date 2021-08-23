@@ -167,11 +167,7 @@ public class HookController {
 								megaBotApi.sendMessage(phoneAuthor, ea.getMensagem());
 								logger.info("[" + phoneAuthor + "] Cliente localizado. Id:[" + pf.getIdpessoaf() + "] Mensagem enviada");
 							}
-							//} else {
-							//	logger.info("[" + phoneAuthor + "] Requisição fora do expediente. Enviado mensagem ao cliente");
-							//	megaBotApi.sendMessage(phoneAuthor, parametroService.getMensagemHorarioAtendimento());
-							//	logger.info("[" + phoneAuthor + "] Ok");
-							//}
+
 						} else {
 							logger.info("Aplicação configurada para não tratar o cliente.");
 							logger.info("Setando estado de chat no protocolo");
