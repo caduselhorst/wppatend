@@ -41,29 +41,27 @@ public class Departamento {
 	}
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
-		return super.hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
 	}
-	
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof Departamento) {
-			Departamento r = (Departamento) obj;
-			if(id == null && r.getId() != null) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Departamento other = (Departamento) obj;
+		if (id == null) {
+			if (other.id != null)
 				return false;
-			} else {
-				if (id != null && r.getId() == null) {
-					return false;
-				} else {
-					if(id == null && r.getId() == null) {
-						return descricao.equals(r.getDescricao());
-					} else {
-						return id.equals(r.getId());
-					}
-				}
-			}
-		}
-		return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
+	
 
 }

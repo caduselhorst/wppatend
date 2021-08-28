@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import br.com.wppatend.entities.FilaAtendimento;
 import br.com.wppatend.entities.Protocolo;
 import br.com.wppatend.entities.Roteirizador;
+import br.com.wppatend.repositories.UserRepository;
 import br.com.wppatend.services.FilaAtendimentoService;
 import br.com.wppatend.services.ParametroService;
 import br.com.wppatend.services.ProtocoloService;
@@ -32,6 +33,8 @@ public class RoteirizadorThread extends Thread {
 	private RoteirizadorService roteirizadorService;
 	@Autowired
 	private ProtocoloService protocoloService;
+	@Autowired
+	private UserRepository userRepository;
 	
 	private Thread thread;
 
@@ -56,8 +59,9 @@ public class RoteirizadorThread extends Thread {
 			List<FilaAtendimento> fila = filaService.findAll();
 			if(fila != null) {
 				fila.forEach(f -> {
+					
 					Optional<Roteirizador> r = roteirizadorService.findByDisponivel();
-					if(r.isPresent()) {
+					if(r.isPresent() && userRepository.findById(r.get().getUserId()).get().getDepartamentos().contains(f.getDepartamento())) {
 						Protocolo p = f.getProtocolo();
 						p = protocoloService.findById(p.getId()).get();
 						p.setOperador(r.get().getUserId());
