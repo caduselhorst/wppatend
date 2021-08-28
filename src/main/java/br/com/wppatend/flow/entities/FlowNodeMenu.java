@@ -1,11 +1,6 @@
 package br.com.wppatend.flow.entities;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
@@ -14,10 +9,12 @@ import javax.persistence.PrimaryKeyJoinColumn;
 public class FlowNodeMenu extends FlowNode {
 	
 	private String message;
+	/*
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
 	private List<FlowNodeMenuOption> options;
+	*/
 	private String messageOnUnrecognizedOption;
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne
 	private FlowNode unrecognizedOptionNode;
 	
 	public String getMessage() {
@@ -26,15 +23,7 @@ public class FlowNodeMenu extends FlowNode {
 	
 	public void setMessage(String message) {
 		this.message = message;
-	}
-	
-	public List<FlowNodeMenuOption> getOptions() {
-		return options;
-	}
-	
-	public void setOptions(List<FlowNodeMenuOption> options) {
-		this.options = options;
-	}
+	}	
 	
 	public String getMessageOnUnrecognizedOption() {
 		return messageOnUnrecognizedOption;

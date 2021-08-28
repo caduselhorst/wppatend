@@ -1,7 +1,7 @@
 package br.com.wppatend.controllers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,14 +14,14 @@ import br.com.wppatend.roteirizador.RoteirizadorThread;
 @RequestMapping("roteirizador")
 public class RoteirizadorController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AtendimentoController.class);
+	//private static final Logger logger = LoggerFactory.getLogger(AtendimentoController.class);
 	
 	@Autowired
 	private RoteirizadorThread roteirizador;
 	
 	@GetMapping
     public String index() {
-		logger.info("Index de Atendimentos");
+		//logger.info("Index de Atendimentos");
         return "redirect:/roteirizador/";
     }
 	

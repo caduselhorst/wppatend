@@ -11,11 +11,11 @@ import javax.persistence.PrimaryKeyJoinColumn;
 public class FlowNodeDecision extends FlowNode {
 	
 	private String decisionClass;
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, orphanRemoval = true)
 	private FlowNode onTrueNode;
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, orphanRemoval = true)
 	private FlowNode onFalseNode;
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, orphanRemoval = true)
 	private FlowNode onErrorNode;
 	
 	public String getDecisionClass() {

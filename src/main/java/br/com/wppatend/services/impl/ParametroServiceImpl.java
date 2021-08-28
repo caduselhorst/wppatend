@@ -288,4 +288,13 @@ public class ParametroServiceImpl implements ParametroService {
 		 
 	}
 	
+	@Override
+	public String getParametro(String paramName) {
+		if(repository.findById(paramName).isPresent()) {
+			return repository.findById(paramName).get().getValor();
+		} else {
+			return null;
+		}
+	}
+	
 }

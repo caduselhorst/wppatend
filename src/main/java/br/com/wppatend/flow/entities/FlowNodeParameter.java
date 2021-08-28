@@ -6,12 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-
 @Entity(name="flownodeparameter")
-@SQLDelete(sql = "update flownodeparameter set deleted = true where id=?")
-@Where(clause = "deleted = false")
 public class FlowNodeParameter {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FlowNodeParamSeq")

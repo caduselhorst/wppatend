@@ -8,6 +8,7 @@ import br.com.wppatend.clients.PessoaFisicaRestClient;
 import br.com.wppatend.clients.PessoaJuridicaRestClient;
 import br.com.wppatend.flow.entities.FlowInstance;
 import br.com.wppatend.flow.exceptions.ActionException;
+import br.com.wppatend.flow.services.FlowService;
 import br.com.wppatend.services.ParametroService;
 import br.com.wppatend.services.ProtocoloService;
 
@@ -20,16 +21,23 @@ public abstract class Action {
 	protected ProtocoloService protocoloService;
 	protected PessoaFisicaRestClient pessoaFisicaRestClient;
 	protected PessoaJuridicaRestClient pessoaJuridicaRestClient;
+	protected FlowService flowService;
 	
-	protected Action(FlowInstance flowInstance, MegaBotRestClient megaBotRestClient, 
-			ParametroService parametroService, ProtocoloService protocoloService,
-			PessoaFisicaRestClient pessoaFisicaRestClient, PessoaJuridicaRestClient pessoaJuridicaRestClient) {
+	protected Action(
+			FlowInstance flowInstance,
+			MegaBotRestClient megaBotRestClient, 
+			ParametroService parametroService,
+			ProtocoloService protocoloService,
+			PessoaFisicaRestClient pessoaFisicaRestClient,
+			PessoaJuridicaRestClient pessoaJuridicaRestClient,
+			FlowService flowService) {
 		this.flowInstance = flowInstance;
 		this.megaBotRestClient = megaBotRestClient;
 		this.parametroService = parametroService;
 		this.protocoloService = protocoloService;
 		this.pessoaFisicaRestClient = pessoaFisicaRestClient;
 		this.pessoaJuridicaRestClient = pessoaJuridicaRestClient;
+		this.flowService = flowService;
 	}
 
 	protected FlowInstance getFlowInstance() {

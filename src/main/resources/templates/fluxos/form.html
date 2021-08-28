@@ -29,15 +29,17 @@
                     <label for="name">Descrição</label>
                     <input type="text" required="true" class="form-control" th:field="*{name}" id="name" />
                 </div>
+                <!-- 
                 <div class="form-group">
                     <label for="nextSucessNode">Passo inicial</label>
                     <select class="form-control" 
                     	th:field="*{initialNode}"
 						id="nextSucessNode">
 						<option th:value="0" th:text="${'.:Selecione:.'}"></option>
-						<option th:each="node : ${fluxo.nodes}"th:value="${node.id}" th:text="${node.name}" th:selected="${fluxo.nodes.contains(node)}"/>
+						<option th:each="node : ${nodes}"th:value="${node.id}" th:text="${node.name}" th:selected="${nodes.contains(node)}"/>
 					</select>
                 </div>
+                 -->
                 <div class="form-group">
                     <input type="checkbox" th:field="*{active}" id="name" />
                     <label for="name">Ativo</label>

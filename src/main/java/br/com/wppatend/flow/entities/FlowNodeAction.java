@@ -11,9 +11,9 @@ import javax.persistence.PrimaryKeyJoinColumn;
 public class FlowNodeAction extends FlowNode {
 
 	private String actionClass;
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, orphanRemoval = true)
 	private FlowNode onSuccessNode;
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, orphanRemoval = true)
 	private FlowNode onErrorNode;
 	
 	public String getActionClass() {

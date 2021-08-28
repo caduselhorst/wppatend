@@ -37,7 +37,7 @@
                     <th style="text-align: center;">Editar</th>
                     <th style="text-align: center;">Excluir</th>
                 </tr>
-                <tr th:each="row : ${flow.nodes}">
+                <tr th:each="row : ${nodes}">
                     <td th:text="${row.id}"></td>
                     <td th:text="${row.name}"></td>
                     <td>
@@ -58,6 +58,7 @@
                     	</div>
                     	<!-- Node menu -->
                     	<div th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeMenu)}">
+                    		<!-- 
                     		<table class="table table-striped">
                     			<tr>
                     				<th>Opção</th>
@@ -68,6 +69,7 @@
                     				<td th:text="${menuOption.nextNode.name}"></td>
                     			</tr>
                     		</table>
+                    		 -->
                     		<a th:href="${'/fluxos/nodes/nodemenu/options/' + flow.id + '/' + row.id}" class="btn btn-secondary">Gerenciar opções</a>
                     		<br>
                     		<span class="fa fa-close" style="color: red;">Passo opção não conhecida: </span>

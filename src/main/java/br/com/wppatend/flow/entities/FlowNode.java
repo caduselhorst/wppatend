@@ -1,25 +1,16 @@
 package br.com.wppatend.flow.entities;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
-
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 @Entity(name = "flownode")
 @Inheritance(strategy = InheritanceType.JOINED)
-@SQLDelete(sql = "update flownode set deleted = true where id=?")
-@Where(clause = "deleted = false")
 public class FlowNode {
 	
 	@Id
@@ -27,11 +18,12 @@ public class FlowNode {
 	@SequenceGenerator(name = "FlowNodeSeq", sequenceName = "flownodeseq", allocationSize = 1)
 	private Long id;
 	private String name;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<FlowNodeParameter> params;
+	@OneToOne
+	private Flow flow;
 	private boolean copyParamToNextNode;
 	private boolean deleted;
 	private boolean end;
+	private boolean init;
 	
 	public Long getId() {
 		return id;
@@ -47,14 +39,6 @@ public class FlowNode {
 	
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<FlowNodeParameter> getParams() {
-		return params;
-	}
-
-	public void setParams(List<FlowNodeParameter> params) {
-		this.params = params;
 	}
 
 	public boolean isDeleted() {
@@ -80,20 +64,48 @@ public class FlowNode {
 	public void setEnd(boolean end) {
 		this.end = end;
 	}
+
+	public Flow getFlow() {
+		return flow;
+	}
+
+	public void setFlow(Flow flow) {
+		this.flow = flow;
+	}
 	
-	
+
+	public boolean isInit() {
+		return init;
+	}
+
+	public void setInit(boolean init) {
+		this.init = init;
+	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof FlowNode) {
-			return ((FlowNode) obj).getId().equals(id);
-		}
-		return false;
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FlowNode other = (FlowNode) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
+	
 
 }

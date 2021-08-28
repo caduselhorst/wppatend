@@ -7,6 +7,8 @@ import br.com.wppatend.clients.MegaBotRestClient;
 import br.com.wppatend.clients.PessoaFisicaRestClient;
 import br.com.wppatend.clients.PessoaJuridicaRestClient;
 import br.com.wppatend.flow.entities.FlowInstance;
+import br.com.wppatend.flow.exceptions.CollectorException;
+import br.com.wppatend.flow.services.FlowService;
 import br.com.wppatend.services.ParametroService;
 import br.com.wppatend.services.ProtocoloService;
 
@@ -19,16 +21,18 @@ public abstract class Collector {
 	protected ProtocoloService protocoloService;
 	protected PessoaFisicaRestClient pessoaFisicaRestClient;
 	protected PessoaJuridicaRestClient pessoaJuridicaRestClient;
+	protected FlowService flowService;
 	
 	protected Collector(FlowInstance flowInstance, MegaBotRestClient megaBotRestClient, 
 			ParametroService parametroService, ProtocoloService protocoloService,
-			PessoaFisicaRestClient pessoaFisicaRestClient, PessoaJuridicaRestClient pessoaJuridicaRestClient) {
+			PessoaFisicaRestClient pessoaFisicaRestClient, PessoaJuridicaRestClient pessoaJuridicaRestClient, FlowService flowService) {
 		this.flowInstance = flowInstance;
 		this.megaBotRestClient = megaBotRestClient;
 		this.parametroService = parametroService;
 		this.protocoloService = protocoloService;
 		this.pessoaFisicaRestClient = pessoaFisicaRestClient;
 		this.pessoaJuridicaRestClient = pessoaJuridicaRestClient;
+		this.flowService = flowService;
 	}
 	
 	public FlowInstance getFlowInstance() {
@@ -79,6 +83,6 @@ public abstract class Collector {
 		this.pessoaJuridicaRestClient = pessoaJuridicaRestClient;
 	}
 
-	public abstract void doCollect(String collectValues);
+	public abstract void doCollect(String collectValues) throws CollectorException;
 	
 }

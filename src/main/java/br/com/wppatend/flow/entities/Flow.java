@@ -1,23 +1,13 @@
 package br.com.wppatend.flow.entities;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-
 @Entity(name = "flow")
-@SQLDelete(sql = "update flow set deleted = true where id=?")
-@Where(clause = "deleted = false")
 public class Flow {
 	
 	@Id
@@ -25,11 +15,7 @@ public class Flow {
 	@SequenceGenerator(name = "FlowSeq", sequenceName = "flowseq", allocationSize = 1)
 	private Long id;
 	private String name;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
-	private List<FlowNode> nodes;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
-	private List<FlowParameter> parameters;
-	@OneToOne
+	@OneToOne(optional = true)
 	private FlowNode initialNode;
 	private boolean active;
 	private boolean deleted;
@@ -44,18 +30,6 @@ public class Flow {
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public List<FlowNode> getNodes() {
-		return nodes;
-	}
-	public void setNodes(List<FlowNode> nodes) {
-		this.nodes = nodes;
-	}
-	public List<FlowParameter> getParameters() {
-		return parameters;
-	}
-	public void setParameters(List<FlowParameter> parameters) {
-		this.parameters = parameters;
 	}
 	public boolean isActive() {
 		return active;

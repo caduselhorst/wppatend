@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.wppatend.clients.MegaBotRestClient;
+import br.com.wppatend.clients.PessoaFisicaRestClient;
+import br.com.wppatend.clients.PessoaJuridicaRestClient;
 import br.com.wppatend.constraints.DirecaoMensagem;
 import br.com.wppatend.entities.Chat;
 import br.com.wppatend.entities.FilaAtendimento;
@@ -24,6 +26,7 @@ import br.com.wppatend.flow.actions.Collector;
 import br.com.wppatend.flow.actions.Decision;
 import br.com.wppatend.flow.entities.Flow;
 import br.com.wppatend.flow.entities.FlowInstance;
+import br.com.wppatend.flow.entities.FlowInstanceParameter;
 import br.com.wppatend.flow.entities.FlowInstancePhoneNumber;
 import br.com.wppatend.flow.entities.FlowNode;
 import br.com.wppatend.flow.entities.FlowNodeAction;
@@ -34,6 +37,7 @@ import br.com.wppatend.flow.entities.FlowNodeMenu;
 import br.com.wppatend.flow.entities.FlowNodeMenuOption;
 import br.com.wppatend.flow.entities.FlowParameter;
 import br.com.wppatend.flow.exceptions.ActionException;
+import br.com.wppatend.flow.exceptions.CollectorException;
 import br.com.wppatend.flow.exceptions.DecisionException;
 import br.com.wppatend.flow.services.FlowService;
 import br.com.wppatend.services.ChatService;
@@ -59,6 +63,10 @@ public class FlowEngine {
 	private FilaAtendimentoService filaAtendimentoService;
 	@Autowired
 	private ChatService chatService;
+	@Autowired
+	private PessoaFisicaRestClient pessoaFisicaRestClient;
+	@Autowired
+	private PessoaJuridicaRestClient pessoaJuridicaRestClient;
 	
 	public void handleMessage(WppObjectRequest wppObjectRequest) {
 		
@@ -84,7 +92,7 @@ public class FlowEngine {
 				 */
 				FlowInstance inst = instance.get().getFlowInstance();  
 				if(inst.getFinishDate() == null) {
-					processRequest(inst, phoneAuthor, body);
+					processRequest(inst, phoneAuthor, body, instance.get());
 				} else {
 					Chat chat = new Chat();
 					chat.setBody(body);
@@ -112,13 +120,18 @@ public class FlowEngine {
 					p = protocoloService.save(p);
 					
 					FlowInstance fInst = new FlowInstance();
+					List<FlowParameter> parameters = flowService.loadParametersByFlow(f.getId());
 					
-					if(f.getParameters() != null) {
+					if(parameters != null) {
 						fInst.setParameters(new ArrayList<>());
-						for(FlowParameter fp :  f.getParameters()) {
-							FlowParameter fpInst = new FlowParameter();
-							fpInst.setClassType(fp.getClassType());
-							fpInst.setName(fp.getName());
+						for(FlowParameter fp :  parameters) {
+							FlowInstanceParameter fpInst = new FlowInstanceParameter();
+							/*fpInst.setClassType(fp.getClassType());
+							fpInst.setName(fp.getName());*/
+							fpInst.setParameter(fp);
+							if(fInst.getParameters() == null) {
+								fInst.setParameters(new ArrayList<>());
+							}
 							fInst.getParameters().add(fpInst);
 						}
 					}
@@ -126,7 +139,15 @@ public class FlowEngine {
 					fInst.setFlow(f);
 					fInst.setInitialDate(dataInicio);
 					fInst.setProtocolo(p);
-					fInst.setActualNode(f.getNodes().get(0));
+					for(FlowNode fn : flowService.loadNodeByFlow(f.getId())) {
+						if(fn instanceof FlowNodeAction) {
+							if(((FlowNodeAction) fn).isInit()) {
+								fInst.setActualNode(fn);
+								break;
+							}
+						}
+					}
+					
 					
 					fInst = flowService.saveFlowInstance(fInst);
 					
@@ -136,7 +157,7 @@ public class FlowEngine {
 					
 					fipn = flowService.saveFlowInstancePhoneNumber(fipn);
 					
-					processRequest(fInst, phoneAuthor, body);
+					processRequest(fInst, phoneAuthor, body, fipn);
 						
 				}
 			}
@@ -146,7 +167,7 @@ public class FlowEngine {
 		
 	}
 	
-	private void processRequest(FlowInstance intance, String phoneAuthor, String body) {
+	private void processRequest(FlowInstance intance, String phoneAuthor, String body, FlowInstancePhoneNumber fipn) {
 		
 		String msg = processFlowInstanceActualNode(intance, phoneAuthor, body); 
 		
@@ -154,8 +175,19 @@ public class FlowEngine {
 			msg = processFlowInstanceActualNode(intance, phoneAuthor, body);
 		}
 		
+		if(msg.contains("nreco")) {
+			throw new RuntimeException(msg);
+		}
+		
 		if(!msg.equals("OK")) {
 			sendMessageToClient(phoneAuthor, msg);
+		} else {
+			if(!msg.equals("ENQUEUED")) {
+				intance.setFinishDate(new Date());
+				flowService.saveFlowInstance(intance);
+				flowService.deleteFlowIntancePhoneNumber(fipn);
+			}
+				
 		}
 	}
 	
@@ -169,10 +201,23 @@ public class FlowEngine {
 			try {
 				
 				Class<?> classe = Class.forName(nodeAction.getActionClass());
-				Constructor<?> cons = classe.getConstructor(FlowInstance.class, 
-						MegaBotRestClient.class, ParametroService.class);
-				Action a = (Action) cons.newInstance(instance, 
-						megaBotRestClient, parametroService);
+				Constructor<?> cons = classe.getConstructor(
+						FlowInstance.class, 
+						MegaBotRestClient.class,
+						ParametroService.class,
+						ProtocoloService.class, 
+						PessoaFisicaRestClient.class,
+						PessoaJuridicaRestClient.class,
+						FlowService.class);
+				Action a = 
+						(Action) cons.newInstance(
+								instance, 
+								megaBotRestClient, 
+								parametroService, 
+								protocoloService, 
+								pessoaFisicaRestClient, 
+								pessoaJuridicaRestClient,
+								flowService);
 				a.init();
 				try {
 					a.doAction();
@@ -199,7 +244,12 @@ public class FlowEngine {
 				instance.setActualNode(nodeAction.getOnErrorNode());
 			}
 			instance = flowService.saveFlowInstance(instance);
-			return processReturnMessage(instance.getActualNode());
+			if(nodeAction.isEnd()) {
+				return "OK";
+			} else {
+				return processReturnMessage(instance.getActualNode());
+			}
+			
 		}
 		
 		/*
@@ -211,9 +261,12 @@ public class FlowEngine {
 				
 				Class<?> classe = Class.forName(nodeCollect.getCollectorClass());
 				Constructor<?> cons = classe.getConstructor(FlowInstance.class, 
-						MegaBotRestClient.class, ParametroService.class);
+						MegaBotRestClient.class, ParametroService.class, 
+						ProtocoloService.class, PessoaFisicaRestClient.class, 
+						PessoaJuridicaRestClient.class, FlowService.class);
 				Collector c = (Collector) cons.newInstance(
-						instance, megaBotRestClient, parametroService);
+						instance, megaBotRestClient, parametroService, protocoloService,
+						pessoaFisicaRestClient, pessoaJuridicaRestClient, flowService);
 				c.doCollect(body);
 				instance.setActualNode(nodeCollect.getNextNode());
 				
@@ -232,6 +285,9 @@ public class FlowEngine {
 			} catch (InstantiationException e) {
 				logger.error("An error ocurred during the attempted to execution of this action", e);
 				instance.setActualNode(nodeCollect.getOnErrorNode());
+			} catch (CollectorException e ) {
+				logger.error("An error ocurred during the attempted to execution of this action", e);
+				instance.setActualNode(nodeCollect.getOnErrorNode());
 			}
 			instance = flowService.saveFlowInstance(instance);
 			return processReturnMessage(instance.getActualNode());
@@ -243,19 +299,28 @@ public class FlowEngine {
 		if(instance.getActualNode() instanceof FlowNodeDecision) {
 			FlowNodeDecision nodeDecision = (FlowNodeDecision) instance.getActualNode();
 			try {
-				
+				logger.info("Decision class: " + nodeDecision.getDecisionClass());
 				Class<?> classe = Class.forName(nodeDecision.getDecisionClass());
-				Constructor<?> cons = classe.getConstructor(FlowInstance.class, 
-						MegaBotRestClient.class, ParametroService.class, FlowService.class);
-				Decision d = (Decision) cons.newInstance(
-						instance, megaBotRestClient, parametroService, flowService);
+				Constructor<?> cons =
+						classe.getConstructor(
+								FlowInstance.class, 
+								MegaBotRestClient.class,
+								ParametroService.class,
+								ProtocoloService.class,
+								PessoaFisicaRestClient.class,
+								PessoaJuridicaRestClient.class,
+								FlowService.class);
+				Decision d = 
+						(Decision) cons.newInstance(
+								instance, megaBotRestClient, parametroService, protocoloService,
+								pessoaFisicaRestClient, pessoaJuridicaRestClient, flowService);
 				d.init();
 				try {
-				if(d.isConditionSatisfied()) {
-					instance.setActualNode(nodeDecision.getOnTrueNode());
-				} else {
-					instance.setActualNode(nodeDecision.getOnFalseNode());
-				}
+					if(d.isConditionSatisfied()) {
+						instance.setActualNode(nodeDecision.getOnTrueNode());
+					} else {
+						instance.setActualNode(nodeDecision.getOnFalseNode());
+					}
 				} catch (DecisionException e) {
 					instance.setActualNode(nodeDecision.getOnErrorNode());
 				}
@@ -291,7 +356,7 @@ public class FlowEngine {
 			filaAtendimentoService.save(fila);
 			instance.setFinishDate(new Date());
 			instance = flowService.saveFlowInstance(instance);
-			return "OK";
+			return "ENQUEUED";
 		}
 		
 		/*
@@ -299,8 +364,9 @@ public class FlowEngine {
 		 */
 		if(instance.getActualNode() instanceof FlowNodeMenu) {
 			FlowNodeMenu nodeMenu = (FlowNodeMenu) instance.getActualNode();
+			List<FlowNodeMenuOption> options = flowService.loadMenuOptionByNodeId(nodeMenu.getId());
 			FlowNodeMenuOption findedOption = null;
-			for(FlowNodeMenuOption option : nodeMenu.getOptions()) {
+			for(FlowNodeMenuOption option : options) {
 				if(body.toUpperCase().contains(option.getPattern().toUpperCase())) {
 					findedOption = option;
 					break;
@@ -321,11 +387,11 @@ public class FlowEngine {
 	}
 	
 	private void sendMessageToClient(String phoneNumber, String body) {
-		sendMessageToClient(phoneNumber, body);
+		megaBotRestClient.sendMessage(phoneNumber, body);
 	}
 	
 	private String processReturnMessage(FlowNode node) {
-		if(node instanceof FlowNodeAction) {
+		if(node instanceof FlowNodeAction) {			
 			return null;
 		}
 		

@@ -33,5 +33,6 @@ public interface ParametroService {
 	public boolean isFeriado();
 	public boolean isFeriado(Calendar c);
 	public boolean isTrataCliente();
+	public String getParametro(String paramName);
 	
 }

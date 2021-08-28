@@ -69,6 +69,7 @@ public class FlowController {
 		logger.debug("Entrou em add de finalizações");
     	Flow f = new Flow();
         model.addAttribute("fluxo", f);
+        model.addAttribute("nodes", null);
         return "fluxos/form";
 
     }
@@ -78,6 +79,7 @@ public class FlowController {
 		logger.debug("Entrou edit de finalizações");
     	Optional<Flow> f = flowService.findFlowById(id);
         model.addAttribute("fluxo", f.get());
+        model.addAttribute("nodes", flowService.loadNodeByFlow(id));
         return "fluxos/form";
 
     }
@@ -86,6 +88,7 @@ public class FlowController {
 	public String loadFlow(@PathVariable Long id, Model model) {
 		Optional<Flow> f = flowService.findFlowById(id);
         model.addAttribute("flow", f.get());
+        model.addAttribute("nodes", flowService.loadNodeByFlow(id));
 		return "fluxos/nodes";
 	}
 	
@@ -97,6 +100,7 @@ public class FlowController {
 		Optional<Flow> f = flowService.findFlowById(flowId);
 		FlowNodeAction nodeAction = new FlowNodeAction();
         model.addAttribute("flow", f.get());
+        model.addAttribute("nodes", flowService.loadNodeByFlow(flowId));
         model.addAttribute("flowNode", nodeAction);
 		return "fluxos/nodeactionform";
 	}
@@ -110,6 +114,7 @@ public class FlowController {
 		Optional<Flow> f = flowService.findFlowById(flowId);
 		FlowNodeAction nodeAction = (FlowNodeAction) flowService.findFlowNodeById(nodeId).get();
         model.addAttribute("flow", f.get());
+        model.addAttribute("nodes", flowService.loadNodeByFlow(flowId));
         model.addAttribute("flowNode", nodeAction);
 		return "fluxos/nodeactionform";
 	}
@@ -119,6 +124,7 @@ public class FlowController {
 	 */
 	@PostMapping("/nodes/save/actionNode")
 	public String saveActionNodeOnFlow(Long flowId, Model model, FlowNodeAction nodeAtion, final RedirectAttributes ra) {
+		/*
 		Optional<Flow> f = flowService.findFlowById(flowId);
 		Flow flow = f.get();
 		if(flow.getNodes() == null) {
@@ -130,6 +136,8 @@ public class FlowController {
 			flow.getNodes().add(nodeAtion);
 			flowService.saveFlow(flow);
 		}
+		*/
+		flowService.addNodeIntoFlow(flowId, nodeAtion);
 		
 		return "redirect:/fluxos/loadflow/" + flowId;
 	}
@@ -143,6 +151,8 @@ public class FlowController {
 		Optional<Flow> f = flowService.findFlowById(flowId);
 		FlowNodeMenu nodeMenu = new FlowNodeMenu();
         model.addAttribute("flow", f.get());
+        model.addAttribute("nodes", flowService.loadNodeByFlow(flowId));
+        model.addAttribute("options", new ArrayList<>());
         model.addAttribute("flowNode", nodeMenu);
 		return "fluxos/nodemenuform";
 	}
@@ -155,8 +165,9 @@ public class FlowController {
 			@PathVariable(name = "nodeId") Long nodeId, Model model) {
 		Optional<Flow> f = flowService.findFlowById(flowId);
 		FlowNodeMenu nodeAction = (FlowNodeMenu) flowService.findFlowNodeById(nodeId).get();
-		nodeAction.getOptions();
+		//nodeAction.getOptions();
         model.addAttribute("flow", f.get());
+        model.addAttribute("nodes", flowService.loadNodeByFlow(flowId));
         model.addAttribute("flowNode", nodeAction);
 		return "fluxos/nodemenuform";
 	}
@@ -166,6 +177,7 @@ public class FlowController {
 	 */
 	@PostMapping("/nodes/save/menuNode")
 	public String saveMenuNodeOnFlow(Long flowId, Model model, FlowNodeMenu nodeMenu, final RedirectAttributes ra) {
+		/*
 		Optional<Flow> f = flowService.findFlowById(flowId);
 		Flow flow = f.get();
 		if(flow.getNodes() == null) {
@@ -177,6 +189,8 @@ public class FlowController {
 			flow.getNodes().add(nodeMenu);
 			flowService.saveFlow(flow);
 		}
+		*/
+		flowService.addNodeIntoFlow(flowId, nodeMenu);
 		
 		return "redirect:/fluxos/loadflow/" + flowId;
 	}
@@ -192,6 +206,7 @@ public class FlowController {
 		Optional<FlowNode> optFlowNode = flowService.findFlowNodeById(flowNodeId);
 		FlowNodeMenu nodeMenu = (FlowNodeMenu) optFlowNode.get();
 		model.addAttribute("flow", optFlow.get());
+		model.addAttribute("nodes", flowService.loadNodeByFlow(flowId));
 		model.addAttribute("flowNode", nodeMenu);
 		model.addAttribute("option", new FlowNodeMenuOption());
 		
@@ -213,6 +228,7 @@ public class FlowController {
 		FlowNodeMenu nodeMenu = (FlowNodeMenu) optFlowNode.get();
 		Optional<FlowNodeMenuOption> optMenuOption = flowService.findFlowNodeMenuOptionById(flowNodeOptionId);
 		model.addAttribute("flow", optFlow.get());
+		model.addAttribute("nodes", flowService.loadNodeByFlow(flowId));
 		model.addAttribute("flowNode", nodeMenu);
 		model.addAttribute("option", optMenuOption.get());
 		
@@ -226,7 +242,10 @@ public class FlowController {
 	public String saveMenuOptionIntoMenuNode(Long flowId, Long flowNodeId, Model model, 
 			FlowNodeMenuOption menuOption, final RedirectAttributes ra) {
 		Optional<FlowNode> optFlow = flowService.findFlowNodeById(flowNodeId);
-		FlowNodeMenu nodeMenu = (FlowNodeMenu) optFlow.get();
+		FlowNode fn = optFlow.get();
+		FlowNodeMenu nodeMenu = (FlowNodeMenu) fn;
+		flowService.addOptionIntoNodeMenu(flowNodeId, menuOption);
+		/*
 		if(nodeMenu.getOptions() == null) {
 			nodeMenu.setOptions(new ArrayList<>());
 		}
@@ -242,6 +261,7 @@ public class FlowController {
 			nodeMenu.getOptions().add(menuOption);
 			flowService.saveFlowNode(nodeMenu);
 		}
+		*/
 		
 		return "redirect:/fluxos/nodes/nodemenu/options/" + flowId + "/" + flowNodeId;
 		
@@ -258,6 +278,7 @@ public class FlowController {
 		Flow flow = f.get();
 		FlowNodeMenu nodeAction = (FlowNodeMenu) flowService.findFlowNodeById(nodeId).get();
         model.addAttribute("flow", flow);
+        model.addAttribute("options", flowService.loadMenuOptionByNodeId(nodeId));
         model.addAttribute("flowNode", nodeAction);
         return "fluxos/nodemenuoptionlist";
 	}
@@ -270,6 +291,7 @@ public class FlowController {
 		Optional<Flow> f = flowService.findFlowById(flowId);
 		FlowNodeCollect nodeCollect = new FlowNodeCollect();
         model.addAttribute("flow", f.get());
+        model.addAttribute("nodes", flowService.loadNodeByFlow(flowId));
         model.addAttribute("flowNode", nodeCollect);
 		return "fluxos/nodecollectform";
 	}
@@ -283,6 +305,7 @@ public class FlowController {
 		Optional<Flow> f = flowService.findFlowById(flowId);
 		FlowNodeCollect nodeAction = (FlowNodeCollect) flowService.findFlowNodeById(nodeId).get();
         model.addAttribute("flow", f.get());
+        model.addAttribute("nodes", flowService.loadNodeByFlow(flowId));
         model.addAttribute("flowNode", nodeAction);
 		return "fluxos/nodecollectform";
 	}
@@ -292,6 +315,7 @@ public class FlowController {
 	 */
 	@PostMapping("/nodes/save/collectNode")
 	public String saveCollectorNodeOnFlow(Long flowId, Model model, FlowNodeCollect nodeCollect, final RedirectAttributes ra) {
+		/*
 		Optional<Flow> f = flowService.findFlowById(flowId);
 		Flow flow = f.get();
 		if(flow.getNodes() == null) {
@@ -303,6 +327,8 @@ public class FlowController {
 			flow.getNodes().add(nodeCollect);
 			flowService.saveFlow(flow);
 		}
+		*/
+		flowService.addNodeIntoFlow(flowId, nodeCollect);
 		
 		return "redirect:/fluxos/loadflow/" + flowId;
 	}
@@ -328,6 +354,7 @@ public class FlowController {
 		Optional<Flow> f = flowService.findFlowById(flowId);
 		FlowNodeDecision nodeAction = (FlowNodeDecision) flowService.findFlowNodeById(nodeId).get();
         model.addAttribute("flow", f.get());
+        model.addAttribute("nodes", flowService.loadNodeByFlow(flowId));
         model.addAttribute("flowNode", nodeAction);
 		return "fluxos/nodedecisionform";
 	}
@@ -337,6 +364,7 @@ public class FlowController {
 	 */
 	@PostMapping("/nodes/save/decisionNode")
 	public String saveDecisionNodeOnFlow(Long flowId, Model model, FlowNodeDecision nodeDecision, final RedirectAttributes ra) {
+		/*
 		Optional<Flow> f = flowService.findFlowById(flowId);
 		Flow flow = f.get();
 		if(flow.getNodes() == null) {
@@ -348,6 +376,8 @@ public class FlowController {
 			flow.getNodes().add(nodeDecision);
 			flowService.saveFlow(flow);
 		}
+		*/
+		flowService.addNodeIntoFlow(flowId, nodeDecision);
 		
 		return "redirect:/fluxos/loadflow/" + flowId;
 	}
@@ -362,6 +392,7 @@ public class FlowController {
 		List<Departamento> departamentos = departamentoService.getList();
         model.addAttribute("flow", f.get());
         model.addAttribute("flowNode", nodeEnqueue);
+        model.addAttribute("nodes", flowService.loadNodeByFlow(flowId));
         model.addAttribute("departamentos", departamentos);
 		return "fluxos/nodeenqueueform";
 	}
@@ -376,6 +407,7 @@ public class FlowController {
 		FlowNodeEnqueue nodeAction = (FlowNodeEnqueue) flowService.findFlowNodeById(nodeId).get();
 		List<Departamento> departamentos = departamentoService.getList();
         model.addAttribute("flow", f.get());
+        model.addAttribute("nodes", flowService.loadNodeByFlow(flowId));
         model.addAttribute("flowNode", nodeAction);
         model.addAttribute("departamentos", departamentos);
 		return "fluxos/nodeenqueueform";
@@ -386,6 +418,7 @@ public class FlowController {
 	 */
 	@PostMapping("/nodes/save/enqueueNode")
 	public String saveEnqueueNodeOnFlow(Long flowId, Model model, FlowNodeEnqueue nodeEnqueue, final RedirectAttributes ra) {
+		/*
 		Optional<Flow> f = flowService.findFlowById(flowId);
 		Flow flow = f.get();
 		if(flow.getNodes() == null) {
@@ -397,6 +430,9 @@ public class FlowController {
 			flow.getNodes().add(nodeEnqueue);
 			flowService.saveFlow(flow);
 		}
+		*/
+		
+		flowService.addNodeIntoFlow(flowId, nodeEnqueue);
 		
 		return "redirect:/fluxos/loadflow/" + flowId;
 	}
@@ -406,10 +442,13 @@ public class FlowController {
 	 */
 	@GetMapping("nodes/delete/{flowId}/{nodeId}")
 	public String deleteNodeFromFlow(@PathVariable(name = "flowId") Long flowId, @PathVariable(name = "nodeId") Long nodeId ) {
+		/*
 		Flow f = flowService.findFlowById(flowId).get();
 		f.getNodes().remove(flowService.findFlowNodeById(nodeId).get());
 		flowService.saveFlow(f);
 		return "redirect:/fluxos/loadflow/" + flowId;
+		*/
+		throw new RuntimeException("Não implementado");
 	}
 	
 	@PostMapping(value = "/save")
@@ -438,7 +477,7 @@ public class FlowController {
 	public String loadFlowParameters(@PathVariable Long flowId, Model model) {
 		
 		Optional<Flow> optFlow = flowService.findFlowById(flowId);
-		model.addAttribute("list", optFlow.get().getParameters());
+		model.addAttribute("list", flowService.loadParametersByFlow(flowId)/*optFlow.get().getParameters()*/);
 		model.addAttribute("flow", optFlow.get());
 		return "fluxos/parameterslist";
 		
@@ -477,18 +516,7 @@ public class FlowController {
 	 */
 	@PostMapping("/parameters/save")
 	public String saveParameter(Long flowId, Model model, FlowParameter parameter) {
-		Flow flow = flowService.findFlowById(flowId).get();
-		
-		if(flow.getParameters() == null) {
-			flow.setParameters(new ArrayList<>());
-		}
-		
-		if(parameter.getId() == null) {
-			flow.getParameters().add(parameter);
-			flowService.saveFlow(flow);
-		} else {
-			flowService.saveFlowParameter(parameter);
-		}
+		flowService.addParameterFlowIntoFlow(flowId, parameter);
 		
 		return "redirect:/fluxos/parameters/" + flowId;
 	}
@@ -499,10 +527,13 @@ public class FlowController {
 	@GetMapping("/parameters/{flowId}/delete/{parameterId}")
 	public String deleteParameter(@PathVariable(name="flowId") Long flowId, 
 			@PathVariable(name="parameterId") Long parameterId) {
+		throw new RuntimeException("Não implementado");
+		/*
 		Flow flow = flowService.findFlowById(flowId).get();
 		flow.getParameters().remove(flowService.findFlowParameterById(parameterId).get());
 		flowService.saveFlow(flow);
 		return "redirect:/fluxos/parameters/" + flowId;
+		*/
 	}
 
 }

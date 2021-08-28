@@ -23,9 +23,14 @@ public abstract class Decision {
 	protected PessoaFisicaRestClient pessoaFisicaRestClient;
 	protected PessoaJuridicaRestClient pessoaJuridicaRestClient;
 	
-	protected Decision(FlowService flowService, FlowInstance flowInstance, MegaBotRestClient megaBotRestClient, 
-			ParametroService parametroService, ProtocoloService protocoloService,
-			PessoaFisicaRestClient pessoaFisicaRestClient, PessoaJuridicaRestClient pessoaJuridicaRestClient) {
+	protected Decision(
+			FlowInstance flowInstance, 
+			MegaBotRestClient megaBotRestClient, 
+			ParametroService parametroService, 
+			ProtocoloService protocoloService,
+			PessoaFisicaRestClient pessoaFisicaRestClient, 
+			PessoaJuridicaRestClient pessoaJuridicaRestClient,
+			FlowService flowService) {
 		this.flowService = flowService;
 		this.flowInstance = flowInstance;
 		this.megaBotRestClient = megaBotRestClient;

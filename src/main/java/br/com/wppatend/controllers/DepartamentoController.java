@@ -2,8 +2,8 @@ package br.com.wppatend.controllers;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ import br.com.wppatend.services.DepartamentoService;
 @RequestMapping("departamentos")
 public class DepartamentoController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(DepartamentoController.class);
+	//private static final Logger logger = LoggerFactory.getLogger(DepartamentoController.class);
 	
 	@Autowired
 	private DepartamentoService departamentoService;
@@ -33,7 +33,7 @@ public class DepartamentoController {
 	
 	@GetMapping(value = "/{pageNumber}")
     public String list(@PathVariable Integer pageNumber, Model model) {
-		logger.debug("Entrou na lista de departamentos");
+		//logger.debug("Entrou na lista de departamentos");
         Page<Departamento> page = departamentoService.getPaginatedList(pageNumber);
 
         int current = page.getNumber() + 1;
@@ -51,7 +51,7 @@ public class DepartamentoController {
 	
 	@GetMapping("/add/departamento")
     public String add(Model model) {
-		logger.debug("Entrou em add de departamentos");
+		//logger.debug("Entrou em add de departamentos");
     	Departamento f = new Departamento();
         model.addAttribute("departamento", f);
         return "departamentos/form";
@@ -60,7 +60,7 @@ public class DepartamentoController {
 	
 	@GetMapping("/edit/{id}")
     public String edit(@PathVariable Long id, Model model) {
-		logger.debug("Entrou edit de finalizações");
+		//logger.debug("Entrou edit de finalizações");
     	Optional<Departamento> f = departamentoService.loadById(id);
         model.addAttribute("departamento", f.get());
         return "departametnos/form";
@@ -69,7 +69,7 @@ public class DepartamentoController {
 	
 	@PostMapping(value = "/save")
     public String save(Departamento departamento, final RedirectAttributes ra) {
-		logger.debug("Entrou em save de departamentos");
+		//logger.debug("Entrou em save de departamentos");
     	String msg = "Finalização salva com sucesso.";
 		@SuppressWarnings("unused")
 		Departamento save = departamentoService.save(departamento);

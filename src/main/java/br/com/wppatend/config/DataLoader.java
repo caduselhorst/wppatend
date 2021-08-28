@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -28,8 +26,6 @@ public class DataLoader implements ApplicationRunner {
 	private PermissionRepository permissionRepository;
 	private UserRepository userRepository;
 	
-	
-	private static final Logger logger = LoggerFactory.getLogger(DataLoader.class);
 
     @Autowired
     public DataLoader(RoleRepository roleRepository,
@@ -43,10 +39,10 @@ public class DataLoader implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		
-		logger.info("Server date: " + new Date());
+		//logger.info("Server date: " + new Date());
     	
     	if(!args.containsOption("config.app")) {
-    		logger.error(String.format("Parâmetro [%1$s] ausente", "api.pessoafisica"));
+    		//logger.error(String.format("Parâmetro [%1$s] ausente", "api.pessoafisica"));
     		throw new Exception("Parâmetro de sistema ausente na inicialização", 
     				new MissingEnvironmentVariableException("Parametro [config.app] não informado."));
     	}
@@ -87,7 +83,7 @@ public class DataLoader implements ApplicationRunner {
 			
 			userRepository.save(admin);
 		} else {
-			logger.info("Initial data has previosly loaded");
+			//logger.info("Initial data has previosly loaded");
 		}  	
     }
 

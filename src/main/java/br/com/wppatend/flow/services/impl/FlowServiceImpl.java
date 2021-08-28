@@ -14,6 +14,7 @@ import br.com.wppatend.flow.entities.Flow;
 import br.com.wppatend.flow.entities.FlowInstance;
 import br.com.wppatend.flow.entities.FlowInstancePhoneNumber;
 import br.com.wppatend.flow.entities.FlowNode;
+import br.com.wppatend.flow.entities.FlowNodeMenu;
 import br.com.wppatend.flow.entities.FlowNodeMenuOption;
 import br.com.wppatend.flow.entities.FlowParameter;
 import br.com.wppatend.flow.repositories.FlowInstancePhoneNumberRepository;
@@ -42,6 +43,20 @@ public class FlowServiceImpl implements FlowService {
 
 	@Override
 	public Flow saveFlow(Flow flow) {
+		
+		Flow f = null;
+		
+		if(flow.getId() == null) {
+			f = new Flow();
+		} else {
+			f = flowRepository.findById(flow.getId()).get();
+		}
+				
+		f.setActive(flow.isActive());
+		f.setInitialNode(flow.getInitialNode());
+		f.setName(flow.getName());
+		
+		
 		return flowRepository.save(flow);
 	}
 
@@ -137,5 +152,57 @@ public class FlowServiceImpl implements FlowService {
 	public void deleteFlowParameter(Long id) {
 		flowParameterRepository.delete(flowParameterRepository.findById(id).get());
 	}
+	
+	@Override
+	public Flow addParameterFlowIntoFlow(Long flowId, FlowParameter parameter) {
+		Flow flow = flowRepository.findById(flowId).get();
+		
+		parameter.setFlow(flow);
+		
+		flowParameterRepository.save(parameter);
+		
+		return flow;
+	}
+	
+	@Override
+	public Flow addNodeIntoFlow(Long flowId, FlowNode node) {
+		Flow flow = flowRepository.findById(flowId).get();
+		
+		node.setFlow(flow);
+		
+		flowNodeRepository.save(node);
+		
+		return flow;
+	}
+	
+	@Override
+	public List<FlowParameter> loadParametersByFlow(Long flowId) {
+		Flow f = flowRepository.findById(flowId).get();
+		return flowParameterRepository.findByFlow(f);
+	}
+	
+	@Override
+	public List<FlowNode> loadNodeByFlow(Long flowId) {
+		Flow f = flowRepository.findById(flowId).get();
+		return flowNodeRepository.findByFlowOrderByName(f);
+	}
+	
+	@Override
+	public FlowNode addOptionIntoNodeMenu(Long nodeId, FlowNodeMenuOption option) {
+		FlowNodeMenu menu = (FlowNodeMenu) flowNodeRepository.findById(nodeId).get();
+		
+		option.setMenuNode(menu);
+		
+		flowNodeMenuOptionRepository.save(option);
+		
+		return menu;
+	}
+	
+	@Override
+	public List<FlowNodeMenuOption> loadMenuOptionByNodeId(Long nodeId) {
+		FlowNodeMenu menu = (FlowNodeMenu) flowNodeRepository.findById(nodeId).get();
+		return flowNodeMenuOptionRepository.findByMenuNode(menu);
+	}
+	
 
 }

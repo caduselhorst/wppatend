@@ -28,8 +28,8 @@ public class FlowInstance {
 	private Protocolo protocolo;
 	@OneToOne
 	private FlowNode actualNode;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	private List<FlowParameter> parameters;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<FlowInstanceParameter> parameters;
 	private Date initialDate;
 	private Date updatedDate;
 	private Date finishDate;
@@ -90,11 +90,11 @@ public class FlowInstance {
 		this.finishDate = finishDate;
 	}
 
-	public List<FlowParameter> getParameters() {
+	public List<FlowInstanceParameter> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(List<FlowParameter> parameters) {
+	public void setParameters(List<FlowInstanceParameter> parameters) {
 		this.parameters = parameters;
 	}	
 

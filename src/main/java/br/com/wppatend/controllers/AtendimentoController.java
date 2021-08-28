@@ -52,7 +52,7 @@ public class AtendimentoController {
 	
 	@GetMapping("/")
     public String atendimento(Model model) {
-		//logger.info("Index de Atendimentos");
+		logger.info("Index de Atendimentos");
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = ((User) principal);
 		

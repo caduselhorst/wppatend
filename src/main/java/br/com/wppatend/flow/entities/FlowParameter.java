@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.SQLDelete;
@@ -24,6 +25,8 @@ public class FlowParameter {
 	@Lob
 	private byte[] value;
 	private boolean deleted;
+	@OneToOne
+	private Flow flow;
 	
 	public Long getId() {
 		return id;
@@ -64,18 +67,38 @@ public class FlowParameter {
 	public void setClassType(String classType) {
 		this.classType = classType;
 	}
-	
+
+	public Flow getFlow() {
+		return flow;
+	}
+
+	public void setFlow(Flow flow) {
+		this.flow = flow;
+	}
+
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof FlowParameter) {
-			return ((FlowParameter) obj).getId().equals(id);
-		}
-		return false;
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FlowParameter other = (FlowParameter) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 	
 }

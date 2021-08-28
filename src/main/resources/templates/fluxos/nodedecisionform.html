@@ -41,7 +41,7 @@
                     	th:field="*{onTrueNode}"
 						id="trueNode">
 						<option th:value="0" th:text="${'.:Selecione:.'}"></option>
-						<option th:each="node : ${flow.nodes}"th:value="${node.id}" th:text="${node.name}" th:selected="${flow.nodes.contains(node)}"/>
+						<option th:each="node : ${nodes}"th:value="${node.id}" th:text="${node.name}" th:selected="${nodes.contains(node)}"/>
 					</select>
                 </div>
                 <div class="form-group">
@@ -50,7 +50,7 @@
                     	th:field="*{onFalseNode}"
 						id="falseNode">
 						<option th:value="0" th:text="${'.:Selecione:.'}"></option>
-						<option th:each="node : ${flow.nodes}"th:value="${node.id}" th:text="${node.name}" th:selected="${flow.nodes.contains(node)}"/>
+						<option th:each="node : ${nodes}"th:value="${node.id}" th:text="${node.name}" th:selected="${nodes.contains(node)}"/>
 					</select>
                 </div>
                 <div class="form-group">
@@ -59,7 +59,7 @@
                     	th:field="*{onErrorNode}"
 						id="nextErrorNode">
 						<option th:value="0" th:text="${'.:Selecione:.'}"></option>
-						<option th:each="node : ${flow.nodes}"th:value="${node.id}" th:text="${node.name}" th:selected="${flow.nodes.contains(node)}"/>
+						<option th:each="node : ${nodes}"th:value="${node.id}" th:text="${node.name}" th:selected="${nodes.contains(node)}"/>
 					</select>
                 </div>
             </div>

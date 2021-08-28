@@ -36,6 +36,8 @@
                     <input type="text" required="true" class="form-control" th:field="*{actionClass}" id="class" />
                 </div>
                 <div class="form-group">
+                    <input type="checkbox" th:field="*{init}" id="init" />
+                    <label for="end">Inicio do fluxo</label>
                     <input type="checkbox" th:field="*{end}" id="end" />
                     <label for="end">Fim do fluxo</label>
                 </div>
@@ -45,7 +47,7 @@
                     	th:field="*{onSuccessNode}"
 						id="nextSucessNode">
 						<option th:value="0" th:text="${'.:Selecione:.'}"></option>
-						<option th:each="node : ${flow.nodes}"th:value="${node.id}" th:text="${node.name}" th:selected="${flow.nodes.contains(node)}"/>
+						<option th:each="node : ${nodes}"th:value="${node.id}" th:text="${node.name}" th:selected="${nodes.contains(node)}"/>
 					</select>
                 </div>
                 <div class="form-group">
@@ -54,7 +56,7 @@
                     	th:field="*{onErrorNode}"
 						id="nextErrorNode">
 						<option th:value="0" th:text="${'.:Selecione:.'}"></option>
-						<option th:each="node : ${flow.nodes}"th:value="${node.id}" th:text="${node.name}" th:selected="${flow.nodes.contains(node)}"/>
+						<option th:each="node : ${nodes}"th:value="${node.id}" th:text="${node.name}" th:selected="${nodes.contains(node)}"/>
 					</select>
                 </div>
             </div>

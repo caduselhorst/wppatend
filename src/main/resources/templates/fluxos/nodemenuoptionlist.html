@@ -30,7 +30,7 @@
                     <th style="text-align: center">Alterar</th>
                     <th style="text-align: center">Excluir</th>
                 </tr>
-                <tr th:each="row : ${flowNode.options}">
+                <tr th:each="row : ${options}">
                     <td th:text="${row.id}"></td>
                     <td th:text="${row.pattern}"></td>                    
                     <td th:text="${row.nextNode.name}"></td>

@@ -1,8 +1,6 @@
 package br.com.wppatend.flow.entities;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,7 +15,9 @@ public class FlowNodeMenuOption {
 	@SequenceGenerator(name = "FlowNodeMenuOptSeq", sequenceName = "flownodemnuoptseq", allocationSize = 1)
 	private Long id;
 	private String pattern;
-	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToOne
+	private FlowNodeMenu menuNode;
+	@OneToOne
 	private FlowNode nextNode;
 	
 	public Long getId() {
@@ -43,6 +43,13 @@ public class FlowNodeMenuOption {
 	public void setNextNode(FlowNode nextNode) {
 		this.nextNode = nextNode;
 	}
-	
+
+	public FlowNodeMenu getMenuNode() {
+		return menuNode;
+	}
+
+	public void setMenuNode(FlowNodeMenu menuNode) {
+		this.menuNode = menuNode;
+	}
 	
 }
