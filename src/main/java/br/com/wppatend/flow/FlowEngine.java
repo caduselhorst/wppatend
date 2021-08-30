@@ -179,7 +179,7 @@ public class FlowEngine {
 			throw new RuntimeException(msg);
 		}
 		
-		if(!msg.equals("OK")) {
+		if(!msg.equals("OK") && !msg.equals("ENQUEUED")) {
 			sendMessageToClient(phoneAuthor, msg);
 		} else {
 			if(!msg.equals("ENQUEUED")) {
