@@ -741,17 +741,21 @@ public class HookController {
 	
 	@RequestMapping(value = "/web/flow/hook", method = RequestMethod.POST)
 	public ResponseEntity<String> flowHook (@RequestBody WppObjectRequest msg) {
-		logger.info("Nova requisição -> " + String.format("Mensagem para tratamento: %1$s (%2$s) fromMe: %3$s chatId: %4$s Id: %5$s Server date: %6$s", 
-				msg.getMessages().get(0).getSenderName().getName(), 
-				msg.getMessages().get(0).getAuthor(), 
-				msg.getMessages().get(0).getFromMe(),
-				msg.getMessages().get(0).getChatId(),
-				msg.getMessages().get(0).getId(),
-				new Date()));
 		try {
-			if(msg.getMessages().get(0).getFromMe() != null && !msg.getMessages().get(0).getFromMe()) {
-				flowEngine.handleMessage(msg);
+			if(msg.getMessages() != null) {
+				logger.info("Nova requisição -> " + String.format("Mensagem para tratamento: %1$s (%2$s) fromMe: %3$s chatId: %4$s Id: %5$s Server date: %6$s", 
+						msg.getMessages().get(0).getSenderName().getName(), 
+						msg.getMessages().get(0).getAuthor(), 
+						msg.getMessages().get(0).getFromMe(),
+						msg.getMessages().get(0).getChatId(),
+						msg.getMessages().get(0).getId(),
+						new Date()));
+				
+					if(msg.getMessages().get(0).getFromMe() != null && !msg.getMessages().get(0).getFromMe()) {
+						flowEngine.handleMessage(msg);
+					}
 			}
+				
 		} catch (NullPointerException e) {
 			logger.error("Erro durante o processamento", e);
 		}
