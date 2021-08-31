@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.CloseableThreadContext.Instance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,6 +185,10 @@ public class FlowEngine {
 		} else {
 			if(!msg.equals("ENQUEUED")) {
 				intance.setFinishDate(new Date());
+				Protocolo p = intance.getProtocolo();
+				p.setDataFechamento(new Date());
+				p = protocoloService.save(p);
+				intance.setProtocolo(p);
 				flowService.saveFlowInstance(intance);
 				flowService.deleteFlowIntancePhoneNumber(fipn);
 			}
