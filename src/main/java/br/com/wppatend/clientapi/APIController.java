@@ -259,5 +259,17 @@ public class APIController {
 		
 	}
 	
+	@PostMapping(path = "/nochat/send")
+	public ResponseEntity<ApiReturn> sendNoChatMessage(@RequestBody SendMessageInfo info) {
+		
+		botClient.sendMessage(info.getPhoneNumber(), info.getMessage());
+		
+		ApiReturn ret = new ApiReturn();
+		ret.setError(false);
+		
+		return ResponseEntity.ok(ret);
+		
+	}
+	
 
 }
