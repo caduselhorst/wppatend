@@ -1,0 +1,94 @@
+[
+	{
+		"chave" : "app.msg.cliente",
+		"valor" : "*Bem vindo ao atendimento virtual Lojas 246!*"
+	},
+	{
+		"chave" : "app.msg.fim.atendimento",
+		"valor" : "Agradecemos o contato e nos colocamos à disposição"
+	},
+	{
+		"chave" : "api.pessoafisica",
+		"valor" : "http://cloud.developed.com.br:8082/pessoafisica"
+	},
+	{
+		"chave" : "api.pessoajuridica",
+		"valor" : "http://cloud.developed.com.br:8082/pessoajuridica"
+	},
+	{
+		"chave" : "bot.api.url",
+		"valor" : "http://api.megabotwpp.com:4800"
+	},
+	{
+		"chave" : "bot.api.token",
+		"valor" : "M_YiFfOkCn0D3u6uT6"
+	},
+	{
+		"chave" : "bot.api.send.msg",
+		"valor" : "true"
+	},
+	{
+		"chave" : "bot.api.error.msg",
+		"valor" : "Estamos passando por instabilidades. Por favor, entre em contato em alguns minutos."
+	},
+	{
+		"chave" : "api.consulta.cnpj",
+		"valor" : "https://www.receitaws.com.br/v1/cnpj"
+	},
+	{
+		"chave" : "app.dev.mode",
+		"valor" : "false"
+	},
+	{
+		"chave" : "app.dev.mode.phones",
+		"valor" : "559681433060,554188414336"
+	},
+	{
+		"chave" : "app.dev.mode.msg",
+		"valor" : "Estamos em manutenção. Pedimos desculpas pelo transtorno."
+	},
+	{
+		"chave" : "roteirizacao.tempo.pooling",
+		"valor" : "1000"
+	},
+	{
+		"chave" : "app.horario.atendimento.seg",
+		"valor" : "08:00-12:00,14:00-18:00"
+	},
+	{
+		"chave" : "app.horario.atendimento.ter",
+		"valor" : "08:00-12:00,14:00-18:00"
+	},
+	{
+		"chave" : "app.horario.atendimento.qua",
+		"valor" : "08:00-12:00,14:00-18:00"
+	},
+	{
+		"chave" : "app.horario.atendimento.qui",
+		"valor" : "08:00-12:00,14:00-18:00"
+	},
+	{
+		"chave" : "app.horario.atendimento.sex",
+		"valor" : "08:00-12:00,14:00-18:00"
+	},
+	{
+		"chave" : "app.horario.atendimento.sab",
+		"valor" : "08:00-13:00"
+	},
+	{
+		"chave" : "app.horario.atendimento.dom",
+		"valor" : ""
+	},
+	{
+		"chave" : "app.horario.atendimento.fer",
+		"valor" : ""
+	},
+	{
+		"chave" : "app.horario.atendimento.msg",
+		"valor" : "Nosso horário de atendimento é de segunda a sexta, das 08:00 às 12:12 e das 14:00 às 18:00. Aos sábados, das 08:00 as 13:00."
+	},
+	{
+		"chave" : "app.feriados",
+		"valor" : "01/01,21/04,01/05,07/09,12/10,02/11,15/11,25/12"
+	}
+]

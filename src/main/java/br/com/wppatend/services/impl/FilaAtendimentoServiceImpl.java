@@ -25,5 +25,10 @@ public class FilaAtendimentoServiceImpl implements FilaAtendimentoService {
 	public void delete(FilaAtendimento fila) {
 		repository.delete(fila);
 	}
+	
+	@Override
+	public FilaAtendimento save(FilaAtendimento fila) {
+		return repository.save(fila);
+	}
 
 }

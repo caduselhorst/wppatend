@@ -73,12 +73,17 @@ public class DashboardController {
     	List<DashboardFila> lFila = new ArrayList<>();
     	fila.forEach(f -> {
     		
-    		PessoaFisica pf = pessoaFisicaRestClient.getPessoaFisicaById(f.getProtocolo().getCodPessoa());
+    		PessoaFisica pf = null;
+    		
+    		if(f.getProtocolo().getCodPessoa() != null) {
+    			pf = pessoaFisicaRestClient.getPessoaFisicaById(f.getProtocolo().getCodPessoa());
+    		}
+    		 
     		
     		DashboardFila df = new DashboardFila();
     		df.setData(sdf.format(f.getDataFila()));
     		df.setFoneContato(f.getProtocolo().getFone());
-    		df.setNomeContato(pf.getNome());
+    		df.setNomeContato(pf == null ? null :pf.getNome());
     		df.setNroProtocolo(f.getProtocolo().getProtocolo());
     		lFila.add(df);
     	});
@@ -105,6 +110,14 @@ public class DashboardController {
     	dashApiStatus.setWebhook(apiStatus.getWebhook());
     	dashApiStatus.setStatus(Boolean.parseBoolean(apiStatus.getAccountStatus()));
     	
+    	
+    	/*
+    	DashboardApiStatus dashApiStatus = new DashboardApiStatus();
+    	dashApiStatus.setFone(null);
+    	dashApiStatus.setMensagem("Não conectado");
+    	dashApiStatus.setWebhook(null);
+    	dashApiStatus.setStatus(false);
+    	*/
     	DashboardVO vo = new DashboardVO();
     	vo.setFila(lFila);
     	vo.setFinalizacoes(finalizacoes);

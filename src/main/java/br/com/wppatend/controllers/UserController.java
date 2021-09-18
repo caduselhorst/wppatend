@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import br.com.wppatend.entities.User;
+import br.com.wppatend.services.DepartamentoService;
 import br.com.wppatend.services.RoleService;
 import br.com.wppatend.services.UserService;
 import br.com.wppatend.vos.AlterarSenhaVO;
@@ -27,10 +28,13 @@ public class UserController {
 	
 	private UserService userService;
 	private RoleService roleService;
+	private DepartamentoService departamentoService;
 	
-	public UserController(UserService userService, RoleService roleService) {
+	public UserController(UserService userService, RoleService roleService,
+			DepartamentoService departamentoService) {
 		this.userService = userService;
 		this.roleService = roleService;
+		this.departamentoService = departamentoService;
 	}
 	
 	@GetMapping
@@ -59,7 +63,9 @@ public class UserController {
     public String add(Model model) {
     	User u = new User();
     	u.setRoles(new ArrayList<>());
+    	u.setDepartamentos(new ArrayList<>());
     	model.addAttribute("roles", roleService.findAll());
+    	model.addAttribute("departamentos", departamentoService.getList());
         model.addAttribute("user", u);
         return "usuarios/form";
 
@@ -69,6 +75,7 @@ public class UserController {
     public String edit(@PathVariable Long id, Model model) {
     	Optional<User> u = userService.loadById(id);
     	model.addAttribute("roles", roleService.findAll());
+    	model.addAttribute("departamentos", departamentoService.getList());
         model.addAttribute("user", u.get());
         return "usuarios/form";
 

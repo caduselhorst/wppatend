@@ -1,0 +1,56 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+<head>
+    <title>Cadastro de fluxo</title>
+    <script type="text/javascript" src="../../dist/js/address.js"></script>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>Cadastro de fluuxo</h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="active">Cadastro de fluxo</li>
+    </ol>
+</section>
+
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Dados</h3>
+            <div class="box-tools pull-right">
+                <a href="/fluxos" type="button" class="btn btn-box-tool"><i class="fa fa-list-ul"></i></a>
+            </div>
+        </div>
+        <form data-toggle="validator" role="form" th:object="${fluxo}" th:action="@{/fluxos/save}" method="post">
+            <div class="box-body">
+                <input type="hidden" th:field="*{id}"/>
+                <div class="form-group">
+                    <label for="name">Descrição</label>
+                    <input type="text" required="true" class="form-control" th:field="*{name}" id="name" />
+                </div>
+                <!-- 
+                <div class="form-group">
+                    <label for="nextSucessNode">Passo inicial</label>
+                    <select class="form-control" 
+                    	th:field="*{initialNode}"
+						id="nextSucessNode">
+						<option th:value="0" th:text="${'.:Selecione:.'}"></option>
+						<option th:each="node : ${nodes}"th:value="${node.id}" th:text="${node.name}" th:selected="${nodes.contains(node)}"/>
+					</select>
+                </div>
+                 -->
+                <div class="form-group">
+                    <input type="checkbox" th:field="*{active}" id="name" />
+                    <label for="name">Ativo</label>
+                </div>
+            </div>
+            <div class="box-footer">
+                <button class="btn btn-primary" type="submit">Gravar</button>
+                <a class="btn btn-danger" href="../1">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

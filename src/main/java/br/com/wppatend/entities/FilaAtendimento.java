@@ -18,6 +18,8 @@ public class FilaAtendimento {
 	private Long id;
 	@OneToOne
 	private Protocolo protocolo;
+	@OneToOne
+	private Departamento departamento;
 	private Date dataFila;
 	public Long getId() {
 		return id;
@@ -37,6 +39,11 @@ public class FilaAtendimento {
 	public void setDataFila(Date dataFila) {
 		this.dataFila = dataFila;
 	}
-	
+	public Departamento getDepartamento() {
+		return departamento;
+	}
+	public void setDepartamento(Departamento departamento) {
+		this.departamento = departamento;
+	}
 
 }

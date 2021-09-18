@@ -2,8 +2,8 @@ package br.com.wppatend.controllers;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ import br.com.wppatend.services.FinalizacaoService;
 @RequestMapping("finalizacoes")
 public class FinalizacaoController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(FinalizacaoController.class);
+	//private static final Logger logger = LoggerFactory.getLogger(FinalizacaoController.class);
 	
 	@Autowired
 	private FinalizacaoService finalizacaoService;
@@ -33,7 +33,7 @@ public class FinalizacaoController {
 	
 	@GetMapping(value = "/{pageNumber}")
     public String list(@PathVariable Integer pageNumber, Model model) {
-		logger.debug("Entrou na lista de finalizações");
+		//logger.debug("Entrou na lista de finalizações");
         Page<Finalizacao> page = finalizacaoService.getList(pageNumber);
 
         int current = page.getNumber() + 1;
@@ -51,7 +51,7 @@ public class FinalizacaoController {
 	
 	@GetMapping("/add/finalizacao")
     public String add(Model model) {
-		logger.debug("Entrou em add de finalizações");
+		//logger.debug("Entrou em add de finalizações");
     	Finalizacao f = new Finalizacao();
         model.addAttribute("finalizacao", f);
         return "finalizacoes/form";
@@ -60,7 +60,7 @@ public class FinalizacaoController {
 	
 	@GetMapping("/edit/{id}")
     public String edit(@PathVariable Long id, Model model) {
-		logger.debug("Entrou edit de finalizações");
+		//logger.debug("Entrou edit de finalizações");
     	Optional<Finalizacao> f = finalizacaoService.loadById(id);
         model.addAttribute("finalizacao", f.get());
         return "finalizacoes/form";
@@ -69,7 +69,7 @@ public class FinalizacaoController {
 	
 	@PostMapping(value = "/save")
     public String save(Finalizacao finalizacao, final RedirectAttributes ra) {
-		logger.debug("Entrou em save de finalizações");
+		//logger.debug("Entrou em save de finalizações");
     	String msg = "Finalização salva com sucesso.";
 		@SuppressWarnings("unused")
 		Finalizacao save = finalizacaoService.save(finalizacao);
