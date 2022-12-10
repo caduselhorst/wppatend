@@ -12,9 +12,9 @@ public class FlowNodeCollect extends FlowNode {
 
 	private String message;
 	private String collectorClass;
-	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, orphanRemoval = true, optional = true)
 	private FlowNode nextNode;
-	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, orphanRemoval = true, optional = true)
 	private FlowNode onErrorNode;
 	
 	public String getMessage() {

@@ -8,12 +8,15 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import br.com.wppatend.entities.FilaAtendimento;
 import br.com.wppatend.entities.Protocolo;
 import br.com.wppatend.entities.Roteirizador;
+import br.com.wppatend.entities.User;
+import br.com.wppatend.events.ProtocoloEvent;
 import br.com.wppatend.repositories.UserRepository;
 import br.com.wppatend.services.FilaAtendimentoService;
 import br.com.wppatend.services.ParametroService;
@@ -35,6 +38,8 @@ public class RoteirizadorThread extends Thread {
 	private ProtocoloService protocoloService;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private ApplicationEventPublisher applicationEventPublisher;
 	
 	private Thread thread;
 
@@ -61,11 +66,19 @@ public class RoteirizadorThread extends Thread {
 				fila.forEach(f -> {
 					
 					Optional<Roteirizador> r = roteirizadorService.findByDisponivel();
+					
 					if(r.isPresent() && userRepository.findById(r.get().getUserId()).get().getDepartamentos().contains(f.getDepartamento())) {
+						
+						User user = userRepository.findById(r.get().getUserId()).get();
+						
 						Protocolo p = f.getProtocolo();
+						
 						p = protocoloService.findById(p.getId()).get();
 						p.setOperador(r.get().getUserId());
 						p = protocoloService.save(p);
+						
+						applicationEventPublisher.publishEvent(new ProtocoloEvent(p, user));
+						
 						filaService.delete(f);
 					}
 				});

@@ -1,0 +1,42 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+<head>
+    <title>Gerar QRCode para conexão de aparelho à API</title>
+    <script type="text/javascript" src="../../dist/js/configuracao-api.js"></script>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>Gerar QRCode para associar aparelho à Api</h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="active">Gerar QRCode</li>
+    </ol>
+</section>
+
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">QRCode</h3>
+        </div>
+        <div class="box-body">
+            <div class="form-group">
+                <div id="loading-panel" style="display:none">
+                	<h3>Um momento, por favor. Gerando o QRCode ...</h3>
+                </div>
+                <div id="img-panel" style="display:none">
+                	<img id="img-qr-code" />
+                </div>
+                <div id="msg-panel" style="display:none">
+                	<span id="message"></span>
+                </div>
+            </div>
+        </div>
+        <div class="box-footer">
+            <button class="btn btn-primary" onclick="loadQRCode()">Gerar</button>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

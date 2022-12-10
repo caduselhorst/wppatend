@@ -98,6 +98,14 @@
                     	<div th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeEnqueue)}">
                     		<span class="fa fa-arrow-right" style="color: green;" th:text="${row.departamento == null ? 'Não configurado' : row.departamento.descricao}"></span>
                     	</div>
+                    	<!-- Node message -->
+                    	<div th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeMessage)}">
+                    		<span class="fa fa-check-square" style="color: green;">Passo sucesso: </span>
+                    		<span th:text="${row.onSuccessNode == null ? 'Não configurado' : row.onSuccessNode.name}"></span>
+                    		<br />
+                    		<span class="fa fa-close" style="color: red;">Passo erro: </span>
+                    		<span th:text="${row.onErrorNode == null ? 'Não configurado' : row.onErrorNode.name}"></span>
+                    	</div>
                     </td>
                     <td style="text-align: center;">
                     	<a th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeAction)}" th:href="${'/fluxos/nodes/edit/actionNode/' + flow.id + '/' + row.id}"><span class="fa fa-pencil" style="color: blue;"></span></a>
@@ -105,6 +113,7 @@
                     	<a th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeCollect)}" th:href="${'/fluxos/nodes/edit/collectNode/' + flow.id + '/' + row.id}"><span class="fa fa-pencil" style="color: blue;"></span></a>
                     	<a th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeDecision)}" th:href="${'/fluxos/nodes/edit/decisionNode/' + flow.id + '/' + row.id}"><span class="fa fa-pencil" style="color: blue;"></span></a>
                     	<a th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeEnqueue)}" th:href="${'/fluxos/nodes/edit/enqueueNode/' + flow.id + '/' + row.id}"><span class="fa fa-pencil" style="color: blue;"></span></a>
+                    	<a th:if="${row instanceof T(br.com.wppatend.flow.entities.FlowNodeMessage)}" th:href="${'/fluxos/nodes/edit/messageNode/' + flow.id + '/' + row.id}"><span class="fa fa-pencil" style="color: blue;"></span></a>
                     </td>
                     <td style="text-align: center;">
                     	<a th:href="${'/fluxos/nodes/delete/' + flow.id + '/' + row.id}"><span class="fa fa-trash" style="color: red;"></span></a>
@@ -120,6 +129,7 @@
 	        <a th:href="${'/fluxos/nodes/add/collectNode/' + flow.id}" class="btn btn-primary">+Coletor</a>
 	        <a th:href="${'/fluxos/nodes/add/decisionNode/' + flow.id}" class="btn btn-primary">+Decisor</a>
 	        <a th:href="${'/fluxos/nodes/add/enqueueNode/' + flow.id}" class="btn btn-primary">+Enfileiramento</a>
+	        <a th:href="${'/fluxos/nodes/add/messageNode/' + flow.id}" class="btn btn-primary">+Mensagem</a>
 	    </div>
 	</div>
 </div>

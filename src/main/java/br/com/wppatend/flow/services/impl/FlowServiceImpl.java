@@ -8,15 +8,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.wppatend.entities.Protocolo;
 import br.com.wppatend.flow.entities.Flow;
 import br.com.wppatend.flow.entities.FlowInstance;
+import br.com.wppatend.flow.entities.FlowInstanceParameter;
 import br.com.wppatend.flow.entities.FlowInstancePhoneNumber;
 import br.com.wppatend.flow.entities.FlowNode;
 import br.com.wppatend.flow.entities.FlowNodeMenu;
 import br.com.wppatend.flow.entities.FlowNodeMenuOption;
 import br.com.wppatend.flow.entities.FlowParameter;
+import br.com.wppatend.flow.repositories.FlowInstanceParameterRepository;
 import br.com.wppatend.flow.repositories.FlowInstancePhoneNumberRepository;
 import br.com.wppatend.flow.repositories.FlowInstanceRepository;
 import br.com.wppatend.flow.repositories.FlowNodeMenuOptionRepository;
@@ -40,7 +43,10 @@ public class FlowServiceImpl implements FlowService {
 	private FlowInstancePhoneNumberRepository flowInstancePhoneNumberRepository;
 	@Autowired
 	private FlowParameterRepository flowParameterRepository;
+	@Autowired
+	private FlowInstanceParameterRepository flowInstanceParameterRepository;
 
+	@Transactional
 	@Override
 	public Flow saveFlow(Flow flow) {
 		
@@ -75,9 +81,12 @@ public class FlowServiceImpl implements FlowService {
 		}
 	}
 
+	@Transactional
 	@Override
 	public FlowInstance saveFlowInstance(FlowInstance flowInstance) {
-		return flowInstanceRepository.save(flowInstance);
+		FlowInstance instance = flowInstanceRepository.save(flowInstance);
+		flowInstanceRepository.flush();
+		return instance;
 	}
 
 	@Override
@@ -85,6 +94,7 @@ public class FlowServiceImpl implements FlowService {
 		return flowInstanceRepository.findById(id);
 	}
 
+	@Transactional
 	@Override
 	public FlowNode saveFlowNode(FlowNode flowNode) {
 		return flowNodeRepository.save(flowNode);
@@ -95,6 +105,7 @@ public class FlowServiceImpl implements FlowService {
 		return flowNodeRepository.findById(id);
 	}
 
+	@Transactional
 	@Override
 	public FlowInstancePhoneNumber saveFlowInstancePhoneNumber(FlowInstancePhoneNumber instance) {
 		return flowInstancePhoneNumberRepository.save(instance);
@@ -110,11 +121,13 @@ public class FlowServiceImpl implements FlowService {
 		return flowInstanceRepository.findByProtocolo(protocolo).get(0);
 	}
 	
+	@Transactional
 	@Override
 	public void deleteFlowIntancePhoneNumber(FlowInstancePhoneNumber flowInstancePhoneNumber) {
 		flowInstancePhoneNumberRepository.delete(flowInstancePhoneNumber);
 	}
 	
+	@Transactional
 	@Override
 	public Page<Flow> getFlowList(Integer pageNumber) {
 		PageRequest pageRequest =
@@ -123,11 +136,13 @@ public class FlowServiceImpl implements FlowService {
         return flowRepository.findAll(pageRequest);
 	}
 	
+	@Transactional
 	@Override
 	public void deleteFlow(Long id) {
 		flowRepository.delete(flowRepository.findById(id).get());
 	}
 	
+	@Transactional
 	@Override
 	public FlowNodeMenuOption saveFlowNodeMenuOption(FlowNodeMenuOption menuOption) {
 		return flowNodeMenuOptionRepository.save(menuOption);
@@ -143,16 +158,19 @@ public class FlowServiceImpl implements FlowService {
 		return flowParameterRepository.findById(id);
 	}
 	
+	@Transactional
 	@Override
 	public FlowParameter saveFlowParameter(FlowParameter flowParameter) {
 		return flowParameterRepository.save(flowParameter);
 	}
 	
+	@Transactional
 	@Override
 	public void deleteFlowParameter(Long id) {
 		flowParameterRepository.delete(flowParameterRepository.findById(id).get());
 	}
 	
+	@Transactional
 	@Override
 	public Flow addParameterFlowIntoFlow(Long flowId, FlowParameter parameter) {
 		Flow flow = flowRepository.findById(flowId).get();
@@ -164,6 +182,7 @@ public class FlowServiceImpl implements FlowService {
 		return flow;
 	}
 	
+	@Transactional
 	@Override
 	public Flow addNodeIntoFlow(Long flowId, FlowNode node) {
 		Flow flow = flowRepository.findById(flowId).get();
@@ -187,6 +206,7 @@ public class FlowServiceImpl implements FlowService {
 		return flowNodeRepository.findByFlowOrderByName(f);
 	}
 	
+	@Transactional
 	@Override
 	public FlowNode addOptionIntoNodeMenu(Long nodeId, FlowNodeMenuOption option) {
 		FlowNodeMenu menu = (FlowNodeMenu) flowNodeRepository.findById(nodeId).get();
@@ -202,6 +222,17 @@ public class FlowServiceImpl implements FlowService {
 	public List<FlowNodeMenuOption> loadMenuOptionByNodeId(Long nodeId) {
 		FlowNodeMenu menu = (FlowNodeMenu) flowNodeRepository.findById(nodeId).get();
 		return flowNodeMenuOptionRepository.findByMenuNode(menu);
+	}
+	
+	@Transactional
+	@Override
+	public FlowInstanceParameter saveFlowInstanceParameter(FlowInstanceParameter flowInstanceParameter) {
+		return flowInstanceParameterRepository.save(flowInstanceParameter);
+	}
+	
+	@Override
+	public List<FlowInstanceParameter> findByFlowInstance(FlowInstance flowInstance) {
+		return flowInstanceParameterRepository.findByFlowInstance(flowInstance);
 	}
 	
 

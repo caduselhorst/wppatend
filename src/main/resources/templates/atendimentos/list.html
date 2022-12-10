@@ -1,28 +1,200 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="layout">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout">
 <head>
-    <title>Funções</title>
+<title>Atendimento</title>
+<!-- 
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
+     -->
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+<script src="https://kit.fontawesome.com/b429e7dfea.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="../../dist/js/atendimentos.js"></script>
 </head>
 <body>
-<section layout:fragment="header">	
-</section>
-<section layout:fragment="content">
-		<div class="box-header" id="chat" style="height: 50%">
-	        <h2>Cliente</h2>
-	        <span th:if></span>
-	    </div>
-	    <div class="box-body" id="chat" style="height: 50%">
-	        
-	        asdfasd
-	        
-	    </div>
-	    <div class="box-footer" id="controls">
-	        
-	        fasdf
-	        
-	    </div>
-</section>
-
+	
+	<section layout:fragment="header">
+		<h1>Atendimento</h1>
+		<ol class="breadcrumb">
+			<li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+			<li class="active">Atendimentos</li>
+		</ol>
+	</section>
+	<div layout:fragment="content">
+		<input type="hidden" name="usuario" id="usuario" th:value="${#authentication.name}">
+		<input type="hidden" name="ematendimento" id="ematendimento" th:value="*{ematendimento}">
+		<input type="hidden" name="disponivel" id="disponivel" th:value="*{disponivel}">
+		<input type="hidden" name="usuarioId" id="usuarioId" th:value="*{usuarioId}">
+		<input type="hidden" name="usuarioName" id="usuarioName" th:value="*{usuarioNome}">
+		<input type="hidden" name="nroAtendimentos" id="nroAtendimentos" th:value="*{nroAtendimentos}">
+		<input type="hidden" name="nroTelefone" id="nroTelefone" value="">
+		<div id="main-content" class="container">
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Estado do operador</h3>
+					<div class="box-tools pull-right">
+		                <a type="button" class="btn btn-box-tool" id="mostraEscondeButton">
+		                	<i class="fa fa-minus" style="display: inline;" id="menosImg"></i>
+		                	<i class="fa fa-plus" style="display: none;" id="maisImg" ></i>
+		                </a>
+		                <br clear="all" />
+					</div>
+				</div>
+				<div id="panelEstado" style="display: inline">
+					<input type="button" class="btn btn-danger" value="Indisponível" id="btnestado" name="btnestado">
+					<input type="button" class="btn btn-primary" value="Desconectar" id="btndesconectar" name="btndesconectar">
+				</div>
+			</div>
+			<div class="box" id="boxProtocolo" style="display: none; height: 100%">
+				<input type="hidden" id="idProtocolo" value="0">
+				<audio src="../../alerts/alert1.mp3" id="alerta"></audio>
+				<div class="d-flex align-items-start flex-column" style="width: 100%;" id="panelProtocolo">
+					<div class="p-2">
+						<div class="box-header with-border">
+							<h3 class="box-title">Prococolo: <span id="protocolo">gsdfgsdfgsdfg</span> Telefone: <span id="telefone">asdfasdf</span></h3>
+						</div>
+					</div>
+					<div class="p-2" id="panelMessage"  style="background-color: #ffffff; height: 100%; width: 100%; overflow-y: scroll">
+						
+					</div>
+					<div class="mt-auto p-2" style="width: 100%;" id="panelBotoes">
+						<div style="display: none; background-color: #c0c0c0; top: 0;" id="panelEmojis">
+							<div class="row">
+								<div class="col-md-1"><a type="button" class="btn" id="_1" onclick="colaEmogi(this);">😀</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_2" onclick="colaEmogi(this);">😃</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_3" onclick="colaEmogi(this);">😄</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_4" onclick="colaEmogi(this);">😁</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_5" onclick="colaEmogi(this);">😆</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_6" onclick="colaEmogi(this);">😅</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_7" onclick="colaEmogi(this);">😂</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_8" onclick="colaEmogi(this);">🤣</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_9" onclick="colaEmogi(this);">🥲</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_10" onclick="colaEmogi(this);">☺️</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_11" onclick="colaEmogi(this);">😊</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_12" onclick="colaEmogi(this);">😇</a></div>
+							</div>
+							<div class="row">
+								<div class="col-md-1"><a type="button" class="btn" id="_13" onclick="colaEmogi(this);">🙂</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_14" onclick="colaEmogi(this);">🙃</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_15" onclick="colaEmogi(this);">😉</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_16" onclick="colaEmogi(this);">😌</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_17" onclick="colaEmogi(this);">😍</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_18" onclick="colaEmogi(this);">🥰</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_19" onclick="colaEmogi(this);">😘</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_20" onclick="colaEmogi(this);">😗</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_21" onclick="colaEmogi(this);">😙</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_22" onclick="colaEmogi(this);">😚</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_23" onclick="colaEmogi(this);">😋</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_24" onclick="colaEmogi(this);">😛</a></div>
+							</div>
+							<div class="row">
+								<div class="col-md-1"><a type="button" class="btn" id="_25" onclick="colaEmogi(this);">😝</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_26" onclick="colaEmogi(this);">😜</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_27" onclick="colaEmogi(this);">🤪</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_28" onclick="colaEmogi(this);">🤨</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_29" onclick="colaEmogi(this);">🧐</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_30" onclick="colaEmogi(this);">🤓</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_31" onclick="colaEmogi(this);">😎</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_32" onclick="colaEmogi(this);">🥸</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_33" onclick="colaEmogi(this);">🤩</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_34" onclick="colaEmogi(this);">🥳</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_35" onclick="colaEmogi(this);">😏</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_36" onclick="colaEmogi(this);">😒</a></div>
+							</div>
+							<div class="row">
+								<div class="col-md-1"><a type="button" class="btn" id="_37" onclick="colaEmogi(this);">😞</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_38" onclick="colaEmogi(this);">😔</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_39" onclick="colaEmogi(this);">😟</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_40" onclick="colaEmogi(this);">😕</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_41" onclick="colaEmogi(this);">🙁</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_42" onclick="colaEmogi(this);">😣</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_43" onclick="colaEmogi(this);">😖</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_44" onclick="colaEmogi(this);">😫</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_45" onclick="colaEmogi(this);">😩</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_46" onclick="colaEmogi(this);">🥺</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_47" onclick="colaEmogi(this);">😢</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_48" onclick="colaEmogi(this);">😭</a></div>
+							</div>
+							<div class="row">
+								<div class="col-md-1"><a type="button" class="btn" id="_49" onclick="colaEmogi(this);">😤</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_50" onclick="colaEmogi(this);">😠</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_51" onclick="colaEmogi(this);">😡</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_52" onclick="colaEmogi(this);">🤬</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_53" onclick="colaEmogi(this);">🤯</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_54" onclick="colaEmogi(this);">😳</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_55" onclick="colaEmogi(this);">🥵</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_56" onclick="colaEmogi(this);">🥶</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_57" onclick="colaEmogi(this);">😶‍🌫️</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_58" onclick="colaEmogi(this);">😱</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_59" onclick="colaEmogi(this);">😨</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_60" onclick="colaEmogi(this);">😱</a></div>
+							</div>
+							<div class="row">
+								<div class="col-md-1"><a type="button" class="btn" id="_61" onclick="colaEmogi(this);">😨</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_62" onclick="colaEmogi(this);">😰</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_63" onclick="colaEmogi(this);">😥</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_64" onclick="colaEmogi(this);">😓</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_65" onclick="colaEmogi(this);">🤗</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_66" onclick="colaEmogi(this);">🤔</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_67" onclick="colaEmogi(this);">🤭</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_68" onclick="colaEmogi(this);">🤫</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_69" onclick="colaEmogi(this);">🤥</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_70" onclick="colaEmogi(this);">😶</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_71" onclick="colaEmogi(this);">😐</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_72" onclick="colaEmogi(this);">😑</a></div>
+							</div>
+							<div class="row">
+								<div class="col-md-1"><a type="button" class="btn" id="_73" onclick="colaEmogi(this);">😬</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_74" onclick="colaEmogi(this);">🙄</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_75" onclick="colaEmogi(this);">😯</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_76" onclick="colaEmogi(this);">😦</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_77" onclick="colaEmogi(this);">😈</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_78" onclick="colaEmogi(this);">👿</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_79" onclick="colaEmogi(this);">👹</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_80" onclick="colaEmogi(this);">👺</a></div>
+								<div class="col-md-1"><a type="button" class="btn" id="_81" onclick="colaEmogi(this);">🤡</a></div>
+								<div class="col-md-1"></div>
+								<div class="col-md-1"></div>
+								<div class="col-md-1"></div>
+							</div>
+							
+						</div>
+						<div class="row justify-content-center">
+							<div class="col-md-1">
+								<div class="row justify-content-center">
+									<a type="button" class="btn btn-success" style="border-radius: 50%" id="btnEmojis"><i class="fa-regular fa-face-smile"></i></a>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<textarea rows="1" class="form-control" style="width: 100%" id="mensagem" name="mensagem"></textarea>
+							</div>
+							<div class="col-md-1">
+								<div class="row justify-content-center">
+									<input type="file" name="chooseFile" id="chooseFile" style="display: none" accept="*.png;*.jpg">
+									<a type="button" class="btn btn-success" style="border-radius: 50%" id="btnSendMessage"><i class="fa fa-paper-plane"></i></a>&nbsp;
+									<a type="button" class="btn btn-primary" style="border-radius: 50%" id="btnSendFile"><i class="fa fa-arrow-up"></i></a>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<select class="form-control" 
+			                    	th:field="*{finalizacoes}"
+									id="finalizacao">
+									<option value="0">Escolha para finalizar</option>
+									<option th:each="finalizacao : ${finalizacoes}"th:value="${finalizacao.id}"th:text="${finalizacao.descricao}"/>
+								</select>
+							</div>
+							<div class="col-md-1">
+								<input type="button" class="btn btn-primary" value="Finalizar" id="btnfinalizar" name="btnfinalizar">
+							</div>
+						</div>
+			
+					</div>
+				</div>
+			</div>	
+		</div>
+	</div>
 </body>
 </html>

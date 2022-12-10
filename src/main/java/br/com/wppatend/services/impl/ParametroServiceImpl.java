@@ -87,7 +87,7 @@ public class ParametroServiceImpl implements ParametroService {
 		String[] fones = StringUtils.split(repository.findById("app.dev.mode.phones").get().getValor(), ",");
 		ArrayList<String> lista = new ArrayList<>();
 		for(String s : fones) {
-			lista.add(s);
+			lista.add(s.replace(" ", ""));
 		}
 		return lista;
 	}

@@ -5,14 +5,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 
 @Entity(name = "flow")
 public class Flow {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FlowSeq")
-	@SequenceGenerator(name = "FlowSeq", sequenceName = "flowseq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	@OneToOne(optional = true)

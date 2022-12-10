@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import br.com.wppatend.entities.Protocolo;
 import br.com.wppatend.flow.entities.Flow;
 import br.com.wppatend.flow.entities.FlowInstance;
+import br.com.wppatend.flow.entities.FlowInstanceParameter;
 import br.com.wppatend.flow.entities.FlowInstancePhoneNumber;
 import br.com.wppatend.flow.entities.FlowNode;
 import br.com.wppatend.flow.entities.FlowNodeMenuOption;
@@ -46,5 +47,8 @@ public interface FlowService {
 	public List<FlowNode> loadNodeByFlow(Long flowId);
 	public List<FlowParameter> loadParametersByFlow(Long flowId);
 	public List<FlowNodeMenuOption> loadMenuOptionByNodeId(Long nodeId);
+	
+	public FlowInstanceParameter saveFlowInstanceParameter(FlowInstanceParameter flowInstanceParameter);
+	public List<FlowInstanceParameter> findByFlowInstance(FlowInstance flowInstance);
 
 }

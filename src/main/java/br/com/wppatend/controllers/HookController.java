@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -747,8 +748,16 @@ public class HookController {
 						msg.getMessages().get(0).getId(),
 						new Date()));
 				
-					if(msg.getMessages().get(0).getFromMe() != null && !msg.getMessages().get(0).getFromMe()) {
+					if(msg.getMessages().get(0).getFromMe() != null 
+							&& !msg.getMessages().get(0).getFromMe() 
+							&& !msg.getMessages().get(0).getIsGroup()
+							&& msg.getInfo() == null) {
 						flowEngine.handleMessage(msg);
+					} else {
+						logger.info("Mensagem não será tratada");
+						if(msg.getInfo() != null) {
+							msg.getInfo().forEach(i -> logger.info(i.toString()));
+						}
 					}
 			}
 				
@@ -756,6 +765,16 @@ public class HookController {
 			logger.error("Erro durante o processamento", e);
 		}
 		return ResponseEntity.ok("Ok");
+	}
+	
+	@PostMapping(value = "/web/hook/teste")
+	public void teste (@RequestBody String msg) {
+		System.out.println(msg);
+	}
+	
+	@PostMapping(value = "/web/hook/novoteste")
+	public void novoteste (@RequestBody WppObjectRequest request) {
+		request.getMessages().forEach(m -> System.out.println(m.getChatId()));
 	}
 	
 

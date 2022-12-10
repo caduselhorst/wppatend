@@ -4,14 +4,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 @Entity(name = "empresa_contato")
 public class EmpresaContato {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "EmpContatoSeq")
-	@SequenceGenerator(name = "EmpContatoSeq", sequenceName = "empcontatoseq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long pessoaf;
 	private Long pessoaj;

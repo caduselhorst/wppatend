@@ -5,9 +5,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.wppatend.api.dto.UserDTO;
 import br.com.wppatend.api.model.ApiProtocolo;
 import br.com.wppatend.api.model.ApiReturn;
 import br.com.wppatend.api.model.EstadoOperadorInfo;
@@ -38,12 +41,19 @@ import br.com.wppatend.entities.Roteirizador;
 import br.com.wppatend.entities.User;
 import br.com.wppatend.flow.entities.FlowInstancePhoneNumber;
 import br.com.wppatend.flow.services.FlowService;
+import br.com.wppatend.notificadores.MessageType;
+import br.com.wppatend.notificadores.MessageWrapper;
 import br.com.wppatend.services.ChatService;
 import br.com.wppatend.services.FinalizacaoService;
 import br.com.wppatend.services.ParametroService;
 import br.com.wppatend.services.ProtocoloService;
 import br.com.wppatend.services.RoteirizadorService;
 import br.com.wppatend.services.UserService;
+import br.com.wppatend.wpprequest.model.ApiAcoesResponse;
+import br.com.wppatend.wpprequest.model.ApiQRCode;
+import br.com.wppatend.wpprequest.model.ApiSendMessageResponse;
+import br.com.wppatend.wpprequest.model.ApiSetWebHook;
+import br.com.wppatend.wpprequest.model.ApiSetWebHookResponse;
 import br.com.wppatend.wpprequest.model.PessoaFisica;
 import br.com.wppatend.wpprequest.model.PessoaJuridica;
 
@@ -73,6 +83,36 @@ public class APIController {
 	@Autowired
 	private FlowService flowService;
 	
+	@Autowired
+	private ModelMapper modelMapper;
+	
+	@Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+	
+	private Roteirizador insereRoteirizadorData(Long idUsuario) {
+		Roteirizador rot = new Roteirizador();
+		rot.setDisponivel(false);
+		rot.setEmAtendimento(false);
+		rot.setUserId(idUsuario);
+		rot.setData(new Date());
+		rot.setNroAtendimentos(0);
+		
+		return roteirizadorService.save(rot);
+	}
+	
+	@GetMapping("/user/{usuario}")
+	public ResponseEntity<UserDTO> getUserByUsuario(@PathVariable String usuario) {
+		
+		User user = userService.findByUserName(usuario);
+		
+		return ResponseEntity.ok(modelMapper.map(user, UserDTO.class));
+	}
+	
+	@PostMapping(path="/user/{usuario}/roteirizador")
+	public ResponseEntity<?> roteirizador(@PathVariable String usuario) {
+		User user = userService.findByUserName(usuario);
+		return ResponseEntity.ok(insereRoteirizadorData(user.getId()));
+	}
 	
 	@PostMapping(path ="/user/login")
 	public ResponseEntity<ApiReturn> login (@RequestBody LoginInfo loginInfo) {
@@ -93,14 +133,7 @@ public class APIController {
 			return ResponseEntity.ok(ret);
 		}
 		
-		Roteirizador rot = new Roteirizador();
-		rot.setDisponivel(false);
-		rot.setEmAtendimento(false);
-		rot.setUserId(user.getId());
-		rot.setData(new Date());
-		rot.setNroAtendimentos(0);
-		
-		roteirizadorService.save(rot);
+		insereRoteirizadorData(user.getId());
 		
 		UserResponse resp = new UserResponse();
 		resp.setId(user.getId());
@@ -202,17 +235,29 @@ public class APIController {
 	@PostMapping(path ="/chat/send")
 	public ResponseEntity<ApiReturn> sendMessage (@RequestBody SendMessageInfo info) {
 		
+		ApiSendMessageResponse response = botClient.sendMessage(info.getPhoneNumber(), info.getMessage());
+		
 		Chat chat = new Chat();
 		chat.setData_tx_rx(new Date());
 		chat.setTipo("chat");
 		chat.setBody(info.getMessage());
 		chat.setProtocolo(info.getProtocolo());
 		chat.setTx_rx(DirecaoMensagem.ENVIADA);
+		chat.setChatId(response.getChatID());
+		chat.setMessageId(response.getMessageID());
 		
 		
 		chatService.save(chat);
+				
+		Protocolo p = protocoloService.findById(info.getProtocolo()).get();
+		User user = userService.loadById(p.getOperador()).get();
+
+		MessageWrapper wrapper = MessageWrapper.builder()
+				.message(chat)
+				.type(MessageType.CHAT.toString())
+				.build();
 		
-		botClient.sendMessage(info.getPhoneNumber(), info.getMessage());
+		simpMessagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/messages", wrapper);
 		
 		ApiReturn ret = new ApiReturn();
 		ret.setError(false);
@@ -270,6 +315,25 @@ public class APIController {
 		return ResponseEntity.ok(ret);
 		
 	}
+
+	@GetMapping("/qrcode/gerar")
+	public ApiQRCode gerarQRCode() {
+		return botClient.getApiQRCode();
+	}
 	
+	@PostMapping("/webhook")
+	public ApiSetWebHookResponse setWebHook(@RequestBody ApiSetWebHook request) {
+		return botClient.setApiWebHook(request);
+	}
+	
+	@GetMapping("/resetar")
+	public ApiAcoesResponse resetar() {
+		return botClient.resetaApi();
+	}
+	
+	@GetMapping("/logout")
+	public ApiAcoesResponse logout() {
+		return botClient.logout();
+	}
 
 }

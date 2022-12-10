@@ -1,7 +1,6 @@
 package br.com.wppatend.config;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +9,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.yaml.snakeyaml.error.MissingEnvironmentVariableException;
 
 import br.com.wppatend.entities.Permission;
 import br.com.wppatend.entities.Role;
@@ -40,12 +38,6 @@ public class DataLoader implements ApplicationRunner {
 	public void run(ApplicationArguments args) throws Exception {
 		
 		//logger.info("Server date: " + new Date());
-    	
-    	if(!args.containsOption("config.app")) {
-    		//logger.error(String.format("Parâmetro [%1$s] ausente", "api.pessoafisica"));
-    		throw new Exception("Parâmetro de sistema ausente na inicialização", 
-    				new MissingEnvironmentVariableException("Parametro [config.app] não informado."));
-    	}
     	
     	if(roleRepository.findById(Long.parseLong("1")).equals(Optional.empty())) {
 			

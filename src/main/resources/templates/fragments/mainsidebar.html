@@ -35,6 +35,22 @@
         <li class="treeview">
             <a href="#" sec:authorize="hasAuthority('Administrador')">
                 <i class="fa fa-folder"></i>
+                <span>Configurações API</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li><a href="/configuracoes/qrcode"><i class="fa fa-circle-o"></i> Conectar Telefone (QRCODE)</a></li>
+            </ul>
+             <ul class="treeview-menu">
+                <li><a href="/configuracoes/webhook"><i class="fa fa-circle-o"></i> Configurar Web Hook</a></li>
+            </ul>
+            <ul class="treeview-menu">
+                <li><a href="/configuracoes/acoes"><i class="fa fa-circle-o"></i> Outras ações</a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#" sec:authorize="hasAuthority('Administrador')">
+                <i class="fa fa-folder"></i>
                 <span>Processos</span>
                 <i class="fa fa-angle-left pull-right"></i>
             </a>
@@ -42,6 +58,19 @@
                 <li><a href="/roteirizador"><i class="fa fa-circle-o"></i> Roteirizador</a></li>
             </ul>
         </li>
+        <li class="treeview">
+        	<a href="#">
+                <i class="fa fa-gear"></i>
+                <span>Sessão</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li><a th:href="@{/usuarios/alterasenha(username=${#authentication.name})}"><i class="fa fa-circle-o"></i> Alterar senha</a></li>
+            </ul>
+            <ul class="treeview-menu">
+                <li><a href="/logout"><i class="fa fa-circle-o"></i> Sair</a></li>
+            </ul>
+        </li>>
     </ul>
 </section>
 <!-- /.sidebar -->

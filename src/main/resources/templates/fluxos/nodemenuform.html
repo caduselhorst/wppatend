@@ -34,7 +34,8 @@
                 </div>
                 <div class="form-group">
                     <label for="class">Mensagem</label>
-                    <input type="text" required="true" class="form-control" th:field="*{message}" id="class" />
+                    <!-- <input type="text" required="true" multiple="multiple" class="form-control" th:field="*{message}" id="class" />  -->
+                    <textarea rows="15" cols="70" class="form-control" th:field="*{message}" id="class"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="nextSucessNode">Passo opção não conhecida</label>

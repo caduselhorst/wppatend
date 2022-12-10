@@ -1,17 +1,12 @@
 package br.com.wppatend.flow.entities;
 
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 
 import br.com.wppatend.entities.Protocolo;
 
@@ -19,8 +14,7 @@ import br.com.wppatend.entities.Protocolo;
 public class FlowInstance {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FlowInstSeq")
-	@SequenceGenerator(name = "FlowInstSeq", sequenceName = "flowinstseq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@OneToOne
 	private Flow flow;
@@ -28,8 +22,6 @@ public class FlowInstance {
 	private Protocolo protocolo;
 	@OneToOne
 	private FlowNode actualNode;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<FlowInstanceParameter> parameters;
 	private Date initialDate;
 	private Date updatedDate;
 	private Date finishDate;
@@ -89,13 +81,5 @@ public class FlowInstance {
 	public void setFinishDate(Date finishDate) {
 		this.finishDate = finishDate;
 	}
-
-	public List<FlowInstanceParameter> getParameters() {
-		return parameters;
-	}
-
-	public void setParameters(List<FlowInstanceParameter> parameters) {
-		this.parameters = parameters;
-	}	
 
 }

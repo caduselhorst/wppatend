@@ -25,6 +25,7 @@ import br.com.wppatend.flow.entities.FlowNodeDecision;
 import br.com.wppatend.flow.entities.FlowNodeEnqueue;
 import br.com.wppatend.flow.entities.FlowNodeMenu;
 import br.com.wppatend.flow.entities.FlowNodeMenuOption;
+import br.com.wppatend.flow.entities.FlowNodeMessage;
 import br.com.wppatend.flow.entities.FlowParameter;
 import br.com.wppatend.flow.services.FlowService;
 import br.com.wppatend.services.DepartamentoService;
@@ -124,19 +125,7 @@ public class FlowController {
 	 */
 	@PostMapping("/nodes/save/actionNode")
 	public String saveActionNodeOnFlow(Long flowId, Model model, FlowNodeAction nodeAtion, final RedirectAttributes ra) {
-		/*
-		Optional<Flow> f = flowService.findFlowById(flowId);
-		Flow flow = f.get();
-		if(flow.getNodes() == null) {
-			flow.setNodes(new ArrayList<>());
-		}
-		if(nodeAtion.getId() != null) {
-			flowService.saveFlowNode(nodeAtion);
-		} else {
-			flow.getNodes().add(nodeAtion);
-			flowService.saveFlow(flow);
-		}
-		*/
+
 		flowService.addNodeIntoFlow(flowId, nodeAtion);
 		
 		return "redirect:/fluxos/loadflow/" + flowId;
@@ -177,21 +166,7 @@ public class FlowController {
 	 */
 	@PostMapping("/nodes/save/menuNode")
 	public String saveMenuNodeOnFlow(Long flowId, Model model, FlowNodeMenu nodeMenu, final RedirectAttributes ra) {
-		/*
-		Optional<Flow> f = flowService.findFlowById(flowId);
-		Flow flow = f.get();
-		if(flow.getNodes() == null) {
-			flow.setNodes(new ArrayList<>());
-		}
-		if(nodeMenu.getId() != null) {
-			flowService.saveFlowNode(nodeMenu);
-		} else {
-			flow.getNodes().add(nodeMenu);
-			flowService.saveFlow(flow);
-		}
-		*/
 		flowService.addNodeIntoFlow(flowId, nodeMenu);
-		
 		return "redirect:/fluxos/loadflow/" + flowId;
 	}
 	
@@ -241,27 +216,10 @@ public class FlowController {
 	@PostMapping("/nodes/save/menuNode/option")
 	public String saveMenuOptionIntoMenuNode(Long flowId, Long flowNodeId, Model model, 
 			FlowNodeMenuOption menuOption, final RedirectAttributes ra) {
-		Optional<FlowNode> optFlow = flowService.findFlowNodeById(flowNodeId);
-		FlowNode fn = optFlow.get();
-		FlowNodeMenu nodeMenu = (FlowNodeMenu) fn;
+		//Optional<FlowNode> optFlow = flowService.findFlowNodeById(flowNodeId);
+		//FlowNode fn = optFlow.get();
+		//FlowNodeMenu nodeMenu = (FlowNodeMenu) fn;
 		flowService.addOptionIntoNodeMenu(flowNodeId, menuOption);
-		/*
-		if(nodeMenu.getOptions() == null) {
-			nodeMenu.setOptions(new ArrayList<>());
-		}
-		if(menuOption.getId() != null) {
-			for(FlowNodeMenuOption opt : nodeMenu.getOptions()) {
-				if(opt.getId().equals(menuOption.getId())) {
-					opt.setPattern(menuOption.getPattern());
-					opt.setNextNode(menuOption.getNextNode());
-				}
-			}
-			flowService.saveFlowNode(nodeMenu);
-		} else {
-			nodeMenu.getOptions().add(menuOption);
-			flowService.saveFlowNode(nodeMenu);
-		}
-		*/
 		
 		return "redirect:/fluxos/nodes/nodemenu/options/" + flowId + "/" + flowNodeId;
 		
@@ -315,21 +273,7 @@ public class FlowController {
 	 */
 	@PostMapping("/nodes/save/collectNode")
 	public String saveCollectorNodeOnFlow(Long flowId, Model model, FlowNodeCollect nodeCollect, final RedirectAttributes ra) {
-		/*
-		Optional<Flow> f = flowService.findFlowById(flowId);
-		Flow flow = f.get();
-		if(flow.getNodes() == null) {
-			flow.setNodes(new ArrayList<>());
-		}
-		if(nodeCollect.getId() != null) {
-			flowService.saveFlowNode(nodeCollect);
-		} else {
-			flow.getNodes().add(nodeCollect);
-			flowService.saveFlow(flow);
-		}
-		*/
-		flowService.addNodeIntoFlow(flowId, nodeCollect);
-		
+		flowService.addNodeIntoFlow(flowId, nodeCollect);		
 		return "redirect:/fluxos/loadflow/" + flowId;
 	}
 	
@@ -364,19 +308,7 @@ public class FlowController {
 	 */
 	@PostMapping("/nodes/save/decisionNode")
 	public String saveDecisionNodeOnFlow(Long flowId, Model model, FlowNodeDecision nodeDecision, final RedirectAttributes ra) {
-		/*
-		Optional<Flow> f = flowService.findFlowById(flowId);
-		Flow flow = f.get();
-		if(flow.getNodes() == null) {
-			flow.setNodes(new ArrayList<>());
-		}
-		if(nodeDecision.getId() != null) {
-			flowService.saveFlowNode(nodeDecision);
-		} else {
-			flow.getNodes().add(nodeDecision);
-			flowService.saveFlow(flow);
-		}
-		*/
+
 		flowService.addNodeIntoFlow(flowId, nodeDecision);
 		
 		return "redirect:/fluxos/loadflow/" + flowId;
@@ -418,21 +350,46 @@ public class FlowController {
 	 */
 	@PostMapping("/nodes/save/enqueueNode")
 	public String saveEnqueueNodeOnFlow(Long flowId, Model model, FlowNodeEnqueue nodeEnqueue, final RedirectAttributes ra) {
-		/*
-		Optional<Flow> f = flowService.findFlowById(flowId);
-		Flow flow = f.get();
-		if(flow.getNodes() == null) {
-			flow.setNodes(new ArrayList<>());
-		}
-		if(nodeEnqueue.getId() != null) {
-			flowService.saveFlowNode(nodeEnqueue);
-		} else {
-			flow.getNodes().add(nodeEnqueue);
-			flowService.saveFlow(flow);
-		}
-		*/
 		
 		flowService.addNodeIntoFlow(flowId, nodeEnqueue);
+		
+		return "redirect:/fluxos/loadflow/" + flowId;
+	}
+	
+	/*
+	 * Load to add a message node
+	 */
+	@GetMapping("/nodes/add/messageNode/{flowId}")
+	public String addMessageNodeOnFlow(@PathVariable Long flowId, Model model) {
+		Optional<Flow> f = flowService.findFlowById(flowId);
+		FlowNodeMessage node = new FlowNodeMessage();
+        model.addAttribute("flow", f.get());
+        model.addAttribute("flowNode", node);
+        model.addAttribute("nodes", flowService.loadNodeByFlow(flowId));
+		return "fluxos/nodemessageform";
+	}
+	
+	/*
+	 * Load to edit a message node
+	 */
+	@GetMapping("/nodes/edit/messageNode/{flowId}/{nodeId}")
+	public String editMessageNodeOnFlow(@PathVariable(name = "flowId") Long flowId, 
+			@PathVariable(name = "nodeId") Long nodeId, Model model) {
+		Optional<Flow> f = flowService.findFlowById(flowId);
+		FlowNodeMessage node = (FlowNodeMessage) flowService.findFlowNodeById(nodeId).get();
+        model.addAttribute("flow", f.get());
+        model.addAttribute("nodes", flowService.loadNodeByFlow(flowId));
+        model.addAttribute("flowNode", node);
+		return "fluxos/nodemessageform";
+	}
+	
+	/*
+	 * Save a message node
+	 */
+	@PostMapping("/nodes/save/messageNode")
+	public String saveMessageNodeOnFlow(Long flowId, Model model, FlowNodeMessage flowNode, final RedirectAttributes ra) {
+		
+		flowService.addNodeIntoFlow(flowId, flowNode);
 		
 		return "redirect:/fluxos/loadflow/" + flowId;
 	}

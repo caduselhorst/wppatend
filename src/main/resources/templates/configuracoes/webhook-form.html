@@ -1,0 +1,41 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+<head>
+    <title>Configurar endereço do Web Hook</title>
+    <script type="text/javascript" src="../../dist/js/configuracao-api.js"></script>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>Configurar Web Hook</h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="active">Configurar Web Hook</li>
+    </ol>
+</section>
+
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Web Hook</h3>
+        </div>
+        <div class="box-body">
+            <div class="form-group">
+            	<label for="name">Web Hook</label>
+                <input type="text" required="true" class="form-control"  id="txt-webhook" />
+                <div id="loading-panel" style="display:none">
+                	<h3>Um momento, por favor. Atualizado o endereço do Web Hook na API ...</h3>
+                </div>
+                <div id="msg-panel" style="display:none">
+                	<span id="message"></span>
+                </div>
+            </div>
+        </div>
+        <div class="box-footer">
+            <button class="btn btn-primary" onclick="setApiWebHook()">Conigurar Web Hook</button>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

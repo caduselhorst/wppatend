@@ -7,15 +7,13 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 
 @Entity(name = "flownode")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class FlowNode {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FlowNodeSeq")
-	@SequenceGenerator(name = "FlowNodeSeq", sequenceName = "flownodeseq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	@OneToOne

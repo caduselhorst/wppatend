@@ -12,13 +12,14 @@ import javax.persistence.SequenceGenerator;
 public class FlowInstanceParameter {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FlowInstanceParameterSeq")
-	@SequenceGenerator(name = "FlowInstanceParameterSeq", sequenceName = "flowinstparamseq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@OneToOne
 	private FlowParameter parameter;
 	@Lob
 	private byte[] value;
+	@OneToOne(optional = true)
+	private FlowInstance flowInstance;
 	
 	public Long getId() {
 		return id;
@@ -44,6 +45,14 @@ public class FlowInstanceParameter {
 		this.value = value;
 	}
 	
+	public FlowInstance getFlowInstance() {
+		return flowInstance;
+	}
+
+	public void setFlowInstance(FlowInstance flowInstance) {
+		this.flowInstance = flowInstance;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

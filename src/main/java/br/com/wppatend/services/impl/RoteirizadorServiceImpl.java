@@ -33,7 +33,7 @@ public class RoteirizadorServiceImpl implements RoteirizadorService {
 
 	@Override
 	public Optional<Roteirizador> findByDisponivel() {
-		return repository.findFirst();
+		return repository.findTopByDisponivelAndEmAtendimentoOrderByNroAtendimentos(true, false);
 	}
 	
 	@Override

@@ -7,14 +7,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 
 @Entity(name = "filatendimento")
 public class FilaAtendimento {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FilaSeq")
-	@SequenceGenerator(name = "FilaSeq", sequenceName = "filaseq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@OneToOne
 	private Protocolo protocolo;

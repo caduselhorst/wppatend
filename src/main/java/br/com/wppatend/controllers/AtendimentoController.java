@@ -1,6 +1,6 @@
 package br.com.wppatend.controllers;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,15 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import br.com.wppatend.clients.PessoaFisicaRestClient;
-import br.com.wppatend.clients.PessoaJuridicaRestClient;
-import br.com.wppatend.entities.Chat;
-import br.com.wppatend.entities.Protocolo;
-import br.com.wppatend.repositories.ChatRepository;
-import br.com.wppatend.repositories.ProtocoloRepository;
-import br.com.wppatend.repositories.UserRepository;
-import br.com.wppatend.wpprequest.model.PessoaFisica;
-import br.com.wppatend.wpprequest.model.PessoaJuridica;
+import br.com.wppatend.entities.Roteirizador;
+import br.com.wppatend.services.FinalizacaoService;
+import br.com.wppatend.services.RoteirizadorService;
+import br.com.wppatend.services.UserService;
 
 @Controller
 @RequestMapping("atendimentos")
@@ -29,19 +24,13 @@ public class AtendimentoController {
 	private static final Logger logger = LoggerFactory.getLogger(AtendimentoController.class);
 	
 	@Autowired
-	private ProtocoloRepository protocoloRepository;
+	private RoteirizadorService roteirizadorService;
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 	
 	@Autowired
-	private PessoaJuridicaRestClient pessoaJuridicaRestClient;
-	
-	@Autowired
-	private PessoaFisicaRestClient pessoaFisicaRestClient;
-	
-	@Autowired
-	private ChatRepository chatRepository;
+	private FinalizacaoService finalizacaoService;
 	
 	@GetMapping
     public String index() {
@@ -53,41 +42,33 @@ public class AtendimentoController {
 	@GetMapping("/")
     public String atendimento(Model model) {
 		logger.info("Index de Atendimentos");
+		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = ((User) principal);
+		String name = userService.findByUserName(user.getUsername()).getName();
 		
-		Protocolo p = protocoloRepository.fingProtocoloAbertoByOperador(userRepository.findByUsername(user.getUsername()).getId());
-		PessoaFisica pf = null;
-		PessoaJuridica pj = null;
-		if(p != null) {
+		Optional<Roteirizador> roteirizador = roteirizadorService.loadById(userService.findByUserName(user.getUsername()).getId());
+		
+		if(roteirizador.isEmpty()) {
+			model.addAttribute("disponivel", "0");
+			model.addAttribute("ematendimento", "0");
+			model.addAttribute("usuarioId", "0");
+			model.addAttribute("nroAtendimentos", "0");
 			
-			if(p.getCodPessoa() != null) {
-				pf = pessoaFisicaRestClient.getPessoaFisicaById(p.getCodPessoa());
-			}
-			if(p.getCodPessoaJuridica() != null) {
-				pj = pessoaJuridicaRestClient.getPessoaJuridicaById(p.getCodPessoaJuridica());
-			}
+		} else {
+			
+			Roteirizador rot = roteirizador.get();
+			
+			model.addAttribute("disponivel", rot.isDisponivel() ? "1" : "0");
+			model.addAttribute("ematendimento", rot.isEmAtendimento() ? "1" : "0");
+			model.addAttribute("usuarioId", rot.getUserId());
+			model.addAttribute("nroAtendimentos", rot.getNroAtendimentos());
+			
 		}
 		
-		if(pf == null) {
-			pf = new PessoaFisica();
-		}
-		if(pj == null) {
-			pj = new PessoaJuridica();
-		}
-		
-		if(p == null) {
-			p = new Protocolo();
-		}
-		
-		List<Chat> chat = chatRepository.findByprotocolo(p.getId());
-		
-		model.addAttribute("protocolo", p);
-		model.addAttribute("pj", pj);
-		model.addAttribute("pf", pf);
-		model.addAttribute("chat", chat);
-		
-		
+		model.addAttribute("usuarioNome", name);
+		model.addAttribute("finalizacoes", finalizacaoService.findAll());
+				
         return "atendimentos/list";
     }
 }

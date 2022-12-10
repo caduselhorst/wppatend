@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -15,8 +14,7 @@ import org.hibernate.annotations.Where;
 public class Finalizacao {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FinalizacaoSeq")
-	@SequenceGenerator(name = "FinalizacaoSeq", sequenceName = "finalizacaoseq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String descricao;
 	private boolean deleted;

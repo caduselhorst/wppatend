@@ -16,10 +16,6 @@
     <div class="box">
         <div class="box-header with-border">
             <h3 class="box-title">Lista</h3>
-            <div class="box-tools pull-right">
-                <a href="/funcoes/add/funcao" type="button" class="btn btn-box-tool"><i class="fa fa-plus"></i></a>
-                <br clear="all" />
-            </div>
         </div>
         <div class="box-body no-padding">
             <table class="table table-striped">
@@ -30,7 +26,7 @@
                 </tr>
                 <tr th:each="row : ${list}">
                     <td th:text="${row.chave}"></td>
-                    <td th:text="${row.valor}"></td>
+                    <td th:text="${row.valor}" style="word-wrap: normal"></td>
                     <td style="text-align: center">
                         <a th:href="${'/parametros/edit/' + row.chave}"><span class="fa fa-pencil"></span></a>
                     </td>
